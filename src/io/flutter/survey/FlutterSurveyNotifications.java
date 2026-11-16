@@ -6,13 +6,13 @@
 package io.flutter.survey;
 
 import consulo.webBrowser.BrowserUtil;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.component.PropertiesComponent;
+import consulo.application.Application;
+import consulo.flutter.notification.FlutterNotificationGroups;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
-import consulo.application.internal.ApplicationInfo;
+import consulo.project.ui.notification.NotificationService;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.event.FileEditorManagerEvent;
 import consulo.fileEditor.event.FileEditorManagerListener;
@@ -20,7 +20,6 @@ import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
 import com.jetbrains.lang.dart.sdk.DartSdk;
 import io.flutter.icons.FlutterIcons;
-import io.flutter.FlutterMessages;
 import io.flutter.FlutterUtils;
 import io.flutter.pub.PubRoot;
 import io.flutter.sdk.FlutterSdk;
@@ -52,7 +51,7 @@ public class FlutterSurveyNotifications {
   }
 
   public static void init(@NotNull Project project) {
-    project.getMessageBus().connect().subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, new FileEditorManagerListener() {
+    project.getMessageBus().connect().subscribe(FileEditorManagerListener.class, new FileEditorManagerListener() {
       @Override
       public void fileOpened(@NotNull final FileEditorManager source, @NotNull final VirtualFile file) {
         check(file);
@@ -81,7 +80,7 @@ public class FlutterSurveyNotifications {
     // Limit display to the survey window.
     if (!survey.isSurveyOpen()) return;
 
-    final PropertiesComponent properties = PropertiesComponent.getInstance();
+    final PropertiesComponent properties = ApplicationPropertiesComponent.getInstance();
 
     // Don't prompt more often than every 40 hours.
     final long lastPromptedMillis = properties.getLong(FLUTTER_LAST_SURVEY_PROMPT_KEY, 0);
@@ -92,53 +91,47 @@ public class FlutterSurveyNotifications {
     // Or, if the survey has already been taken.
     if (properties.getBoolean(survey.uniqueId)) return;
 
-    final Notification notification = new Notification(
-      FlutterMessages.FLUTTER_NOTIFICATION_GROUP_ID, survey.title, "", NotificationType.INFORMATION
-    ).setIcon(FlutterIcons.Flutter);
+    // Consulo: notification builder instead of Notification subclassing/AnActions
+    final Notification.Builder notification = NotificationService.getInstance()
+      .newInfo(FlutterNotificationGroups.FLUTTER_MESSAGES)
+      .title(LocalizeValue.of(survey.title))
+      .icon(FlutterIcons.Flutter);
 
-    notification.addAction(new AnAction(SURVEY_ACTION_TEXT) {
-      @Override
-      public void actionPerformed(@NotNull AnActionEvent event) {
-        properties.setValue(survey.uniqueId, true);
-        notification.expire();
+    notification.addClosingAction(LocalizeValue.localizeTODO(SURVEY_ACTION_TEXT), () -> {
+      properties.setValue(survey.uniqueId, true);
 
-        final ApplicationInfo applicationInfo = ApplicationInfo.getInstance();
-        String rawIdeName = applicationInfo != null ? applicationInfo.getVersionName() : "IntelliJ - Unknown";
-        if (rawIdeName == null) {
-          rawIdeName = "IntelliJ - Unknown";
-        }
-        final String ideName = URLEncoder.encode(rawIdeName, StandardCharsets.UTF_8);
-        StringBuilder stringBuilder = new StringBuilder(survey.urlPrefix + "?Source=" + ideName);
-
-        final DartSdk dartSdk = DartSdk.getDartSdk(myProject);
-        if (dartSdk != null) {
-          stringBuilder.append("&DartVersion=").append(dartSdk.getVersion());
-        }
-
-        final FlutterSdk flutterSdk = FlutterSdk.getFlutterSdk(myProject);
-        final FlutterSdkVersion flutterSdkVersion = flutterSdk == null ? null : flutterSdk.getVersion();
-        if (flutterSdkVersion != null) {
-          stringBuilder.append("&FlutterVersion=").append(flutterSdkVersion.getVersionText());
-        }
-
-        String url = stringBuilder.toString();
-        BrowserUtil.browse(url);
+      // Consulo: the application name instead of ApplicationInfo.getVersionName()
+      String rawIdeName = Application.get().getName().get();
+      if (rawIdeName.isEmpty()) {
+        rawIdeName = "IntelliJ - Unknown";
       }
+      final String ideName = URLEncoder.encode(rawIdeName, StandardCharsets.UTF_8);
+      StringBuilder stringBuilder = new StringBuilder(survey.urlPrefix + "?Source=" + ideName);
+
+      final DartSdk dartSdk = DartSdk.getDartSdk(myProject);
+      if (dartSdk != null) {
+        stringBuilder.append("&DartVersion=").append(dartSdk.getVersion());
+      }
+
+      final FlutterSdk flutterSdk = FlutterSdk.getFlutterSdk(myProject);
+      final FlutterSdkVersion flutterSdkVersion = flutterSdk == null ? null : flutterSdk.getVersion();
+      if (flutterSdkVersion != null) {
+        stringBuilder.append("&FlutterVersion=").append(flutterSdkVersion.getVersionText());
+      }
+
+      String url = stringBuilder.toString();
+      BrowserUtil.browse(url);
     });
 
-    notification.addAction(new AnAction(SURVEY_DISMISSAL_TEXT) {
-      @Override
-      public void actionPerformed(@NotNull AnActionEvent event) {
-        properties.setValue(survey.uniqueId, true);
-        notification.expire();
-      }
+    notification.addClosingAction(LocalizeValue.localizeTODO(SURVEY_DISMISSAL_TEXT), () -> {
+      properties.setValue(survey.uniqueId, true);
     });
 
     // Display the prompt after a short delay.
     try (var scheduler = Executors.newSingleThreadScheduledExecutor()) {
       scheduler.schedule(() -> {
         if (!myProject.isDisposed()) {
-          Notifications.Bus.notify(notification, myProject);
+          notification.notify(myProject);
         }
       }, NOTIFICATION_DELAY_IN_SECS, TimeUnit.SECONDS);
       scheduler.shutdown();

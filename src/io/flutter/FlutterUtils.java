@@ -7,6 +7,7 @@ package io.flutter;
 
 import consulo.ide.setting.ShowSettingsUtil;
 import consulo.component.PropertiesComponent;
+import consulo.project.ProjectPropertiesComponent;
 import consulo.logging.Logger;
 import consulo.container.plugin.PluginId;
 import consulo.module.Module;
@@ -155,7 +156,7 @@ public class FlutterUtils {
 
   public static void disableGradleProjectMigrationNotification(@NotNull Project project) {
     final String showMigrateToGradlePopup = "show.migrate.to.gradle.popup";
-    final PropertiesComponent properties = PropertiesComponent.getInstance(project);
+    final PropertiesComponent properties = ProjectPropertiesComponent.getInstance(project);
 
     if (properties.getValue(showMigrateToGradlePopup) == null) {
       properties.setValue(showMigrateToGradlePopup, "false");

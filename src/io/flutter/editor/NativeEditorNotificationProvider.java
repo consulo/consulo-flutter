@@ -15,11 +15,11 @@ import consulo.language.editor.CommonDataKeys;
 import consulo.localize.LocalizeValue;
 import consulo.platform.Platform;
 import consulo.project.Project;
-import consulo.project.util.ProjectUtil;
 import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.ActionPlaces;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.util.io.FileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import io.flutter.FlutterBundle;
@@ -56,7 +56,8 @@ public class NativeEditorNotificationProvider implements EditorNotificationProvi
       return null;
     }
 
-    VirtualFile root = ProjectUtil.guessProjectDir(project);
+    // Consulo: project.getBaseDir() instead of ProjectUtil.guessProjectDir
+    VirtualFile root = project.getBaseDir();
     if (root == null) {
       return null;
     }
@@ -109,8 +110,11 @@ public class NativeEditorNotificationProvider implements EditorNotificationProvi
       myAction = ActionManager.getInstance().getAction(actionName);
 
       // Ensure this project is a Flutter project by updating the menu action. It will only be visible for Flutter projects.
-      myAction.update(
-        AnActionEvent.createFromDataContext(ActionPlaces.EDITOR_TOOLBAR, myAction.getTemplatePresentation(), makeContext()));
+      // Consulo: only actions with a synchronous update can be updated here
+      if (myAction instanceof AnActionWithSyncUpdate syncUpdate) {
+        syncUpdate.update(
+          AnActionEvent.createFromDataContext(ActionPlaces.EDITOR_TOOLBAR, myAction.getTemplatePresentation(), makeContext()));
+      }
 
       isVisible = myAction.getTemplatePresentation().isVisible();
     }

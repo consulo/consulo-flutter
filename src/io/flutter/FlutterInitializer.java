@@ -7,7 +7,6 @@ package io.flutter;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import consulo.container.plugin.PluginManager;
 import consulo.application.ui.event.UISettingsListener;
 import consulo.flutter.notification.FlutterNotificationGroups;
 import consulo.localize.LocalizeValue;
@@ -31,7 +30,6 @@ import io.flutter.devtools.RemainingDevToolsViewFactory;
 import io.flutter.editor.FlutterSaveActionsManager;
 import io.flutter.logging.FlutterConsoleLogManager;
 import io.flutter.logging.PluginLogger;
-import io.flutter.module.FlutterModuleBuilder;
 import io.flutter.pub.PubRoot;
 import io.flutter.pub.PubRoots;
 import io.flutter.run.FlutterReloadManager;
@@ -144,7 +142,7 @@ public class FlutterInitializer extends FlutterProjectActivity {
         return null;
       })
       .expireWith(FlutterProjectDisposable.getInstance(project))
-      .finishOnUiThread(Application.get().getDefaultModalityState(), result -> {
+      .finishOnUiThread(Application::getDefaultModalityState, result -> {
         edtInitialization(finalHasFlutterModule, project);
       })
       .submit(AppExecutorUtil.getAppExecutorService());
@@ -169,26 +167,8 @@ public class FlutterInitializer extends FlutterProjectActivity {
       });
     }
 
-    if (hasFlutterModule
-        && PluginManager.findPlugin(PluginId.getId("org.jetbrains.android")) != null
-        && !FlutterModuleUtils.hasAndroidModule(project)) {
-      List<Module> modules = FlutterModuleUtils.findModulesWithFlutterContents(project);
-      for (Module module : modules) {
-        if (module.isDisposed() || !FlutterModuleUtils.isFlutterModule(module)) continue;
-        // Consulo: modules have no .iml file, use the module directory
-        VirtualFile baseDir = module.getModuleDir();
-        if (baseDir == null) continue;
-        boolean isModule = false;
-        try { // TODO(messick) Rewrite this loop to eliminate the need for this try-catch
-          FlutterModuleBuilder.addAndroidModule(project, null, baseDir.getPath(), module.getName(), isModule);
-        }
-        catch (IllegalStateException ignored) {
-        }
-      }
-
-      // Ensure a run config is selected and ready to go.
-      FlutterModuleUtils.ensureRunConfigSelected(project);
-    }
+    // Consulo: adding the Android module of a Flutter project (FlutterModuleBuilder.addAndroidModule, only done when the
+    // org.jetbrains.android plugin is installed) is dropped with the Android Studio integration.
 
     FlutterRunNotifications.init(project);
 

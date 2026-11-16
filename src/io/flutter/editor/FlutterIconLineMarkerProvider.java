@@ -5,7 +5,11 @@
  */
 package io.flutter.editor;
 
-import com.intellij.codeInsight.daemon.GutterName;
+import com.jetbrains.lang.dart.DartLanguage;
+import consulo.language.Language;
+import consulo.language.editor.Pass;
+import consulo.localize.LocalizeValue;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.language.editor.gutter.LineMarkerInfo;
 import consulo.language.editor.gutter.LineMarkerProviderDescriptor;
 import consulo.language.ast.ASTNode;
@@ -16,7 +20,7 @@ import consulo.project.Project;
 import consulo.util.lang.Pair;
 import consulo.document.util.TextRange;
 import consulo.virtualFileSystem.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.util.VirtualFileVisitor;
 import consulo.language.psi.PsiElement;
@@ -36,7 +40,7 @@ import io.flutter.utils.IconPreviewGenerator;
 import io.flutter.utils.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.VisibleForTesting;
+import com.google.common.annotations.VisibleForTesting;
 
 import javax.swing.*;
 import java.util.*;
@@ -79,10 +83,17 @@ public class FlutterIconLineMarkerProvider extends LineMarkerProviderDescriptor 
     BuiltInPaths.put("CupertinoIcons", CupertinoRelativeIconsPath);
   }
 
-  @Nullable("null means disabled")
+  // Consulo: LineMarkerProvider is a language extension
+  @NotNull
   @Override
-  public @GutterName String getName() {
-    return FlutterBundle.message("flutter.icon.preview.title");
+  public Language getLanguage() {
+    return DartLanguage.INSTANCE;
+  }
+
+  @NotNull
+  @Override
+  public LocalizeValue getName() {
+    return FlutterBundle.messageValue("flutter.icon.preview.title");
   }
 
   @Override
@@ -186,10 +197,10 @@ public class FlutterIconLineMarkerProvider extends LineMarkerProviderDescriptor 
         final String selector = AstBufferUtil.getTextSkippingWhitespaceComments(selectorNode.getNode());
         final Icon icon;
         if (name.equals("Icons")) {
-          icon = FlutterMaterialIcons.getIconForName(selector);
+          icon = TargetAWT.to(FlutterMaterialIcons.getIconForName(selector));
         }
         else if (name.equals("CupertinoIcons")) {
-          icon = FlutterCupertinoIcons.getIconForName(selector);
+          icon = TargetAWT.to(FlutterCupertinoIcons.getIconForName(selector));
         }
         else {
           // Note: I want to keep this code until I'm sure we won't use pubspec.yaml.
@@ -303,8 +314,9 @@ public class FlutterIconLineMarkerProvider extends LineMarkerProviderDescriptor 
   private LineMarkerInfo<PsiElement> createLineMarker(@Nullable PsiElement element, @NotNull Icon icon) {
     if (element == null) return null;
     assert element.getTextRange() != null;
-    return new LineMarkerInfo<>(element, element.getTextRange(), icon, null, null,
-                                GutterIconRenderer.Alignment.LEFT, () -> "");
+    // Consulo: LineMarkerInfo takes an Image and the update pass
+    return new LineMarkerInfo<>(element, element.getTextRange(), TargetAWT.from(icon), Pass.LINE_MARKERS, null, null,
+                                GutterIconRenderer.Alignment.LEFT);
   }
 
   @Nullable
@@ -333,7 +345,7 @@ public class FlutterIconLineMarkerProvider extends LineMarkerProviderDescriptor 
       return null;
     }
     final List<VirtualFile> ttfFiles = new ArrayList<>();
-    VfsUtilCore.visitChildrenRecursively(parent, new VirtualFileVisitor<Void>() {
+    VirtualFileUtil.visitChildrenRecursively(parent, new VirtualFileVisitor<Void>() {
       @Override
       public boolean visitFile(@NotNull VirtualFile file) {
         final String ext = file.getExtension();

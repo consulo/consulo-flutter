@@ -11,6 +11,11 @@ import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
 import consulo.project.ui.wm.ToolWindowManagerListener;
 import consulo.component.messagebus.MessageBusConnection;
+import consulo.localize.LocalizeValue;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
+import consulo.ui.image.Image;
+import consulo.webBrowser.BrowserLauncher;
+import io.flutter.utils.LabelInput;
 import io.flutter.FlutterUtils;
 import io.flutter.actions.RefreshToolWindowAction;
 import io.flutter.run.daemon.DevToolsInstance;
@@ -22,11 +27,9 @@ import io.flutter.utils.OpenApiUtils;
 import io.flutter.view.DevToolsUrlProvider;
 import io.flutter.view.EmbeddedBrowser;
 import io.flutter.view.ViewUtils;
-import kotlin.coroutines.Continuation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,8 +47,27 @@ public abstract class AbstractDevToolsViewFactory implements ToolWindowFactory {
   public abstract String getToolWindowTitle();
 
   @Nullable
-  public Icon getToolWindowIcon() {
+  public Image getToolWindowIcon() {
     return null;
+  }
+
+  // Consulo: the tool window id, anchor, icon and display name of upstream plugin.xml are provided by the factory
+  @NotNull
+  @Override
+  public String getId() {
+    return getToolWindowId();
+  }
+
+  @NotNull
+  @Override
+  public ToolWindowAnchor getAnchor() {
+    return ToolWindowAnchor.RIGHT;
+  }
+
+  @NotNull
+  @Override
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.of(getToolWindowId());
   }
 
   @NotNull
@@ -58,8 +80,9 @@ public abstract class AbstractDevToolsViewFactory implements ToolWindowFactory {
 
   private boolean devToolsLoadedInBrowser = false;
 
+  // Consulo: shouldBeAvailable instead of isApplicableAsync
   @Override
-  public Object isApplicableAsync(@NotNull Project project, @NotNull Continuation<? super Boolean> $completion) {
+  public boolean shouldBeAvailable(@NotNull Project project) {
     // Due to https://github.com/flutter/flutter/issues/142521, this always returns true when the
     // Flutter IJ plugin is installed.
 
@@ -153,6 +176,14 @@ public abstract class AbstractDevToolsViewFactory implements ToolWindowFactory {
         final DevToolsUrl devToolsUrl = getDevToolsUrl(project, flutterSdkVersion, instance);
 
         OpenApiUtils.safeInvokeLater(() -> {
+          // Consulo: without an embedded browser, offer to open DevTools in the external browser.
+          if (FlutterUtils.embeddedBrowser(project) == null) {
+            viewUtils.presentClickableLabel(toolWindow, List.of(
+              new LabelInput(getToolWindowTitle() + " can not be embedded in the IDE."),
+              new LabelInput("Open " + getToolWindowTitle() + " in the browser?",
+                             (linkLabel, data) -> BrowserLauncher.getInstance().browse(devToolsUrl.getUrlString(), null))));
+            return;
+          }
           Optional.ofNullable(
               FlutterUtils.embeddedBrowser(project))
             .ifPresent(embeddedBrowser ->
@@ -163,7 +194,7 @@ public abstract class AbstractDevToolsViewFactory implements ToolWindowFactory {
                          doAfterBrowserOpened(project, embeddedBrowser);
                          // The "refresh" action refreshes the embedded browser, not the panel.
                          // Therefore, we only show it once we have an embedded browser.
-                         toolWindow.setTitleActions(List.of(new RefreshToolWindowAction(getToolWindowId())));
+                         toolWindow.setTitleActions(new RefreshToolWindowAction(getToolWindowId()));
                        });
         });
       }
@@ -173,8 +204,9 @@ public abstract class AbstractDevToolsViewFactory implements ToolWindowFactory {
   private void maybeReloadDevToolsWhenVisible(@NotNull Project project,
                                               @NotNull ToolWindow toolWindow, @NotNull FlutterSdkVersion flutterSdkVersion,
                                               @Nullable String warningMessage) {
-    MessageBusConnection connection = project.getMessageBus().connect();
-    connection.subscribe(ToolWindowManagerListener.TOPIC, new ToolWindowManagerListener() {
+    // Consulo: the content manager is the tool window disposable
+    MessageBusConnection connection = project.getMessageBus().connect(toolWindow.getContentManager());
+    connection.subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
       @Override
       public void toolWindowShown(@NotNull ToolWindow activatedToolWindow) {
         if (activatedToolWindow.getId().equals(getToolWindowId())) {
@@ -184,6 +216,5 @@ public abstract class AbstractDevToolsViewFactory implements ToolWindowFactory {
         }
       }
     });
-    Disposer.register(toolWindow.getDisposable(), connection);
   }
 }

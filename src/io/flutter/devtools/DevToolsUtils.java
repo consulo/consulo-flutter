@@ -18,7 +18,9 @@ import org.jetbrains.annotations.NotNull;
 import com.google.gson.JsonObject;
 import consulo.application.ApplicationManager;
 import consulo.virtualFileSystem.LocalFileSystem;
-import consulo.execution.debug.impl.internal.XSourcePositionImpl;
+import consulo.execution.debug.XDebuggerUtil;
+import consulo.execution.debug.XSourcePosition;
+import consulo.ui.style.StyleManager;
 import io.flutter.run.daemon.FlutterApp;
 import io.flutter.utils.JsonUtils;
 import org.dartlang.vm.service.element.*;
@@ -102,8 +104,11 @@ public class DevToolsUtils {
 
         application.invokeLater(() -> {
           if (file != null && line >= 0 && column >= 0) {
-            XSourcePositionImpl position = XSourcePositionImpl.create(file, line - 1, column - 1);
-            position.createNavigatable(app.getProject()).navigate(false);
+            // Consulo: XDebuggerUtil.createPosition instead of XSourcePositionImpl.create
+            XSourcePosition position = XDebuggerUtil.getInstance().createPosition(file, line - 1, column - 1);
+            if (position != null) {
+              position.createNavigatable(app.getProject()).navigate(false);
+            }
           }
         });
       }
@@ -115,7 +120,8 @@ public class DevToolsUtils {
   }
 
   public Boolean getIsBackgroundBright() {
-    return JBColor.isBright();
+    // Consulo: the current style instead of JBColor.isBright()
+    return StyleManager.get().getCurrentStyle().isLight();
   }
 
   public @NotNull Float getFontSize() {

@@ -6,6 +6,8 @@
 package io.flutter.devtools;
 
 import consulo.project.Project;
+import consulo.ui.image.Image;
+import io.flutter.icons.FlutterIcons;
 import io.flutter.run.daemon.DevToolsInstance;
 import io.flutter.sdk.FlutterSdkVersion;
 import io.flutter.view.EmbeddedBrowser;
@@ -22,7 +24,7 @@ public class DevToolsExtensionsViewFactory extends AbstractDevToolsViewFactory {
   }
 
   private static void initView(@NotNull final Project project, FlutterViewMessages.FlutterDebugEvent event) {
-    DevToolsExtensionsViewService service = project.getService(DevToolsExtensionsViewService.class);
+    DevToolsExtensionsViewService service = project.getInstance(DevToolsExtensionsViewService.class);
     String vmServiceUri = event.app.getConnector().getBrowserUrl();
     if (service == null || vmServiceUri == null) return;
     service.updateVmServiceUri(vmServiceUri);
@@ -39,6 +41,13 @@ public class DevToolsExtensionsViewFactory extends AbstractDevToolsViewFactory {
     return TOOL_WINDOW_ID;
   }
 
+  // Consulo: the tool window icon of upstream plugin.xml
+  @Override
+  @NotNull
+  public Image getIcon() {
+    return FlutterIcons.DevToolsExtensions;
+  }
+
   @NotNull
   public String getToolWindowTitle() {
     return "Flutter DevTools";
@@ -46,7 +55,7 @@ public class DevToolsExtensionsViewFactory extends AbstractDevToolsViewFactory {
 
   @Override
   protected void doAfterBrowserOpened(@NotNull final Project project, @NotNull final EmbeddedBrowser embeddedBrowser) {
-    DevToolsExtensionsViewService service = project.getService(DevToolsExtensionsViewService.class);
+    DevToolsExtensionsViewService service = project.getInstance(DevToolsExtensionsViewService.class);
     if (service == null) return;
     service.setEmbeddedBrowser(embeddedBrowser);
   }

@@ -148,7 +148,8 @@ public class IntelliJAndroidSdk {
       return null;
     }
 
-    if (!"Android SDK".equals(candidate.getSdkType().getName())) {
+    // Consulo: SdkTypeId has an id instead of a name
+    if (!"Android SDK".equals(candidate.getSdkType().getId())) {
       return null;
     }
 

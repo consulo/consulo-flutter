@@ -10,7 +10,10 @@ import consulo.document.Document;
 import consulo.language.psi.ElementColorProvider;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiElement;
-import consulo.language.impl.internal.psi.PsiFileFactoryImpl;
+import consulo.language.Language;
+import consulo.language.psi.PsiFileFactory;
+import consulo.ui.color.ColorValue;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.language.impl.ast.AstBufferUtil;
 import com.jetbrains.lang.dart.DartLanguage;
 import com.jetbrains.lang.dart.DartTokenTypes;
@@ -29,9 +32,28 @@ import static io.flutter.dart.DartPsiUtil.topmostReferenceExpression;
 
 public class FlutterColorProvider implements ElementColorProvider {
 
+  // Consulo: ElementColorProvider is a language extension
+  @NotNull
+  @Override
+  public Language getLanguage() {
+    return DartLanguage.INSTANCE;
+  }
+
+  // Consulo: ElementColorProvider works with ColorValue instead of java.awt.Color
   @Nullable
   @Override
-  public Color getColorFrom(@NotNull PsiElement element) {
+  public ColorValue getColorFrom(@NotNull PsiElement element) {
+    final Color color = getAWTColorFrom(element);
+    return color == null ? null : TargetAWT.from(color);
+  }
+
+  @Override
+  public void setColorTo(@NotNull PsiElement element, @NotNull ColorValue color) {
+    setColorTo(element, TargetAWT.to(color));
+  }
+
+  @Nullable
+  private Color getAWTColorFrom(@NotNull PsiElement element) {
     // This must return null for non-leaf nodes and any language other than Dart.
     if (element.getNode().getElementType() != DartTokenTypes.IDENTIFIER) return null;
 
@@ -216,8 +238,7 @@ public class FlutterColorProvider implements ElementColorProvider {
     return null;
   }
 
-  @Override
-  public void setColorTo(@NotNull PsiElement element, @NotNull Color color) {
+  private void setColorTo(@NotNull PsiElement element, @NotNull Color color) {
     // Not trying to look up Material or Cupertino colors.
     // Unfortunately, there is no way to prevent the color picker from showing (if clicked) for those expressions.
     if (!Objects.equals(element.getText(), "Color")) return;
@@ -296,9 +317,10 @@ public class FlutterColorProvider implements ElementColorProvider {
       final String newValue = isHex ? Integer.toHexString(value) : Integer.toString(value);
       final String num = isUpper ? newValue.toUpperCase() : newValue;
       final String hex = isHex ? source.substring(0, 2) + num : num;
-      final PsiFileFactoryImpl factory = new PsiFileFactoryImpl(expr.getManager());
+      final PsiFileFactory factory = PsiFileFactory.getInstance(expr.getProject());
       final PsiElement newPsi =
-        factory.createElementFromText(hex, DartLanguage.INSTANCE, DartTokenTypes.LITERAL_EXPRESSION, expr.getContext());
+        factory.createElementFromText(hex, DartLanguage.INSTANCE, expr.getLanguageVersion(), DartTokenTypes.LITERAL_EXPRESSION,
+                                      expr.getContext());
       if (newPsi != null) {
         expr.replace(newPsi);
       }
@@ -307,10 +329,11 @@ public class FlutterColorProvider implements ElementColorProvider {
 
   private void replaceDouble(DartExpression expr, Double value) {
     if (expr instanceof DartLiteralExpression) {
-      final PsiFileFactoryImpl factory = new PsiFileFactoryImpl(expr.getManager());
+      final PsiFileFactory factory = PsiFileFactory.getInstance(expr.getProject());
       final String number = Double.toString(value);
       final PsiElement newPsi =
-        factory.createElementFromText(number, DartLanguage.INSTANCE, DartTokenTypes.LITERAL_EXPRESSION, expr.getContext());
+        factory.createElementFromText(number, DartLanguage.INSTANCE, expr.getLanguageVersion(), DartTokenTypes.LITERAL_EXPRESSION,
+                                      expr.getContext());
       if (newPsi != null) {
         expr.replace(newPsi);
       }

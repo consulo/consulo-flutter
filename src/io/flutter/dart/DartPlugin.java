@@ -6,8 +6,8 @@
 package io.flutter.dart;
 
 import consulo.execution.configuration.ConfigurationType;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
+import consulo.container.plugin.PluginDescriptor;
+import consulo.container.plugin.PluginManager;
 import consulo.container.plugin.PluginId;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -71,7 +71,8 @@ public class DartPlugin {
    */
   @NotNull
   public static DartPluginVersion getDartPluginVersion() {
-    final IdeaPluginDescriptor dartPlugin = PluginManagerCore.getPlugin(PluginId.getId("Dart"));
+    // Consulo: the Dart plugin id is com.jetbrains.lang.dart
+    final PluginDescriptor dartPlugin = PluginManager.findPlugin(PluginId.getId("com.jetbrains.lang.dart"));
     final String versionString = dartPlugin != null ? dartPlugin.getVersion() : null;
     return new DartPluginVersion(versionString);
   }

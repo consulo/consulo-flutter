@@ -6,12 +6,17 @@
 package io.flutter.view;
 
 import consulo.component.PropertiesComponent;
+import consulo.project.ProjectPropertiesComponent;
 import consulo.application.dumb.DumbAware;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
+import consulo.ui.ex.toolWindow.ToolWindowAnchor;
 import consulo.project.ui.wm.ToolWindowManager;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
+import io.flutter.icons.FlutterIcons;
 import io.flutter.utils.OpenApiUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,10 +32,35 @@ public class InspectorViewFactory implements ToolWindowFactory, DumbAware {
     if (window != null) {
       window.setAvailable(true);
 
-      if (PropertiesComponent.getInstance(project).getBoolean(TOOL_WINDOW_VISIBLE_PROPERTY, false)) {
+      if (ProjectPropertiesComponent.getInstance(project).getBoolean(TOOL_WINDOW_VISIBLE_PROPERTY, false)) {
         window.activate(null, false);
       }
     }
+  }
+
+  // Consulo: the tool window id, anchor, icon and display name of upstream plugin.xml are provided by the factory
+  @NotNull
+  @Override
+  public String getId() {
+    return InspectorView.TOOL_WINDOW_ID;
+  }
+
+  @NotNull
+  @Override
+  public ToolWindowAnchor getAnchor() {
+    return ToolWindowAnchor.RIGHT;
+  }
+
+  @NotNull
+  @Override
+  public Image getIcon() {
+    return FlutterIcons.DevToolsInspector;
+  }
+
+  @NotNull
+  @Override
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.localizeTODO("Flutter Inspector");
   }
 
   @Override
@@ -40,7 +70,7 @@ public class InspectorViewFactory implements ToolWindowFactory, DumbAware {
 
   private static void initInspectorView(@NotNull Project project, FlutterViewMessages.FlutterDebugEvent event) {
     OpenApiUtils.safeInvokeLater(() -> {
-      final InspectorView inspectorView = project.getService(InspectorView.class);
+      final InspectorView inspectorView = project.getInstance(InspectorView.class);
       inspectorView.debugActive(event);
     });
   }
@@ -49,7 +79,7 @@ public class InspectorViewFactory implements ToolWindowFactory, DumbAware {
   public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
     //noinspection CodeBlock2Expr
     DumbService.getInstance(project).runWhenSmart(() -> {
-      project.getService(InspectorView.class).initToolWindow(toolWindow);
+      project.getInstance(InspectorView.class).initToolWindow(toolWindow);
     });
   }
 }

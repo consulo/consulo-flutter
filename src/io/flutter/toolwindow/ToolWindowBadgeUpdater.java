@@ -10,11 +10,12 @@ import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowId;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.desktop.awt.ui.impl.image.LayeredIcon;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import io.flutter.run.common.RunMode;
 import io.flutter.run.daemon.FlutterApp;
 
-import javax.swing.Icon;
 import java.util.Objects;
 
 public class ToolWindowBadgeUpdater {
@@ -32,8 +33,9 @@ public class ToolWindowBadgeUpdater {
     if (Objects.requireNonNull(app).getMode() == RunMode.RUN) {
       if (runToolWindow != null) {
         manager.invokeLater(() -> {
-          Icon baseIcon = AllIcons.Toolwindows.ToolWindowRun;
-          Icon iconWithBadge = new LayeredIcon(baseIcon, AllIcons.Nodes.RunnableMark);
+          // Consulo: Image and ImageEffects.layered instead of Icon and LayeredIcon
+          Image baseIcon = AllIcons.Toolwindows.ToolWindowRun;
+          Image iconWithBadge = ImageEffects.layered(baseIcon, AllIcons.Nodes.RunnableMark);
           runToolWindow.setIcon(iconWithBadge);
         });
       }
@@ -42,8 +44,8 @@ public class ToolWindowBadgeUpdater {
       manager.invokeLater(() -> {
         // https://github.com/flutter/flutter-intellij/issues/8391
         if (debugToolWindow != null) {
-          Icon baseIcon = AllIcons.Toolwindows.ToolWindowDebugger;
-          Icon iconWithBadge = new LayeredIcon(baseIcon, AllIcons.Nodes.RunnableMark);
+          Image baseIcon = PlatformIconGroup.toolwindowsToolwindowdebugger();
+          Image iconWithBadge = ImageEffects.layered(baseIcon, AllIcons.Nodes.RunnableMark);
           debugToolWindow.setIcon(iconWithBadge);
         }
       });

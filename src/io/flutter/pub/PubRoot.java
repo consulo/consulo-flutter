@@ -71,7 +71,7 @@ public class PubRoot {
   @Nullable
   public static PubRoot forEventWithRefresh(@NotNull final AnActionEvent event) {
     assert CommonDataKeys.PSI_FILE != null;
-    final PsiFile psiFile = CommonDataKeys.PSI_FILE.getData(event.getDataContext());
+    final PsiFile psiFile = event.getDataContext().getData(CommonDataKeys.PSI_FILE);
     if (psiFile != null) {
       final PubRoot root = forPsiFile(psiFile);
       if (root != null) {
@@ -80,7 +80,7 @@ public class PubRoot {
     }
 
     assert LangDataKeys.MODULE != null;
-    final Module module = LangDataKeys.MODULE.getData(event.getDataContext());
+    final Module module = event.getDataContext().getData(LangDataKeys.MODULE);
     if (module != null) {
       final List<PubRoot> roots = PubRoots.forModule(module);
       if (!roots.isEmpty()) {

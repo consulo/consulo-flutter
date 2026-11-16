@@ -5,12 +5,16 @@
  */
 package io.flutter.android;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ExtensionAPI;
 import consulo.component.extension.ExtensionPointName;
 import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
+// Consulo: extension points are declared by annotation and named by class
+@ExtensionAPI(ComponentScope.APPLICATION)
 public interface GradleSyncProvider {
-  ExtensionPointName<GradleSyncProvider> EP_NAME = ExtensionPointName.create("io.flutter.gradleSyncProvider");
+  ExtensionPointName<GradleSyncProvider> EP_NAME = ExtensionPointName.create(GradleSyncProvider.class);
 
   void scheduleSync(@NotNull Project project);
 }

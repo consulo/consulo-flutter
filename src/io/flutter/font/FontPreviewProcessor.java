@@ -23,7 +23,6 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiManager;
 import consulo.language.psi.search.FileTypeIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
-import consulo.language.impl.internal.content.scope.ProjectAndLibrariesScope;
 import com.jetbrains.lang.dart.DartFileType;
 import com.jetbrains.lang.dart.ide.index.DartLibraryIndex;
 import com.jetbrains.lang.dart.psi.DartComponentName;
@@ -71,7 +70,7 @@ public class FontPreviewProcessor {
   }
 
   public static void analyze(@NotNull Project project) {
-    final FontPreviewProcessor service = ApplicationManager.getApplication().getService(FontPreviewProcessor.class);
+    final FontPreviewProcessor service = ApplicationManager.getApplication().getInstance(FontPreviewProcessor.class);
     service.generate(project);
   }
 
@@ -380,7 +379,8 @@ public class FontPreviewProcessor {
     }
     log("Analyzing package ", packageName);
     final Application application = ApplicationManager.getApplication();
-    final GlobalSearchScope projectScope = new ProjectAndLibrariesScope(project);
+    // Consulo: allScope (project and libraries) instead of the internal ProjectAndLibrariesScope
+    final GlobalSearchScope projectScope = GlobalSearchScope.allScope(project);
     Collection<VirtualFile> files = DumbService.getInstance(project)
       .runReadActionInSmartMode(() -> DartLibraryIndex.getFilesByLibName(projectScope, packageName));
     if (files.isEmpty()) {

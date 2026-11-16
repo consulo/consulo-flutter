@@ -19,14 +19,12 @@ public class FlutterNotificationGroups implements NotificationGroupContributor {
   public static final NotificationGroup FLUTTER_MESSAGES =
     new NotificationGroup(FlutterMessages.FLUTTER_NOTIFICATION_GROUP_ID, LocalizeValue.localizeTODO("Flutter Messages"),
                           NotificationDisplayType.BALLOON, true);
-  public static final NotificationGroup FLUTTER_NOTIFICATIONS =
-    new NotificationGroup(FlutterMessages.FLUTTER_LOGGING_NOTIFICATION_GROUP_ID, LocalizeValue.localizeTODO("Flutter Notifications"),
-                          NotificationDisplayType.BALLOON, true);
+  // "Flutter Notifications" (FlutterMessages.FLUTTER_LOGGING_NOTIFICATION_GROUP_ID) is FlutterSdkNotificationGroups.FLUTTER_LOGGING.
 
   public static final NotificationGroup FLUTTER_PACKAGES =
     new NotificationGroup("Flutter Packages", LocalizeValue.localizeTODO("Flutter Packages"), NotificationDisplayType.BALLOON, true);
 
-  private static final List<NotificationGroup> ALL = List.of(FLUTTER_MESSAGES, FLUTTER_NOTIFICATIONS, FLUTTER_PACKAGES);
+  private static final List<NotificationGroup> ALL = List.of(FLUTTER_MESSAGES, FLUTTER_PACKAGES);
 
   public static NotificationGroup get(String id) {
     for (NotificationGroup group : ALL) {
