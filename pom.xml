@@ -64,6 +64,9 @@
                     <dependencies>
                         <dependency>com.jetbrains.lang.dart</dependency>
                         <dependency>consulo.lsp</dependency>
+                        <!-- required by the Dart plugin -->
+                        <dependency>com.intellij.xml</dependency>
+                        <dependency>consulo.markdown</dependency>
                         <dependency>org.jetbrains.plugins.yaml</dependency>
                     </dependencies>
                     <packaging>

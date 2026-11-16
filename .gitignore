@@ -49,3 +49,4 @@ lib/kotlin*
 /build/
 gradle-app.setting
 target/
+sandbox/
