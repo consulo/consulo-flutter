@@ -56,7 +56,7 @@ public class DeviceService implements Disposable {
 
   @NotNull
   public static DeviceService getInstance(@NotNull final Project project) {
-    return Objects.requireNonNull(project.getService(DeviceService.class));
+    return Objects.requireNonNull(project.getInstance(DeviceService.class));
   }
 
   private DeviceService(@NotNull final Project project) {

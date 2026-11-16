@@ -25,7 +25,7 @@ public class FlutterCoverageAnnotator extends SimpleCoverageAnnotator {
 
   @Nullable
   public static FlutterCoverageAnnotator getInstance(Project project) {
-    return project.getService(FlutterCoverageAnnotator.class);
+    return project.getInstance(FlutterCoverageAnnotator.class);
   }
 
   public FlutterCoverageAnnotator(Project project) {
@@ -37,12 +37,12 @@ public class FlutterCoverageAnnotator extends SimpleCoverageAnnotator {
     return new FileCoverageInfo();
   }
 
-  @Override
+  // Consulo: SimpleCoverageAnnotator has no shouldCollectCoverageInsideLibraryDirs/getRoots hooks; it annotates the
+  // content roots of all modules. The upstream overrides are kept for reference.
   protected boolean shouldCollectCoverageInsideLibraryDirs() {
     return false;
   }
 
-  @Override
   protected VirtualFile[] getRoots(Project project,
                                    @NotNull CoverageDataManager dataManager,
                                    CoverageSuitesBundle suite) {

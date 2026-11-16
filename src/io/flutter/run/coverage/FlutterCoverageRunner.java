@@ -9,7 +9,8 @@ import consulo.execution.coverage.CoverageEngine;
 import consulo.execution.coverage.CoverageRunner;
 import consulo.execution.coverage.CoverageSuite;
 import consulo.logging.Logger;
-import consulo.externalSystem.service.project.ProjectData;
+import consulo.execution.coverage.data.CoverageProjectData;
+import consulo.execution.coverage.data.CoverageProjectDataImpl;
 import io.flutter.FlutterBundle;
 import io.flutter.logging.PluginLogger;
 import io.flutter.settings.FlutterSettings;
@@ -25,7 +26,7 @@ public class FlutterCoverageRunner extends CoverageRunner {
 
   @Nullable
   @Override
-  public ProjectData loadCoverageData(@NotNull final File sessionDataFile, @Nullable CoverageSuite baseCoverageSuite) {
+  public CoverageProjectData loadCoverageData(@NotNull final File sessionDataFile, @Nullable CoverageSuite baseCoverageSuite) {
     if (!(baseCoverageSuite instanceof FlutterCoverageSuite)) {
       return null;
     }
@@ -33,8 +34,8 @@ public class FlutterCoverageRunner extends CoverageRunner {
   }
 
   @Nullable
-  private static ProjectData doLoadCoverageData(@NotNull final File sessionDataFile, @NotNull final FlutterCoverageSuite coverageSuite) {
-    final ProjectData projectData = new ProjectData();
+  private static CoverageProjectData doLoadCoverageData(@NotNull final File sessionDataFile, @NotNull final FlutterCoverageSuite coverageSuite) {
+    final CoverageProjectData projectData = new CoverageProjectDataImpl();
     try {
       LcovInfo.readInto(projectData, sessionDataFile);
     }

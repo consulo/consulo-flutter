@@ -5,7 +5,15 @@
  */
 package io.flutter.run.coverage;
 
-import com.intellij.coverage.*;
+import consulo.application.Application;
+import consulo.execution.coverage.CoverageAnnotator;
+import consulo.execution.coverage.CoverageEngine;
+import consulo.execution.coverage.CoverageFileProvider;
+import consulo.execution.coverage.CoverageRunner;
+import consulo.execution.coverage.CoverageSuite;
+import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.test.AbstractTestProxy;
+import consulo.language.psi.PsiElement;
 import consulo.execution.configuration.RunConfigurationBase;
 import consulo.execution.configuration.RunProfile;
 import consulo.execution.configuration.WrappingRunConfiguration;
@@ -25,12 +33,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class FlutterCoverageEngine extends CoverageEngine {
 
   public static FlutterCoverageEngine getInstance() {
-    return CoverageEngine.EP_NAME.findExtensionOrFail(FlutterCoverageEngine.class);
+    return Application.get().getExtensionPoint(CoverageEngine.class).findExtensionOrFail(FlutterCoverageEngine.class);
   }
 
   @Override
@@ -123,6 +132,17 @@ public class FlutterCoverageEngine extends CoverageEngine {
     final Set<String> qualifiedNames = new HashSet<>();
     qualifiedNames.add(getQName(sourceFile));
     return qualifiedNames;
+  }
+
+  // Consulo: abstract in CoverageEngine (IntelliJ has defaults); there is no per test coverage for Flutter
+  @Override
+  public @NotNull List<PsiElement> findTestsByNames(@NotNull String[] testNames, @NotNull Project project) {
+    return List.of();
+  }
+
+  @Override
+  public @Nullable String getTestMethodName(@NotNull PsiElement element, @NotNull AbstractTestProxy testProxy) {
+    return null;
   }
 
   @Override

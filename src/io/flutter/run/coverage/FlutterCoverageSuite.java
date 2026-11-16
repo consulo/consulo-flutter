@@ -36,7 +36,7 @@ public class FlutterCoverageSuite extends BaseCoverageSuite {
     return coverageEngine;
   }
 
-  @Override
+  // Consulo: not a CoverageSuite method
   public void deleteCachedCoverageData() {
   }
 }

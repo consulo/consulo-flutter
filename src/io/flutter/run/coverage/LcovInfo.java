@@ -6,9 +6,11 @@
 package io.flutter.run.coverage;
 
 import consulo.application.util.SystemInfo;
-import com.intellij.rt.coverage.data.ClassData;
-import com.intellij.rt.coverage.data.LineData;
-import consulo.externalSystem.service.project.ProjectData;
+import consulo.execution.coverage.data.CoverageLine;
+import consulo.execution.coverage.data.CoverageLineImpl;
+import consulo.execution.coverage.data.CoverageProjectData;
+import consulo.execution.coverage.data.CoverageUnit;
+import consulo.execution.coverage.data.LineStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -18,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +42,7 @@ public class LcovInfo {
     this.base = base;
   }
 
-  public static void readInto(@NotNull ProjectData data, @NotNull File file) throws IOException {
+  public static void readInto(@NotNull CoverageProjectData data, @NotNull File file) throws IOException {
     final String filePath = file.getAbsolutePath();
     final int index = filePath.indexOf("coverage");
     if (index < 0) {
@@ -55,17 +58,20 @@ public class LcovInfo {
       if (list == null || list.isEmpty()) {
         continue;
       }
-      final ClassData classData = data.getOrCreateClassData(path);
-      classData.setSource(fullPath(path));
+      // Consulo: ClassData/LineData of the IntelliJ coverage runtime are CoverageUnit/CoverageLine
+      final CoverageUnit classData = data.getOrCreateUnit(path);
+      classData.setSourceFile(fullPath(path));
       final int max = list.get(list.size() - 1).lineNum + 1;
-      final LineData[] lines = new LineData[max];
+      final CoverageLine[] lines = new CoverageLine[max];
       for (LineCount line : list) {
-        final LineData lineData = new LineData(line.lineNum, null);
+        final CoverageLineImpl lineData = new CoverageLineImpl(line.lineNum, null);
         lineData.setHits(line.execCount);
+        // Consulo: the status is not derived from the hits
+        lineData.setStatus(line.execCount > 0 ? LineStatus.COVERED : LineStatus.NOT_COVERED);
         lines[line.lineNum] = lineData;
         classData.registerMethodSignature(lineData);
       }
-      classData.setLines(lines);
+      classData.setLines(Arrays.asList(lines));
     }
   }
 

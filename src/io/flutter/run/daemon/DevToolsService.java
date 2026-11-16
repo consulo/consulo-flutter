@@ -26,7 +26,7 @@ public class DevToolsService {
 
   @NotNull
   public static DevToolsService getInstance(@NotNull final Project project) {
-    return Objects.requireNonNull(project.getService(DevToolsService.class));
+    return Objects.requireNonNull(project.getInstance(DevToolsService.class));
   }
 
   private DevToolsService(@NotNull final Project project) {

@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class FlutterCoverageEnabledConfiguration extends CoverageEnabledConfiguration {
 
-  public FlutterCoverageEnabledConfiguration(@NotNull RunConfigurationBase<?> configuration) {
+  public FlutterCoverageEnabledConfiguration(@NotNull RunConfigurationBase configuration) {
     super(configuration);
     super.setCoverageRunner(CoverageRunner.getInstance(FlutterCoverageRunner.class));
     createCoverageFile();
@@ -50,10 +50,5 @@ public class FlutterCoverageEnabledConfiguration extends CoverageEnabledConfigur
     myCoverageFilePath = path;
   }
 
-  @Override
-  public void coverageRunnerExtensionRemoved(@NotNull CoverageRunner runner) {
-    final String path = myCoverageFilePath;
-    super.coverageRunnerExtensionRemoved(runner);
-    myCoverageFilePath = path;
-  }
+  // Consulo: CoverageEnabledConfiguration has no coverageRunnerExtensionRemoved (extensions are not unloaded)
 }
