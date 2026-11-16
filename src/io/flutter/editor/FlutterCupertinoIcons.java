@@ -6,12 +6,12 @@
 package io.flutter.editor;
 
 import consulo.logging.Logger;
-import com.intellij.openapi.util.IconLoader;
+import consulo.ui.image.Image;
 import io.flutter.FlutterUtils;
 import io.flutter.logging.PluginLogger;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import java.net.URL;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -31,16 +31,16 @@ public class FlutterCupertinoIcons {
     }
   }
 
-  public static Icon getIconForHex(String hexValue) {
+  public static Image getIconForHex(String hexValue) {
     final String iconName = icons.getProperty(hexValue + ".codepoint");
     return getIcon(iconName);
   }
 
-  public static Icon getIconForName(String name) {
+  public static Image getIconForName(String name) {
     return getIcon(name);
   }
 
-  private static Icon getIcon(String name) {
+  private static Image getIcon(String name) {
     if (name == null) {
       return null;
     }
@@ -48,6 +48,16 @@ public class FlutterCupertinoIcons {
     if (path == null) {
       return null;
     }
-    return IconLoader.findIcon("/flutter/icons/" + path, FlutterCupertinoIcons.class);
+    // Consulo: Image.fromUrl instead of IconLoader.findIcon
+    final URL url = FlutterCupertinoIcons.class.getResource("/flutter/icons/" + path);
+    if (url == null) {
+      return null;
+    }
+    try {
+      return Image.fromUrl(url);
+    }
+    catch (IOException e) {
+      return null;
+    }
   }
 }

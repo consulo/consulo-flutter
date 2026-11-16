@@ -6,6 +6,8 @@
 package io.flutter.propertyeditor;
 
 import consulo.project.Project;
+import consulo.ui.image.Image;
+import io.flutter.icons.FlutterIcons;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
@@ -38,6 +40,13 @@ public class PropertyEditorViewFactory extends AbstractDevToolsViewFactory {
   @NotNull
   public String getToolWindowId() {
     return TOOL_WINDOW_ID;
+  }
+
+  // Consulo: the tool window icon of upstream plugin.xml
+  @Override
+  @NotNull
+  public Image getIcon() {
+    return FlutterIcons.PropertyEditor;
   }
 
   @Override
@@ -73,8 +82,9 @@ public class PropertyEditorViewFactory extends AbstractDevToolsViewFactory {
     checkDockedUnpinnedAndCreateContent(project, toolWindow, true);
 
     final PropertyEditorViewFactory self = this;
-    MessageBusConnection connection = project.getMessageBus().connect();
-    connection.subscribe(ToolWindowManagerListener.TOPIC, new ToolWindowManagerListener() {
+    // Consulo: the content manager is the tool window disposable
+    MessageBusConnection connection = project.getMessageBus().connect(toolWindow.getContentManager());
+    connection.subscribe(ToolWindowManagerListener.class, new ToolWindowManagerListener() {
       @Override
       public void toolWindowShown(@NotNull ToolWindow activatedToolWindow) {
         if (activatedToolWindow.getId().equals(getToolWindowId())) {
@@ -82,15 +92,13 @@ public class PropertyEditorViewFactory extends AbstractDevToolsViewFactory {
         }
       }
 
+      // Consulo: stateChanged has no event type, so any state change is checked (upstream: SetToolWindowAutoHide and
+      // SetToolWindowType only); the content is only reloaded when the docked unpinned state changes.
       @Override
-      public void stateChanged(@NotNull ToolWindowManager toolWindowManager, @NotNull ToolWindowManagerEventType changeType) {
-        if (changeType.equals(ToolWindowManagerEventType.SetToolWindowAutoHide) ||
-            changeType.equals(ToolWindowManagerEventType.SetToolWindowType)) {
-          checkDockedUnpinnedAndCreateContent(project, toolWindow, false);
-        }
+      public void stateChanged(@NotNull ToolWindowManager toolWindowManager) {
+        checkDockedUnpinnedAndCreateContent(project, toolWindow, false);
       }
     });
-    Disposer.register(toolWindow.getDisposable(), connection);
   }
 
   private void checkDockedUnpinnedAndCreateContent(@NotNull Project project, @NotNull ToolWindow toolWindow, boolean forceLoad) {

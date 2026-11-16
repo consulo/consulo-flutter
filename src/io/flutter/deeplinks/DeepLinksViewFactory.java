@@ -6,6 +6,8 @@
 package io.flutter.deeplinks;
 
 import consulo.project.Project;
+import consulo.ui.image.Image;
+import io.flutter.icons.FlutterIcons;
 import io.flutter.devtools.AbstractDevToolsViewFactory;
 import io.flutter.devtools.DevToolsIdeFeature;
 import io.flutter.devtools.DevToolsUrl;
@@ -27,6 +29,13 @@ public class DeepLinksViewFactory extends AbstractDevToolsViewFactory {
   @NotNull
   public String getToolWindowId() {
     return TOOL_WINDOW_ID;
+  }
+
+  // Consulo: the tool window icon of upstream plugin.xml
+  @Override
+  @NotNull
+  public Image getIcon() {
+    return FlutterIcons.DevToolsDeepLinks;
   }
 
   @Override

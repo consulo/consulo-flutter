@@ -62,6 +62,7 @@ module io.flutter {
   requires consulo.virtual.file.system.api;
   requires consulo.web.browser.api;
   requires forms.rt;
+  requires java.compiler;
   requires java.desktop;
   requires java.management;
   requires java.net.http;

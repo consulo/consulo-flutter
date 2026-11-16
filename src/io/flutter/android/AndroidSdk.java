@@ -7,7 +7,8 @@ package io.flutter.android;
 
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import com.intellij.execution.process.ColoredProcessHandler;
+import consulo.process.ProcessHandler;
+import consulo.process.ProcessHandlerBuilder;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessOutputTypes;
 import consulo.logging.Logger;
@@ -93,7 +94,8 @@ public class AndroidSdk {
 
     try {
       final StringBuilder stringBuilder = new StringBuilder();
-      final ColoredProcessHandler process = new ColoredProcessHandler(cmd);
+      // Consulo: ProcessHandlerBuilder instead of ColoredProcessHandler
+      final ProcessHandler process = ProcessHandlerBuilder.create(cmd).colored().build();
       process.addProcessListener(new ProcessAdapter() {
         @Override
         public void onTextAvailable(@NotNull ProcessEvent event, @NotNull Key outputType) {

@@ -6,6 +6,7 @@
 package io.flutter.settings;
 
 import com.google.common.annotations.VisibleForTesting;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.component.PropertiesComponent;
 import consulo.application.ApplicationManager;
 import consulo.proxy.EventDispatcher;
@@ -49,11 +50,11 @@ public class FlutterSettings {
       return testInstance;
     }
 
-    return Objects.requireNonNull(Objects.requireNonNull(ApplicationManager.getApplication()).getService(FlutterSettings.class));
+    return Objects.requireNonNull(Objects.requireNonNull(ApplicationManager.getApplication()).getInstance(FlutterSettings.class));
   }
 
   protected static @NotNull PropertiesComponent getPropertiesComponent() {
-    var component = PropertiesComponent.getInstance();
+    var component = ApplicationPropertiesComponent.getInstance();
     assert component != null;
     return component;
   }

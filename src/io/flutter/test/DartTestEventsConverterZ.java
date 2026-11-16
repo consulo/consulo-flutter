@@ -410,7 +410,8 @@ public class DartTestEventsConverterZ extends OutputToGeneralTestEventsConverter
     mySuiteData.clear();
     mySuitCount = 0;
 
-    return doProcessServiceMessages(ServiceMessageBuilder.testsStarted().toString());
+    // Consulo: no ServiceMessageBuilder.testsStarted(), it is the "enteredTheMatrix" message
+    return doProcessServiceMessages(new ServiceMessageBuilder("enteredTheMatrix").toString());
   }
 
   @SuppressWarnings("RedundantThrows")

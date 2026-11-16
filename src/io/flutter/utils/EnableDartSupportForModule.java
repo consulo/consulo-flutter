@@ -7,7 +7,7 @@ package io.flutter.utils;
 
 import consulo.module.Module;
 import consulo.project.Project;
-import com.intellij.util.ui.EdtInvocationManager;
+import consulo.application.Application;
 import com.jetbrains.lang.dart.sdk.DartSdk;
 import com.jetbrains.lang.dart.sdk.DartSdkLibUtil;
 import com.jetbrains.lang.dart.sdk.DartSdkUtil;
@@ -25,7 +25,8 @@ class EnableDartSupportForModule implements Runnable {
   public void run() {
     final Project project = myModule.getProject();
 
-    EdtInvocationManager.getInstance().invokeLater(() -> {
+    // Consulo: Application.invokeLater instead of EdtInvocationManager
+    Application.get().invokeLater(() -> {
       OpenApiUtils.safeInvokeLater(() -> {
         OpenApiUtils.safeRunWriteAction(() -> {
           if (DartSdk.getDartSdk(project) == null || !DartSdkLibUtil.isDartSdkEnabled(myModule)) {

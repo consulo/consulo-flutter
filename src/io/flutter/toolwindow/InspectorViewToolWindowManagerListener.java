@@ -18,7 +18,7 @@ public class InspectorViewToolWindowManagerListener implements ToolWindowManager
   private Runnable onWindowFirstVisible;
 
   public InspectorViewToolWindowManagerListener(Project project, ToolWindow toolWindow) {
-    project.getMessageBus().connect().subscribe(ToolWindowManagerListener.TOPIC, this);
+    project.getMessageBus().connect().subscribe(ToolWindowManagerListener.class, this);
 
     inspectorIsOpen = toolWindow.isShowStripeButton();
   }

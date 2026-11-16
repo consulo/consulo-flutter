@@ -9,10 +9,9 @@ import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.PathEnvironmentVariableUtil;
 import consulo.process.util.ProcessOutput;
-import consulo.process.local.ExecUtil;
-import consulo.application.util.SystemInfo;
+import consulo.process.util.CapturingProcessUtil;
+import consulo.platform.Platform;
 import consulo.application.util.concurrent.AppExecutorUtil;
-import com.intellij.util.system.OS;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -22,7 +21,8 @@ public class SystemUtils {
   
   // Replaces slated-for-removal `com.intellij.openapi.util.SystemInfo.getOsNameAndVersion()`.
   public static String getOsNameAndVersion() {
-    return OS.CURRENT.name() + ' ' + OS.CURRENT.version;
+    // Consulo: Platform.current().os() instead of com.intellij.util.system.OS
+    return Platform.current().os().name() + ' ' + Platform.current().os().version();
   }
 
   /**
@@ -34,29 +34,25 @@ public class SystemUtils {
   @Nullable
   public static String which(String toolName) {
     final File gitExecutableFromPath =
-      PathEnvironmentVariableUtil.findInPath(SystemInfo.isWindows ? toolName + ".exe" : toolName, getPath(), null);
+      // Consulo: findInPath(name) always searches the PATH variable
+      PathEnvironmentVariableUtil.findInPath(Platform.current().os().isWindows() ? toolName + ".exe" : toolName);
     if (gitExecutableFromPath != null) {
       return gitExecutableFromPath.getAbsolutePath();
     }
     return null;
   }
 
-  @Nullable
-  private static String getPath() {
-    return PathEnvironmentVariableUtil.getPathVariableValue();
-  }
-
   /**
    * Execute the given command line, and return the process output as one result in a future.
    * <p>
-   * This is a non-blocking equivalient to {@link ExecUtil#execAndGetOutput(GeneralCommandLine)}.
+   * This is a non-blocking equivalient to {@link CapturingProcessUtil#execAndGetOutput(GeneralCommandLine)}.
    */
   public static CompletableFuture<ProcessOutput> execAndGetOutput(GeneralCommandLine cmd) {
     final CompletableFuture<ProcessOutput> future = new CompletableFuture<>();
 
     AppExecutorUtil.getAppExecutorService().submit(() -> {
       try {
-        final ProcessOutput output = ExecUtil.execAndGetOutput(cmd);
+        final ProcessOutput output = CapturingProcessUtil.execAndGetOutput(cmd);
         future.complete(output);
       }
       catch (ExecutionException e) {

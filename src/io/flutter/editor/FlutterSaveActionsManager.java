@@ -50,7 +50,7 @@ public class FlutterSaveActionsManager {
 
   @Nullable
   public static FlutterSaveActionsManager getInstance(@NotNull Project project) {
-    return project.getService(FlutterSaveActionsManager.class);
+    return project.getInstance(FlutterSaveActionsManager.class);
   }
 
   private final @NotNull Project myProject;
@@ -60,7 +60,7 @@ public class FlutterSaveActionsManager {
 
     final MessageBus bus = project.getMessageBus();
     final MessageBusConnection connection = bus.connect();
-    connection.subscribe(FileDocumentManagerListener.TOPIC, new FileDocumentManagerListener() {
+    connection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
       @Override
       public void beforeDocumentSaving(@NotNull Document document) {
         // Don't try and format read only docs.

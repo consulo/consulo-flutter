@@ -5,11 +5,11 @@
  */
 package io.flutter;
 
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
+import consulo.flutter.notification.FlutterNotificationGroups;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
-import com.intellij.openapi.ui.messages.MessagesService;
+import consulo.project.ui.notification.NotificationService;
+import consulo.ui.ex.awt.Messages;
 import io.flutter.icons.FlutterIcons;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -23,30 +23,28 @@ public class FlutterMessages {
   }
 
   public static void showError(@NotNull String title, @NotNull String message, @Nullable Project project) {
-    Notifications.Bus.notify(
-      new Notification(FLUTTER_NOTIFICATION_GROUP_ID,
-                       title,
-                       message,
-                       NotificationType.ERROR), project);
+    NotificationService.getInstance()
+      .newError(FlutterNotificationGroups.FLUTTER_MESSAGES)
+      .title(LocalizeValue.of(title))
+      .content(LocalizeValue.of(message))
+      .notify(project);
   }
 
   public static void showWarning(@NotNull String title, @NotNull String message, @Nullable Project project) {
-    Notifications.Bus.notify(
-      new Notification(
-        FLUTTER_NOTIFICATION_GROUP_ID,
-        title,
-        message,
-        NotificationType.WARNING), project);
+    NotificationService.getInstance()
+      .newWarn(FlutterNotificationGroups.FLUTTER_MESSAGES)
+      .title(LocalizeValue.of(title))
+      .content(LocalizeValue.of(message))
+      .notify(project);
   }
 
   public static void showInfo(@NotNull String title, @NotNull String message, @Nullable Project project) {
-    final Notification notification = new Notification(
-      FLUTTER_NOTIFICATION_GROUP_ID,
-      title,
-      message,
-      NotificationType.INFORMATION);
-    notification.setIcon(FlutterIcons.Flutter);
-    Notifications.Bus.notify(notification, project);
+    NotificationService.getInstance()
+      .newInfo(FlutterNotificationGroups.FLUTTER_MESSAGES)
+      .title(LocalizeValue.of(title))
+      .content(LocalizeValue.of(message))
+      .icon(FlutterIcons.Flutter)
+      .notify(project);
   }
 
   public static int showDialog(@Nullable Project project,
@@ -54,9 +52,7 @@ public class FlutterMessages {
                                @NotNull @Nls String title,
                                @NotNull String[] options,
                                int defaultOptionIndex) {
-    return MessagesService.getInstance()
-      .showMessageDialog(project, null, message, title,
-                         options, defaultOptionIndex, -1,
-                         FlutterIcons.Flutter_2x, null, true, null);
+    // Consulo: Messages.showDialog instead of MessagesService
+    return Messages.showDialog(project, message, title, options, defaultOptionIndex, FlutterIcons.Flutter_2x);
   }
 }

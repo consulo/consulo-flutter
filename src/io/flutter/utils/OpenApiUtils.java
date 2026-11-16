@@ -72,7 +72,9 @@ public class OpenApiUtils {
   public static void safeInvokeLater(@NotNull Runnable runnable, @NotNull ModalityState state, @NotNull Condition<?> disposed) {
     Application application = ApplicationManager.getApplication();
     if (application == null) return;
-    application.invokeLater(runnable, state, disposed);
+    // Consulo: invokeLater takes a BooleanSupplier for expiration
+    @SuppressWarnings("unchecked") final Condition<Object> condition = (Condition<Object>)disposed;
+    application.invokeLater(runnable, state, () -> condition.value(null));
   }
 
 

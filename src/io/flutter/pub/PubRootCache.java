@@ -21,7 +21,7 @@ import java.util.*;
 public class PubRootCache {
   @NotNull
   public static PubRootCache getInstance(@NotNull final Project project) {
-    return Objects.requireNonNull(project.getService(PubRootCache.class));
+    return Objects.requireNonNull(project.getInstance(PubRootCache.class));
   }
 
   @NotNull final Project project;

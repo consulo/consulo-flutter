@@ -246,8 +246,9 @@ public class WidgetPreviewPanel extends SimpleToolWindowPanel implements Disposa
   // TODO(https://github.com/flutter/flutter/issues/177945): Ideally widget preview would change colors based on theme changes events,
   //  which we already send for the DevTools panels. If this is implemented then we can remove this listening code.
   private void listenForReload() {
-    MessageBusConnection connection = project.getMessageBus().connect();
-    connection.subscribe(EditorColorsManager.TOPIC, (EditorColorsListener)scheme -> {
+    // Consulo: the content manager is the tool window disposable
+    MessageBusConnection connection = project.getMessageBus().connect(toolWindow.getContentManager());
+    connection.subscribe(EditorColorsListener.class, (EditorColorsListener)scheme -> {
       if (urlProvider == null) {
         return;
       }
@@ -257,7 +258,6 @@ public class WidgetPreviewPanel extends SimpleToolWindowPanel implements Disposa
         loadUrl(urlProvider);
       }
     });
-    Disposer.register(toolWindow.getDisposable(), connection);
   }
 
   private void showInfoMessage(@NotNull String message) {
@@ -285,16 +285,18 @@ public class WidgetPreviewPanel extends SimpleToolWindowPanel implements Disposa
   }
 
   private void chooseFile() {
-    final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.singleFileOrDir()
-      .withTitle(FlutterBundle.message("widget.preview.choose_pubroot.title"))
-      .withDescription(FlutterBundle.message("widget.preview.choose_pubroot.description"))
+    final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFileOrFolderDescriptor()
+      .withTitle(FlutterBundle.messageValue("widget.preview.choose_pubroot.title"))
+      .withDescription(FlutterBundle.messageValue("widget.preview.choose_pubroot.description"))
       .withRoots(FlutterUtils.getProjectRoot(project));
 
-    final VirtualFile selectedFile = FileChooser.chooseFile(descriptor, project, null);
-    if (selectedFile != null
-        && OpenApiUtils.safeRunReadAction(() -> ProjectFileIndex.getInstance(project).isInContent(selectedFile))) {
-      startWidgetPreview(selectedFile);
-    }
+    // Consulo: the file chooser is asynchronous
+    FileChooser.chooseFile(descriptor, project, null).thenAccept(selectedFile -> {
+      if (selectedFile != null
+          && OpenApiUtils.safeRunReadAction(() -> ProjectFileIndex.getInstance(project).isInContent(selectedFile))) {
+        startWidgetPreview(selectedFile);
+      }
+    });
   }
 
   @Override

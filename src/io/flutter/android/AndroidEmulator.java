@@ -7,7 +7,7 @@ package io.flutter.android;
 
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import com.intellij.execution.process.ColoredProcessHandler;
+import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessOutputTypes;
 import consulo.application.ApplicationManager;
@@ -72,7 +72,7 @@ public class AndroidEmulator {
 
     try {
       final StringBuilder stdout = new StringBuilder();
-      final ColoredProcessHandler process = MostlySilentColoredProcessHandler.create(cmd);
+      final ProcessHandler process = MostlySilentColoredProcessHandler.create(cmd);
       listener = new ProcessAdapter() {
         @Override
         public void onTextAvailable(@NotNull ProcessEvent event, @NotNull Key outputType) {
@@ -124,7 +124,7 @@ public class AndroidEmulator {
     OpenApiUtils.safeInvokeLater(() -> {
       tw.setAutoHide(false);
       tw.show();
-    }, ModalityState.stateForComponent(tw.getComponent()));
+    }, ApplicationManager.getApplication().getModalityStateForComponent(tw.getComponent()));
   }
 
   @Override

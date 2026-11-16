@@ -8,7 +8,8 @@ package io.flutter.view;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.component.messagebus.MessageBus;
-import com.intellij.util.messages.Topic;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.TopicAPI;
 import io.flutter.run.daemon.FlutterApp;
 import io.flutter.vmService.VMServiceManager;
 import org.dartlang.vm.service.VmService;
@@ -18,8 +19,10 @@ import org.jetbrains.annotations.NotNull;
  * Coordinates communication on the message bus.
  */
 public class FlutterViewMessages {
-  public static final Topic<FlutterDebugNotifier> FLUTTER_DEBUG_TOPIC = Topic.create("flutter.debugActive", FlutterDebugNotifier.class);
+  // Consulo: topics are listener classes annotated with @TopicAPI
+  public static final Class<FlutterDebugNotifier> FLUTTER_DEBUG_TOPIC = FlutterDebugNotifier.class;
 
+  @TopicAPI(ComponentScope.PROJECT)
   public interface FlutterDebugNotifier {
     void debugActive(FlutterDebugEvent event);
   }

@@ -5,13 +5,20 @@
  */
 package io.flutter.devtools;
 
-import com.thaiopensource.util.Service;
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
-@Service(Service.Level.PROJECT)
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public final class RemainingDevToolsViewService extends DevToolsViewService {
-  RemainingDevToolsViewService(@NotNull Project project) {
+  @Inject
+  public RemainingDevToolsViewService(@NotNull Project project) {
     super(project);
   }
 }

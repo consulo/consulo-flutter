@@ -5,7 +5,6 @@
  */
 package io.flutter.devtools;
 
-import consulo.application.internal.ApplicationInfo;
 import consulo.application.ApplicationManager;
 import consulo.util.lang.StringUtil;
 import io.flutter.sdk.FlutterSdkUtil;
@@ -224,12 +223,10 @@ public class DevToolsUrl {
     if (ApplicationManager.getApplication() == null) {
       return UNKNOWN_INTELLIJ_NAME;
     }
-    ApplicationInfo appInfo = ApplicationInfo.getInstance();
-    if (appInfo != null) {
-      String versionName = appInfo.getVersionName();
-      if (versionName != null) {
-        return versionName;
-      }
+    // Consulo: the application name instead of ApplicationInfo.getVersionName()
+    String versionName = ApplicationManager.getApplication().getName().get();
+    if (!versionName.isEmpty()) {
+      return versionName;
     }
     return UNKNOWN_INTELLIJ_NAME;
   }

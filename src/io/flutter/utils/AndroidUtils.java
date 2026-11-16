@@ -6,13 +6,10 @@
 package io.flutter.utils;
 
 import consulo.project.Project;
-import consulo.project.ProjectType;
-import com.intellij.openapi.project.ProjectTypeService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.lang.model.SourceVersion;
-import java.util.Collection;
 
 // based on: org.jetbrains.android.util.AndroidUtils
 @SuppressWarnings("LocalCanBeFinal")
@@ -117,15 +114,6 @@ public class AndroidUtils {
     return hasSep || !requiresSeparator ? null : "The package must have at least one '.' separator";
   }
 
-  public static boolean isAndroidProject(@Nullable Project project) {
-    // Note: IntelliJ does not set the project type. When a Flutter module is added to an
-    // IntelliJ-created Android project we need to set it. We need to allow an alternative
-    // name. GradleResourceCompilerConfigurationGenerator depends on "Android".
-    // TODO(messick) Recognize both native Android Studio and IntelliJ Android projects.
-    Collection<ProjectType> projectTypes = ProjectTypeService.getProjectTypes(project);
-    for (ProjectType projectType : projectTypes) {
-      return projectType != null && "Android".equals(projectType.getId());
-    }
-    return false;
-  }
+  // Consulo: isAndroidProject(Project) is dropped, Consulo has no project types (it was used for Android Studio only).
+
 }

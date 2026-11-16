@@ -7,9 +7,8 @@ package io.flutter.android;
 
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
-import com.intellij.openapi.projectRoots.ProjectJdkTable;
+import consulo.content.bundle.SdkTable;
 import consulo.content.bundle.Sdk;
-import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.process.local.EnvironmentUtil;
@@ -53,10 +52,7 @@ public class IntelliJAndroidSdk {
     assert application != null;
     assert application.isWriteAccessAllowed();
 
-    final ProjectRootManager roots = ProjectRootManager.getInstance(project);
-    if (roots != null) {
-      roots.setProjectSdk(sdk);
-    }
+    // Consulo: there is no project SDK; SDKs are selected per module extension.
   }
 
   /**
@@ -64,11 +60,8 @@ public class IntelliJAndroidSdk {
    */
   @Nullable
   public static IntelliJAndroidSdk fromProject(@NotNull Project project) {
-    var manager = ProjectRootManager.getInstance(project);
-    if (manager == null) return null;
-
-    final Sdk candidate = manager.getProjectSdk();
-    return fromSdk(candidate);
+    // Consulo: there is no project SDK.
+    return null;
   }
 
   /**
@@ -137,9 +130,9 @@ public class IntelliJAndroidSdk {
   @NotNull
   private static List<IntelliJAndroidSdk> findAll() {
     final List<IntelliJAndroidSdk> result = new ArrayList<>();
-    var jdkTable = ProjectJdkTable.getInstance();
+    var jdkTable = SdkTable.getInstance();
     if (jdkTable != null) {
-      for (Sdk sdk : jdkTable.getAllJdks()) {
+      for (Sdk sdk : jdkTable.getAllSdks()) {
         final IntelliJAndroidSdk candidate = IntelliJAndroidSdk.fromSdk(sdk);
         if (candidate != null) {
           result.add(candidate);
@@ -155,7 +148,8 @@ public class IntelliJAndroidSdk {
       return null;
     }
 
-    if (!"Android SDK".equals(candidate.getSdkType().getName())) {
+    // Consulo: SdkTypeId has an id instead of a name
+    if (!"Android SDK".equals(candidate.getSdkType().getId())) {
       return null;
     }
 
