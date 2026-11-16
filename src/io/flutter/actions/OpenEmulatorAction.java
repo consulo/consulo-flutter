@@ -5,12 +5,9 @@
  */
 package io.flutter.actions;
 
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.icons.FlutterIcons;
 import io.flutter.android.AndroidEmulator;
 import io.flutter.sdk.AndroidEmulatorManager;
@@ -53,11 +50,5 @@ public class OpenEmulatorAction extends AnAction {
   @Override
   public void actionPerformed(@NotNull AnActionEvent event) {
     emulator.startEmulator();
-    Analytics.report(AnalyticsData.forAction(ID, event.getPlace(), event.getProject()));
-  }
-
-  @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
   }
 }

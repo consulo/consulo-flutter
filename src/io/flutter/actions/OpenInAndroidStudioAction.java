@@ -5,11 +5,12 @@
  */
 package io.flutter.actions;
 
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import com.intellij.execution.process.ColoredProcessHandler;
+import consulo.process.ProcessHandler;
+import consulo.process.ProcessHandlerBuilder;
 import consulo.process.event.ProcessEvent;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
@@ -20,12 +21,9 @@ import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.fileEditor.TextEditor;
 import consulo.project.Project;
-import consulo.project.util.ProjectUtil;
 import consulo.ui.ex.awt.Messages;
 import consulo.application.util.SystemInfo;
 import consulo.virtualFileSystem.VirtualFile;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterMessages;
 import io.flutter.FlutterUtils;
@@ -45,7 +43,7 @@ import java.lang.reflect.InvocationTargetException;
  * throws "configureNewProject should be used with new projects only".
  * See https://github.com/flutter/flutter-intellij/issues/7103
  */
-public class OpenInAndroidStudioAction extends AnAction {
+public class OpenInAndroidStudioAction extends AnAction implements AnActionWithSyncUpdate {
 
   public static final String ID = "flutter.open.android.studio";
 
@@ -60,15 +58,8 @@ public class OpenInAndroidStudioAction extends AnAction {
   }
 
   @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
-  }
-
-  @Override
   public void actionPerformed(@NotNull final AnActionEvent event) {
-    @Nullable final Project project = event.getProject();
-
-    Analytics.report(AnalyticsData.forAction(ID, event.getPlace(), event.getProject()));
+    @Nullable final Project project = event.getData(Project.KEY);
 
     if (FlutterUtils.isAndroidStudio()) {
       try {
@@ -174,10 +165,10 @@ public class OpenInAndroidStudioAction extends AnAction {
   protected static @Nullable VirtualFile findProjectFile(@Nullable AnActionEvent e) {
     if (e != null) {
       //noinspection DataFlowIssue
-      final VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+      final VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
       if (file != null && file.exists()) {
         // We have a selection. Check if it is within a plugin.
-        final Project project = e.getProject();
+        final Project project = e.getData(Project.KEY);
         assert (project != null);
 
         // Return null if this is an ios folder.
@@ -185,7 +176,7 @@ public class OpenInAndroidStudioAction extends AnAction {
           return null;
         }
 
-        final VirtualFile projectDir = ProjectUtil.guessProjectDir(project);
+        final VirtualFile projectDir = project.getBaseDir(); // Consulo: no ProjectUtil.guessProjectDir
         for (PubRoot root : PubRoots.forProject(project)) {
           if (root.isFlutterPlugin()) {
             final VirtualFile rootFile = root.getRoot();
@@ -216,7 +207,7 @@ public class OpenInAndroidStudioAction extends AnAction {
         }
       }
 
-      final Project project = e.getProject();
+      final Project project = e.getData(Project.KEY);
       if (project != null) {
         return getProjectForFile(findStudioProjectFile(project));
       }
@@ -255,7 +246,8 @@ public class OpenInAndroidStudioAction extends AnAction {
         }
         cmd.addParameter(sourceFile);
       }
-      final ColoredProcessHandler handler = new ColoredProcessHandler(cmd);
+      // Consulo: ColoredProcessHandler is internal, built by ProcessHandlerBuilder
+      final ProcessHandler handler = ProcessHandlerBuilder.create(cmd).colored().build();
       handler.addProcessListener(new ProcessAdapter() {
         @Override
         public void processTerminated(@NotNull final ProcessEvent event) {

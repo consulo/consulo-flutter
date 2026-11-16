@@ -9,8 +9,6 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.icons.FlutterIcons;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterConstants;
@@ -37,7 +35,7 @@ public class RestartFlutterApp extends FlutterAppAction {
 
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    final Project project = getEventProject(e);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -45,9 +43,5 @@ public class RestartFlutterApp extends FlutterAppAction {
     if (reloadManager == null) return;
 
     reloadManager.saveAllAndRestart(getApp(), FlutterConstants.RELOAD_REASON_MANUAL);
-
-    // Report with ID: this per-app action isn't registered with the ActionManager, so
-    // AnalyticsData.forAction(this, e) would have a null id and the event would be dropped.
-    Analytics.report(AnalyticsData.forAction(ID, e.getPlace(), project));
   }
 }

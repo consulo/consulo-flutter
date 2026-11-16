@@ -5,7 +5,7 @@
  */
 package io.flutter.actions;
 
-import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.ui.ex.action.Presentation;
@@ -14,20 +14,15 @@ import io.flutter.utils.FlutterModuleUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class FlutterToolsActionGroup extends DefaultActionGroup {
+public class FlutterToolsActionGroup extends DefaultActionGroup implements AnActionWithSyncUpdate {
   @Override
   public void update(@Nullable AnActionEvent e) {
-    final Project project = e == null ? null : e.getProject();
+    final Project project = e == null ? null : e.getData(Project.KEY);
     final Presentation presentation = e == null ? null : e.getPresentation();
     if (presentation != null) {
       final boolean visible = project != null && FlutterModuleUtils.declaresFlutter(project);
       presentation.setEnabled(visible);
       presentation.setVisible(visible);
     }
-  }
-
-  @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
   }
 }

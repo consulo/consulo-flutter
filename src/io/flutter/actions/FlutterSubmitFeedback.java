@@ -6,22 +6,14 @@
 package io.flutter.actions;
 
 import consulo.webBrowser.BrowserLauncher;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import org.jetbrains.annotations.NotNull;
 
 public class FlutterSubmitFeedback extends DumbAwareAction {
-  @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
-  }
 
   @Override
   public void actionPerformed(@NotNull final AnActionEvent e) {
-    Analytics.report(AnalyticsData.forAction(this, e));
     
     final String url = "https://github.com/flutter/flutter-intellij/issues/new";
     BrowserLauncher.getInstance().browse(url, null);

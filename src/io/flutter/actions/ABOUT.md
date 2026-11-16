@@ -15,7 +15,7 @@ Registers standard IDE UI actions (buttons, context menus) that trigger Flutter 
 - [`FlutterDoctorAction`](FlutterDoctorAction.java)
 - [`FlutterExternalIdeActionGroup`](FlutterExternalIdeActionGroup.java): not registered (commented out in `plugin.xml`, see issue #7103).
 - [`FlutterGettingStartedAction`](FlutterGettingStartedAction.java)
-- [`FlutterNewProjectAction`](FlutterNewProjectAction.kt) (Kotlin): registered only in `studio-contribs.xml` (Android Studio only).
+- [`FlutterNewProjectAction`](FlutterNewProjectAction.java): registered only in `studio-contribs.xml` (Android Studio only).
 - [`FlutterPackagesAddAction`](FlutterPackagesAddAction.java)
 - [`FlutterPackagesExplorerActionGroup`](FlutterPackagesExplorerActionGroup.java)
 - [`FlutterPackagesGetAction`](FlutterPackagesGetAction.java)

@@ -9,12 +9,9 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.icons.FlutterIcons;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterConstants;
-import io.flutter.analytics.AnalyticsConstants;
 import io.flutter.run.FlutterReloadManager;
 import io.flutter.run.daemon.FlutterApp;
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +37,7 @@ public class ReloadFlutterApp extends FlutterAppAction {
 
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    final Project project = getEventProject(e);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -59,12 +56,6 @@ public class ReloadFlutterApp extends FlutterAppAction {
       // Else perform a hot reload.
       reloadManager.saveAllAndReload(getApp(), FlutterConstants.RELOAD_REASON_MANUAL);
     }
-
-    // Report with ID: this per-app action isn't registered with the ActionManager, so
-    // AnalyticsData.forAction(this, e) would have a null id and the event would be dropped.
-    final AnalyticsData analyticsData = AnalyticsData.forAction(ID, e.getPlace(), project);
-    analyticsData.add(AnalyticsConstants.REQUIRES_RESTART, shouldRestart);
-    Analytics.report(analyticsData);
   }
 
   // Override to disable the hot reload action when running flutter web apps.

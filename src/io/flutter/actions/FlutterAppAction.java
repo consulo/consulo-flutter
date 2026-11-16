@@ -5,7 +5,7 @@
  */
 package io.flutter.actions;
 
-import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
@@ -13,9 +13,9 @@ import consulo.application.util.function.Computable;
 import io.flutter.run.daemon.FlutterApp;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 
-abstract public class FlutterAppAction extends DumbAwareAction {
+abstract public class FlutterAppAction extends DumbAwareAction implements AnActionWithSyncUpdate {
   @NotNull private final FlutterApp myApp;
   @NotNull private final Computable<Boolean> myIsApplicable;
   @NotNull private final String myActionId;
@@ -36,7 +36,7 @@ abstract public class FlutterAppAction extends DumbAwareAction {
   public FlutterAppAction(@NotNull FlutterApp app,
                           @NotNull String text,
                           @NotNull String description,
-                          @NotNull Icon icon,
+                          @NotNull Image icon,
                           @NotNull Computable<Boolean> isApplicable,
                           @NotNull String actionId) {
     super(text, description, icon);
@@ -46,11 +46,6 @@ abstract public class FlutterAppAction extends DumbAwareAction {
     myActionId = actionId;
 
     updateActionRegistration(app.isConnected());
-  }
-
-  @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
   }
 
   private void updateActionRegistration(boolean isConnected) {

@@ -5,18 +5,14 @@
  */
 package io.flutter.actions;
 
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.document.FileDocumentManager;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterMessages;
 import io.flutter.FlutterUtils;
-import io.flutter.analytics.AnalyticsConstants;
 import io.flutter.pub.PubRoot;
 import io.flutter.pub.PubRoots;
 import io.flutter.sdk.FlutterSdk;
@@ -31,21 +27,12 @@ import java.util.List;
 public abstract class FlutterSdkAction extends DumbAwareAction {
 
   @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
-  }
-
-  @Override
   public void actionPerformed(@NotNull AnActionEvent event) {
-    final Project project = DumbAwareAction.getEventProject(event);
-
-    AnalyticsData analyticsData = AnalyticsData.forAction(this, event);
+    final Project project = event.getData(Project.KEY);
 
     final FlutterSdk sdk = project != null ? FlutterSdk.getFlutterSdk(project) : null;
     if (sdk == null) {
       showMissingSdkDialog(project);
-      analyticsData.add(AnalyticsConstants.MISSING_SDK, true);
-      Analytics.report(analyticsData);
       return;
     }
 
@@ -61,8 +48,6 @@ public abstract class FlutterSdkAction extends DumbAwareAction {
         startCommand(project, sdk, sub, context);
       }
     }
-
-    Analytics.report(analyticsData);
   }
 
   public abstract void startCommand(@NotNull Project project,

@@ -5,8 +5,8 @@
  */
 package io.flutter.actions;
 
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.application.CommonBundle;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.language.editor.PlatformDataKeys;
@@ -20,8 +20,6 @@ import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.ui.ex.awt.JBUI;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import com.jetbrains.lang.dart.ide.refactoring.ServerRefactoringDialog;
 import com.jetbrains.lang.dart.ide.refactoring.status.RefactoringStatus;
 import io.flutter.FlutterUtils;
@@ -39,7 +37,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-public class ExtractWidgetAction extends DumbAwareAction {
+public class ExtractWidgetAction extends DumbAwareAction implements AnActionWithSyncUpdate {
   @Override
   public void actionPerformed(@NotNull AnActionEvent event) {
     final DataContext dataContext = event.getDataContext();
@@ -53,7 +51,6 @@ public class ExtractWidgetAction extends DumbAwareAction {
     final Caret caret = dataContext.getData(PlatformDataKeys.CARET);
 
     if (project != null && file != null && editor != null && caret != null) {
-      Analytics.report(AnalyticsData.forAction(this, event));
 
       final int offset = caret.getSelectionStart();
       final int length = caret.getSelectionEnd() - offset;
@@ -87,12 +84,7 @@ public class ExtractWidgetAction extends DumbAwareAction {
   @Override
   public void update(@NotNull AnActionEvent e) {
     e.getPresentation().setVisible(isVisibleFor(e));
-    super.update(e);
-  }
-
-  @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
+    // Consulo: AnAction has no update() to call, the default did nothing
   }
 
   protected static boolean isVisibleFor(@NotNull AnActionEvent e) {

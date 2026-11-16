@@ -5,7 +5,7 @@
  */
 package io.flutter.actions;
 
-import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.Presentation;
@@ -23,7 +23,7 @@ import java.util.List;
  * A "retargeting" action that redirects to another action that is set up elsewhere with
  * context required to execute.
  */
-public abstract class FlutterRetargetAppAction extends DumbAwareAction {
+public abstract class FlutterRetargetAppAction extends DumbAwareAction implements AnActionWithSyncUpdate {
   @NotNull
   private final String myActionId;
 
@@ -39,13 +39,10 @@ public abstract class FlutterRetargetAppAction extends DumbAwareAction {
     myPlaces.addAll(Arrays.asList(places));
   }
 
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
-  }
 
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    final AnAction action = getAction(e.getProject());
+    final AnAction action = getAction(e.getData(Project.KEY));
     if (action != null) {
       // The target action reports its own analytics event (with this event's place), so report nothing
       // here; reporting both would count each toolbar or menu invocation twice.
@@ -57,7 +54,7 @@ public abstract class FlutterRetargetAppAction extends DumbAwareAction {
   public void update(@NotNull AnActionEvent e) {
     final Presentation presentation = e.getPresentation();
 
-    final Project project = e.getProject();
+    final Project project = e.getData(Project.KEY);
     if (project == null || !FlutterModuleUtils.hasFlutterModule(project) || !myPlaces.contains(e.getPlace())) {
       presentation.setVisible(false);
       return;
@@ -74,7 +71,10 @@ public abstract class FlutterRetargetAppAction extends DumbAwareAction {
       if (text != null) {
         presentation.setText(text, true);
       }
-      action.update(e);
+      // Consulo: only AnActionWithSyncUpdate actions have update()
+      if (action instanceof AnActionWithSyncUpdate syncAction) {
+        syncAction.update(e);
+      }
     }
   }
 

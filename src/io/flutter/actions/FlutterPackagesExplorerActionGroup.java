@@ -5,16 +5,19 @@
  */
 package io.flutter.actions;
 
-import com.intellij.openapi.actionSystem.*;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.Presentation;
 import consulo.virtualFileSystem.VirtualFile;
 import io.flutter.pub.PubRoot;
 import org.jetbrains.annotations.NotNull;
 
 
-public class FlutterPackagesExplorerActionGroup extends DefaultActionGroup {
+public class FlutterPackagesExplorerActionGroup extends DefaultActionGroup implements AnActionWithSyncUpdate {
 
   private static boolean isFlutterPubspec(@NotNull AnActionEvent e) {
-    @SuppressWarnings("DataFlowIssue") final VirtualFile file = CommonDataKeys.VIRTUAL_FILE.getData(e.getDataContext());
+    @SuppressWarnings("DataFlowIssue") final VirtualFile file = e.getData(VirtualFile.KEY);
     final PubRoot root = file == null ? null : PubRoot.forDirectory(file.getParent());
     return root != null && root.getPubspec().equals(file) && root.declaresFlutter();
   }
@@ -25,10 +28,5 @@ public class FlutterPackagesExplorerActionGroup extends DefaultActionGroup {
     final Presentation presentation = e.getPresentation();
     presentation.setEnabled(enabled);
     presentation.setVisible(enabled);
-  }
-
-  @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
   }
 }

@@ -5,20 +5,19 @@
  */
 package io.flutter.actions;
 
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import com.google.common.base.Joiner;
 import consulo.execution.executor.Executor;
 import consulo.execution.ProgramRunnerUtil;
-import consulo.execution.internal.RunManagerEx;
+import consulo.execution.RunManager;
+import consulo.execution.executor.ExecutorRegistry;
 import consulo.execution.RunnerAndConfigurationSettings;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.FlutterBundle;
 import io.flutter.run.FlutterLaunchMode;
 import io.flutter.run.LaunchState;
@@ -29,9 +28,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public abstract class RunFlutterAction extends AnAction {
+public abstract class RunFlutterAction extends AnAction implements AnActionWithSyncUpdate {
   private final @NotNull String myDetailedTextKey;
   private final @NotNull FlutterLaunchMode myLaunchMode;
   private final @NotNull String myExecutorId;
@@ -102,8 +100,6 @@ public abstract class RunFlutterAction extends AnAction {
     FlutterLaunchMode.addToEnvironment(env, myLaunchMode);
 
     ProgramRunnerUtil.executeConfiguration(env, false, true);
-
-    Analytics.report(AnalyticsData.forAction(this, e));
   }
 
   @Override
@@ -124,11 +120,6 @@ public abstract class RunFlutterAction extends AnAction {
     return config instanceof SdkRunConfig && LaunchState.getRunningAppProcess((SdkRunConfig)config) == null;
   }
 
-  @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
-  }
-
   @Nullable
   protected static String getSelectedRunConfig(@Nullable AnActionEvent e) {
     final RunnerAndConfigurationSettings settings = getRunConfigSettings(e);
@@ -144,17 +135,17 @@ public abstract class RunFlutterAction extends AnAction {
       return null;
     }
 
-    final Project project = event.getProject();
+    final Project project = event.getData(Project.KEY);
     if (project == null) {
       return null;
     }
 
-    return RunManagerEx.getInstanceEx(project).getSelectedConfiguration();
+    return RunManager.getInstance(project).getSelectedConfiguration();
   }
 
   @Nullable
   public static Executor getExecutor(@NotNull String executorId) {
-    for (Executor executor : Objects.requireNonNull(Executor.EXECUTOR_EXTENSION_NAME.getExtensions())) {
+    for (Executor executor : ExecutorRegistry.getInstance().getRegisteredExecutors()) {
       assert executor != null;
       if (executorId.equals(executor.getId())) {
         return executor;

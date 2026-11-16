@@ -5,9 +5,11 @@
  */
 package io.flutter.actions;
 
-import com.intellij.openapi.actionSystem.*;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
-import consulo.project.util.ProjectUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import io.flutter.FlutterUtils;
 import org.jetbrains.annotations.NotNull;
@@ -18,25 +20,20 @@ import org.jetbrains.annotations.Nullable;
  * throws "configureNewProject should be used with new projects only".
  * See https://github.com/flutter/flutter-intellij/issues/7103
  */
-public class FlutterExternalIdeActionGroup extends DefaultActionGroup {
+public class FlutterExternalIdeActionGroup extends DefaultActionGroup implements AnActionWithSyncUpdate {
   private static boolean isExternalIdeFile(@NotNull AnActionEvent e) {
-    @SuppressWarnings("DataFlowIssue") final VirtualFile file = e.getData(CommonDataKeys.VIRTUAL_FILE);
+    @SuppressWarnings("DataFlowIssue") final VirtualFile file = e.getData(VirtualFile.KEY);
     if (file == null || !file.exists()) {
       return false;
     }
 
-    final Project project = e.getProject();
+    final Project project = e.getData(Project.KEY);
     assert (project != null);
     return
       isWithinAndroidDirectory(file, project) ||
       isProjectDirectory(file, project) ||
       isWithinIOsDirectory(file, project) ||
       FlutterUtils.isXcodeProjectFileName(file.getName()) || OpenInAndroidStudioAction.isProjectFileName(file.getName());
-  }
-
-  @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.EDT;
   }
 
   public static boolean isAndroidDirectory(@NotNull VirtualFile file) {
@@ -48,7 +45,7 @@ public class FlutterExternalIdeActionGroup extends DefaultActionGroup {
   }
 
   protected static boolean isWithinAndroidDirectory(@NotNull VirtualFile file, @NotNull Project project) {
-    final VirtualFile baseDir = ProjectUtil.guessProjectDir(project);
+    final VirtualFile baseDir = project.getBaseDir(); // Consulo: no ProjectUtil.guessProjectDir
     if (baseDir == null) {
       return false;
     }
@@ -63,7 +60,7 @@ public class FlutterExternalIdeActionGroup extends DefaultActionGroup {
   }
 
   protected static boolean isWithinIOsDirectory(@NotNull VirtualFile file, @NotNull Project project) {
-    final VirtualFile baseDir = ProjectUtil.guessProjectDir(project);
+    final VirtualFile baseDir = project.getBaseDir();
     if (baseDir == null) {
       return false;
     }
@@ -82,7 +79,7 @@ public class FlutterExternalIdeActionGroup extends DefaultActionGroup {
       return false;
     }
 
-    final VirtualFile baseDir = ProjectUtil.guessProjectDir(project);
+    final VirtualFile baseDir = project.getBaseDir();
     return baseDir != null && baseDir.getPath().equals(file.getPath());
   }
 

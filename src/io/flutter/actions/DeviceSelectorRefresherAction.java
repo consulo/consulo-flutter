@@ -5,33 +5,25 @@
  */
 package io.flutter.actions;
 
-import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.run.daemon.DeviceService;
 import io.flutter.utils.FlutterModuleUtils;
 import org.jetbrains.annotations.NotNull;
 
-public class DeviceSelectorRefresherAction extends AnAction {
+public class DeviceSelectorRefresherAction extends AnAction implements AnActionWithSyncUpdate {
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    final Project project = e.getProject();
+    final Project project = e.getData(Project.KEY);
     if (project == null) return;
-
-    Analytics.report(AnalyticsData.forAction(this, e));
     DeviceService.getInstance(project).restart();
-  }
-
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
   }
 
   @Override
   public void update(@NotNull AnActionEvent e) {
-    var project = e.getProject();
+    var project = e.getData(Project.KEY);
     if (project != null) {
       e.getPresentation().setVisible(FlutterModuleUtils.hasInternalDartSdkPath(project));
     }

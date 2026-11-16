@@ -5,21 +5,20 @@
  */
 package io.flutter.actions;
 
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
-import com.intellij.execution.process.ColoredProcessHandler;
+import consulo.process.ProcessHandler;
+import consulo.process.ProcessHandlerBuilder;
 import consulo.process.event.ProcessEvent;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.language.editor.CommonDataKeys;
 import consulo.ui.ex.action.Presentation;
 import consulo.project.Project;
-import consulo.project.util.ProjectUtil;
+import consulo.project.ProjectLocator;
 import consulo.application.util.SystemInfo;
 import consulo.virtualFileSystem.VirtualFile;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.FlutterMessages;
 import io.flutter.FlutterUtils;
 import io.flutter.pub.PubRoot;
@@ -30,12 +29,12 @@ import io.flutter.utils.ProgressHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class OpenInXcodeAction extends AnAction {
+public class OpenInXcodeAction extends AnAction implements AnActionWithSyncUpdate {
 
   @Nullable
   static VirtualFile findProjectFile(@NotNull AnActionEvent event) {
     @SuppressWarnings("DataFlowIssue") final VirtualFile file = event.getData(CommonDataKeys.VIRTUAL_FILE);
-    final Project project = event.getProject();
+    final Project project = event.getData(Project.KEY);
     if (file != null && file.exists()) {
       if (FlutterUtils.isXcodeFileName(file.getName())) {
         return file;
@@ -60,7 +59,7 @@ public class OpenInXcodeAction extends AnAction {
   }
 
   private static void openFile(@NotNull VirtualFile file) {
-    final Project project = ProjectUtil.guessProjectForFile(file);
+    final Project project = ProjectLocator.getInstance().guessProjectForFile(file);
     final FlutterSdk sdk = project != null ? FlutterSdk.getFlutterSdk(project) : null;
     if (sdk == null) {
       FlutterSdkAction.showMissingSdkDialog(project);
@@ -81,7 +80,7 @@ public class OpenInXcodeAction extends AnAction {
       String buildArg = "--simulator";
       // TODO(pq): consider a popup explaining why we're doing a build.
       // Note: we build only for the simulator to bypass device provisioning issues.
-      final ColoredProcessHandler processHandler = sdk.flutterBuild(pubRoot, "ios", buildArg).startInConsole(project);
+      final ProcessHandler processHandler = sdk.flutterBuild(pubRoot, "ios", buildArg).startInConsole(project);
       if (processHandler == null) {
         progressHelper.done();
         FlutterMessages.showError("Error Opening Xcode", "unable to run `flutter build`", project);
@@ -122,7 +121,8 @@ public class OpenInXcodeAction extends AnAction {
   private static void openWithXcode(@Nullable Project project, @NotNull String path) {
     try {
       final GeneralCommandLine cmd = new GeneralCommandLine().withExePath("open").withParameters(path);
-      final ColoredProcessHandler handler = new ColoredProcessHandler(cmd);
+      // Consulo: ColoredProcessHandler is internal, built by ProcessHandlerBuilder
+      final ProcessHandler handler = ProcessHandlerBuilder.create(cmd).colored().build();
       handler.addProcessListener(new ProcessAdapter() {
         @Override
         public void processTerminated(@NotNull final ProcessEvent event) {
@@ -155,22 +155,15 @@ public class OpenInXcodeAction extends AnAction {
   }
 
   @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
-  }
-
-  @Override
   public void actionPerformed(@NotNull AnActionEvent event) {
     final VirtualFile projectFile = findProjectFile(event);
     if (projectFile != null) {
       openFile(projectFile);
     }
     else {
-      @Nullable final Project project = event.getProject();
+      @Nullable final Project project = event.getData(Project.KEY);
 
       FlutterMessages.showError("Error Opening Xcode", "Project not found.", project);
     }
-
-    Analytics.report(AnalyticsData.forAction(this, event));
   }
 }

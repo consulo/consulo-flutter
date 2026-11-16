@@ -5,12 +5,16 @@
  */
 package io.flutter.actions;
 
-import com.intellij.execution.*;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.execution.ProgramRunnerUtil;
+import consulo.execution.RunManager;
+import consulo.execution.RunnerAndConfigurationSettings;
+import consulo.execution.event.ExecutionListener;
+import consulo.execution.executor.Executor;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.process.ProcessHandler;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.ExecutionEnvironmentBuilder;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.dataContext.DataContext;
 import consulo.ui.ModalityState;
@@ -36,7 +40,7 @@ import javax.swing.*;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AttachDebuggerAction extends FlutterSdkAction {
+public class AttachDebuggerAction extends FlutterSdkAction implements AnActionWithSyncUpdate {
 
   // Is 'flutter attach' running for a project?
   // The three states are true, false, and non-existent (null).
@@ -46,16 +50,12 @@ public class AttachDebuggerAction extends FlutterSdkAction {
   // The button is still required because there may be multiple Flutter run configs.
   public static final Key<ThreeState> ATTACH_IS_ACTIVE = new Key<>("attach-is-active");
 
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
-  }
-
   @Override
   public void startCommand(@NotNull Project project, @NotNull FlutterSdk sdk, @Nullable PubRoot root, @NotNull DataContext context) {
     // NOTE: When making changes here, consider making similar changes to RunFlutterAction.
     RunConfiguration configuration = findRunConfig(project);
     if (configuration == null) {
-      final RunnerAndConfigurationSettings settings = RunManagerEx.getInstanceEx(project).getSelectedConfiguration();
+      final RunnerAndConfigurationSettings settings = RunManager.getInstance(project).getSelectedConfiguration();
       if (settings == null) {
         showSelectConfigDialog();
         return;
@@ -92,9 +92,9 @@ public class AttachDebuggerAction extends FlutterSdkAction {
 
   @Override
   public void update(@NotNull AnActionEvent e) {
-    final Project project = e.getProject();
+    final Project project = e.getData(Project.KEY);
     if (project == null || project.isDefault()) {
-      super.update(e);
+      // Consulo: AnAction has no update() to call, the default did nothing
       return;
     }
     if (!FlutterSdkUtil.hasFlutterModules(project)) {
@@ -105,7 +105,7 @@ public class AttachDebuggerAction extends FlutterSdkAction {
     RunConfiguration configuration = findRunConfig(project);
     boolean enabled;
     if (configuration == null) {
-      final RunnerAndConfigurationSettings settings = RunManagerEx.getInstanceEx(project).getSelectedConfiguration();
+      final RunnerAndConfigurationSettings settings = RunManager.getInstance(project).getSelectedConfiguration();
       if (settings == null) {
         enabled = false;
       }
@@ -127,7 +127,7 @@ public class AttachDebuggerAction extends FlutterSdkAction {
   @Nullable
   public static RunConfiguration findRunConfig(@NotNull Project project) {
     // Look for a Flutter run config. If exactly one is found then return it otherwise return null.
-    final RunManagerEx mgr = RunManagerEx.getInstanceEx(project);
+    final RunManager mgr = RunManager.getInstance(project);
     final List<RunConfiguration> configs = mgr.getAllConfigurationsList();
     int count = 0;
     RunConfiguration sdkConfig = null;
@@ -144,7 +144,7 @@ public class AttachDebuggerAction extends FlutterSdkAction {
     final MessageBusConnection connection = project.getMessageBus().connect();
 
     // Need an ExecutionListener to clean up project-scoped state when the Stop button is clicked.
-    connection.subscribe(ExecutionManager.EXECUTION_TOPIC, new ExecutionListener() {
+    connection.subscribe(ExecutionListener.class, new ExecutionListener() {
       Object handler;
 
       @Override

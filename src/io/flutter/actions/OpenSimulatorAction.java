@@ -5,18 +5,16 @@
  */
 package io.flutter.actions;
 
-import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.icons.FlutterIcons;
 import io.flutter.sdk.XcodeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class OpenSimulatorAction extends AnAction {
+public class OpenSimulatorAction extends AnAction implements AnActionWithSyncUpdate {
   final boolean enabled;
 
   public static final String ID = "open.simulator";
@@ -32,13 +30,8 @@ public class OpenSimulatorAction extends AnAction {
   }
 
   @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
-  }
-
-  @Override
   public void actionPerformed(@NotNull AnActionEvent event) {
-    @Nullable final Project project = event.getProject();
+    @Nullable final Project project = event.getData(Project.KEY);
 
     // Check to see if the simulator is already running. If it is, and we're here, that means there are
     // no running devices and we want to issue an extra call to start (w/ `-n`) to load a new simulator.
@@ -51,7 +44,5 @@ public class OpenSimulatorAction extends AnAction {
     //}
 
     XcodeUtils.openSimulator(project);
-
-    Analytics.report(AnalyticsData.forAction(ID, event.getPlace(), event.getProject()));
   }
 }

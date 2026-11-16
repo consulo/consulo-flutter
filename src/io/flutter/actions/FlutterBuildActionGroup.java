@@ -5,9 +5,9 @@
  */
 package io.flutter.actions;
 
-import com.intellij.execution.process.ColoredProcessHandler;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
+import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DefaultActionGroup;
@@ -17,8 +17,6 @@ import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
 import consulo.application.util.SystemInfo;
 import consulo.virtualFileSystem.VirtualFile;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.FlutterMessages;
 import io.flutter.pub.PubRoot;
 import io.flutter.pub.PubRoots;
@@ -30,7 +28,7 @@ import io.flutter.utils.ProgressHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class FlutterBuildActionGroup extends DefaultActionGroup {
+public class FlutterBuildActionGroup extends DefaultActionGroup implements AnActionWithSyncUpdate {
 
   public static void build(@NotNull Project project,
                            @NotNull PubRoot pubRoot,
@@ -54,7 +52,7 @@ public class FlutterBuildActionGroup extends DefaultActionGroup {
       sdk.flutterBuild(pubRoot, buildType.type).startInModuleConsole(module, pubRoot::refresh, processAdapter);
     }
     else {
-      final ColoredProcessHandler processHandler = sdk.flutterBuild(pubRoot, buildType.type).startInConsole(project);
+      final ProcessHandler processHandler = sdk.flutterBuild(pubRoot, buildType.type).startInConsole(project);
       if (processHandler == null) {
         progressHelper.done();
       }
@@ -90,13 +88,8 @@ public class FlutterBuildActionGroup extends DefaultActionGroup {
     presentation.setVisible(enabled);
   }
 
-  @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
-  }
-
   private static boolean isInFlutterModule(@NotNull AnActionEvent event) {
-    final Project project = event.getProject();
+    final Project project = event.getData(Project.KEY);
     if (project == null) {
       return false;
     }
@@ -136,12 +129,10 @@ public class FlutterBuildActionGroup extends DefaultActionGroup {
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
       final Presentation presentation = event.getPresentation();
-      final Project project = event.getProject();
+      final Project project = event.getData(Project.KEY);
       if (project == null) {
         return;
       }
-
-      Analytics.report(AnalyticsData.forAction(ID_PREFIX + "." + buildType().type, event.getPlace(), project));
 
       final FlutterSdk sdk = FlutterSdk.getFlutterSdk(project);
       if (sdk == null) {
@@ -150,19 +141,14 @@ public class FlutterBuildActionGroup extends DefaultActionGroup {
       final PubRoot pubRoot = PubRoot.forEventWithRefresh(event);
       final BuildType buildType = buildType();
       if (pubRoot != null) {
-        build(project, pubRoot, sdk, buildType, presentation.getDescription());
+        build(project, pubRoot, sdk, buildType, presentation.getDescription().get());
       }
       else {
         var roots = PubRoots.forProject(project);
         for (PubRoot sub : roots) {
-          build(project, sub, sdk, buildType, presentation.getDescription());
+          build(project, sub, sdk, buildType, presentation.getDescription().get());
         }
       }
-    }
-
-    @Override
-    public @NotNull ActionUpdateThread getActionUpdateThread() {
-      return ActionUpdateThread.BGT;
     }
   }
 
@@ -194,7 +180,7 @@ public class FlutterBuildActionGroup extends DefaultActionGroup {
     }
   }
 
-  public static class Ios extends FlutterBuildAction {
+  public static class Ios extends FlutterBuildAction implements AnActionWithSyncUpdate {
     @Override
     protected @NotNull BuildType buildType() {
       return BuildType.IOS;
@@ -207,7 +193,7 @@ public class FlutterBuildActionGroup extends DefaultActionGroup {
     }
   }
 
-  public static class Linux extends FlutterBuildAction {
+  public static class Linux extends FlutterBuildAction implements AnActionWithSyncUpdate {
     @Override
     protected @NotNull BuildType buildType() {
       return BuildType.LINUX;
@@ -220,7 +206,7 @@ public class FlutterBuildActionGroup extends DefaultActionGroup {
     }
   }
 
-  public static class Macos extends FlutterBuildAction {
+  public static class Macos extends FlutterBuildAction implements AnActionWithSyncUpdate {
     @Override
     protected @NotNull BuildType buildType() {
       return BuildType.MACOS;
@@ -241,7 +227,7 @@ public class FlutterBuildActionGroup extends DefaultActionGroup {
     }
   }
 
-  public static class Windows extends FlutterBuildAction {
+  public static class Windows extends FlutterBuildAction implements AnActionWithSyncUpdate {
     @Override
     protected @NotNull BuildType buildType() {
       return BuildType.WINDOWS;

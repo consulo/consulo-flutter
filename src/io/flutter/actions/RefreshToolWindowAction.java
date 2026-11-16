@@ -6,12 +6,9 @@
 package io.flutter.actions;
 
 import consulo.application.AllIcons;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
 import consulo.project.Project;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterUtils;
 import org.jetbrains.annotations.NotNull;
@@ -31,18 +28,11 @@ public class RefreshToolWindowAction extends DumbAwareAction {
   }
 
   @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
-  }
-
-  @Override
   public void actionPerformed(@NotNull AnActionEvent event) {
-    final Project project = event.getProject();
+    final Project project = event.getData(Project.KEY);
     if (project == null) {
       return;
     }
-
-    Analytics.report(AnalyticsData.forAction(this, event));
 
     Optional.ofNullable(
         FlutterUtils.embeddedBrowser(project))
