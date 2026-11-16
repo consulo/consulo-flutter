@@ -6,7 +6,7 @@
 package io.flutter.sdk;
 
 import consulo.process.ExecutionException;
-import com.intellij.execution.process.ColoredProcessHandler;
+import consulo.process.ProcessHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,7 +15,7 @@ public class FlutterCommandStartResult {
   public final FlutterCommandStartResultStatus status;
 
   @Nullable
-  public final ColoredProcessHandler processHandler;
+  public final ProcessHandler processHandler;
 
   @Nullable
   public final ExecutionException exception;
@@ -24,7 +24,7 @@ public class FlutterCommandStartResult {
     this(status, null, null);
   }
 
-  public FlutterCommandStartResult(@Nullable ColoredProcessHandler processHandler) {
+  public FlutterCommandStartResult(@Nullable ProcessHandler processHandler) {
     this(FlutterCommandStartResultStatus.OK, processHandler, null);
   }
 
@@ -33,7 +33,7 @@ public class FlutterCommandStartResult {
   }
 
   public FlutterCommandStartResult(@NotNull FlutterCommandStartResultStatus status,
-                                   @Nullable ColoredProcessHandler processHandler,
+                                   @Nullable ProcessHandler processHandler,
                                    @Nullable ExecutionException exception) {
     this.status = status;
     this.processHandler = processHandler;

@@ -5,14 +5,18 @@
  */
 package io.flutter.project;
 
+import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
-import com.intellij.ide.IconProvider;
-import consulo.project.Project;
 import consulo.component.util.Iconable.IconFlags;
-import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.icon.IconDescriptor;
+import consulo.language.icon.IconDescriptorUpdater;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
-import consulo.desktop.awt.ui.impl.image.LayeredIcon;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.project.Project;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
+import consulo.virtualFileSystem.VirtualFile;
 import com.jetbrains.lang.dart.DartFileType;
 import com.jetbrains.lang.dart.psi.DartFile;
 import io.flutter.icons.FlutterIcons;
@@ -23,15 +27,24 @@ import io.flutter.utils.FlutterModuleUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Objects;
 
-public class FlutterIconProvider extends IconProvider {
-  @SuppressWarnings("DataFlowIssue") private static final @NotNull Icon TEST_FILE =
+// Consulo: upstream IconProvider is an IconDescriptorUpdater; the icon computed by getIcon() replaces the main icon
+public class FlutterIconProvider implements IconDescriptorUpdater {
+  @SuppressWarnings("DataFlowIssue") private static final @NotNull Image TEST_FILE =
     overlayIcons(DartFileType.INSTANCE.getIcon(), AllIcons.Nodes.JunitTestMark);
 
+  @RequiredReadAction
+  @Override
+  public void updateIcon(@NotNull IconDescriptor iconDescriptor, @NotNull PsiElement element, int flags) {
+    final Image icon = getIcon(element, flags);
+    if (icon != null) {
+      iconDescriptor.setMainIcon(icon);
+    }
+  }
+
   @Nullable
-  public Icon getIcon(@NotNull PsiElement element, @IconFlags int flags) {
+  public Image getIcon(@NotNull PsiElement element, @IconFlags int flags) {
     final Project project = element.getProject();
     if (!FlutterModuleUtils.declaresFlutter(project)) return null;
 
@@ -56,9 +69,9 @@ public class FlutterIconProvider extends IconProvider {
 
       if (Objects.equals(dir, root.getAndroidDir())) return AllIcons.Nodes.KeymapTools;
       if (Objects.equals(dir, root.getiOsDir())) return AllIcons.Nodes.KeymapTools;
-      if (Objects.equals(dir, root.getIntegrationTestDir())) return AllIcons.Nodes.TestSourceFolder;
+      if (Objects.equals(dir, root.getIntegrationTestDir())) return PlatformIconGroup.modulesTestroot();
 
-      if (dir.isDirectory() && dir.getName().equals(".idea")) return AllIcons.Modules.GeneratedFolder;
+      if (dir.isDirectory() && dir.getName().equals(".idea")) return PlatformIconGroup.modulesGeneratedroot();
     }
 
     // Files.
@@ -77,13 +90,7 @@ public class FlutterIconProvider extends IconProvider {
   }
 
   @NotNull
-  private static Icon overlayIcons(@NotNull Icon @NotNull ... icons) {
-    final LayeredIcon result = new LayeredIcon(icons.length);
-
-    for (int layer = 0; layer < icons.length; layer++) {
-      result.setIcon(icons[layer], layer);
-    }
-
-    return result;
+  private static Image overlayIcons(@NotNull Image @NotNull ... icons) {
+    return ImageEffects.layered(icons);
   }
 }

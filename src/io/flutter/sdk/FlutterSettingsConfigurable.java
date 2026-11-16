@@ -6,15 +6,15 @@
 package io.flutter.sdk;
 
 import consulo.process.util.CapturingProcessAdapter;
-import com.intellij.execution.process.ColoredProcessHandler;
+import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.process.ProcessHandlerBuilder;
 import consulo.process.util.ProcessOutput;
-import consulo.application.AllIcons;
-import com.intellij.ide.actions.ShowSettingsUtilImpl;
-import com.intellij.ide.actionsOnSave.ActionsOnSaveConfigurable;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
+import consulo.ide.setting.ShowSettingsUtil;
+import consulo.flutter.notification.FlutterSdkNotificationGroups;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.ex.action.ActionToolbar;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.ui.ModalityState;
 import consulo.fileChooser.FileChooser;
@@ -27,15 +27,18 @@ import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.FixedSizeButton;
 import consulo.util.io.FileUtil;
-import com.intellij.openapi.util.io.FileUtilRt;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.event.DocumentAdapter;
-import com.intellij.ui.components.ActionLink;
 import consulo.ui.ex.awt.JBLabel;
-import consulo.desktop.awt.ui.impl.components.fields.ExtendableTextComponent;
-import consulo.desktop.awt.ui.impl.components.fields.ExtendableTextField;
-import consulo.ide.impl.idea.util.PlatformIcons;
+import consulo.disposer.Disposable;
+import consulo.localize.LocalizeValue;
+import consulo.ui.Component;
+import consulo.ui.annotation.RequiredUIAccess;
+import consulo.logging.Logger;
+import consulo.platform.base.icon.PlatformIconGroup;
+import consulo.ui.ex.awt.JBTextField;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import io.flutter.icons.FlutterIcons;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterConstants;
@@ -57,6 +60,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 import javax.swing.text.JTextComponent;
+import java.awt.BorderLayout;
 import java.awt.datatransfer.StringSelection;
 import java.util.List;
 import java.util.Objects;
@@ -86,7 +90,7 @@ public class FlutterSettingsConfigurable implements SearchableConfigurable {
   private FixedSizeButton myCopyButton;
   private JTextArea myFontPackagesTextArea; // This should be changed to a structured list some day.
   private JCheckBox myAllowTestsInSourcesRoot;
-  private ActionLink settingsLink;
+  // Consulo: there is no "Actions on Save" settings page, so the link to it (settingsLink) is removed from the form
   private JCheckBox myEnableLogsPreserveAfterHotReloadOrRestart;
   private @NotNull JCheckBox myEnableFilePathLogging;
 
@@ -96,7 +100,10 @@ public class FlutterSettingsConfigurable implements SearchableConfigurable {
   private String fullVersionString;
   private FlutterSdkVersion previousSdkVersion;
 
-  private final AtomicReference<Process> activeVersionProcess = new AtomicReference<>();
+  private static final Logger LOG = Logger.getInstance(FlutterSettingsConfigurable.class);
+
+  // Consulo: a ProcessHandler can't wrap an already started Process, so the running `flutter --version` is tracked by its handler
+  private final AtomicReference<ProcessHandler> activeVersionProcess = new AtomicReference<>();
 
   FlutterSettingsConfigurable(@NotNull Project project) {
     this.myProject = project;
@@ -111,8 +118,8 @@ public class FlutterSettingsConfigurable implements SearchableConfigurable {
     }
     mySdkCombo.setEditable(true);
 
-    myCopyButton.setSize(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE);
-    myCopyButton.setIcon(PlatformIcons.COPY_ICON);
+    myCopyButton.setSize(TargetAWT.to(ActionToolbar.DEFAULT_MINIMUM_BUTTON_SIZE));
+    myCopyButton.setIcon(TargetAWT.to(PlatformIconGroup.actionsCopy()));
     myCopyButton.addActionListener(e -> {
       if (fullVersionString != null) {
         CopyPasteManager.getInstance().setContents(new StringSelection(fullVersionString));
@@ -135,31 +142,32 @@ public class FlutterSettingsConfigurable implements SearchableConfigurable {
   }
 
   private void createUIComponents() {
+    // Consulo: ExtendableTextField is not an API, the browse button is placed inside the editor text field instead
+    final JBTextField ecbEditor = new JBTextField();
+    ecbEditor.setBorder(null);
+    final FixedSizeButton browseButton = new FixedSizeButton(ecbEditor);
+    browseButton.setIcon(TargetAWT.to(PlatformIconGroup.nodesFolder()));
     //noinspection DialogTitleCapitalization
-    ExtendableTextComponent.Extension browseExtension =
-      ExtendableTextComponent.Extension.create(
-        AllIcons.General.OpenDisk,
-        AllIcons.General.OpenDiskHover,
-        "Select Flutter SDK Path",
-        () -> {
-          FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-          VirtualFile file = FileChooser.chooseFile(descriptor, mySdkCombo, null, null);
-          if (file != null) {
-            //noinspection DataFlowIssue (sure to be set before the extension is invoked)
-            mySdkCombo.setItem(file.getPath());
-          }
-        });
+    browseButton.setToolTipText("Select Flutter SDK Path");
+    browseButton.addActionListener(e -> {
+      FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
+      FileChooser.chooseFile(descriptor, mySdkCombo, null, null).thenAccept(file -> {
+        if (file != null) {
+          //noinspection DataFlowIssue (sure to be set before the extension is invoked)
+          mySdkCombo.getEditor().setItem(file.getPath());
+        }
+      });
+    });
+    ecbEditor.setLayout(new BorderLayout());
+    ecbEditor.add(browseButton, BorderLayout.EAST);
+
     mySdkCombo = new ComboBox<>();
     mySdkCombo.setEditor(new BasicComboBoxEditor() {
       @Override
       protected JTextField createEditorComponent() {
-        ExtendableTextField ecbEditor = new ExtendableTextField();
-        ecbEditor.addExtension(browseExtension);
-        ecbEditor.setBorder(null);
         return ecbEditor;
       }
     });
-    settingsLink = ActionsOnSaveConfigurable.createGoToActionsOnSavePageLink();
   }
 
   @Override
@@ -168,10 +176,12 @@ public class FlutterSettingsConfigurable implements SearchableConfigurable {
     return FlutterConstants.FLUTTER_SETTINGS_PAGE_ID;
   }
 
+  // Consulo: configurables return a Consulo UI component, the Swing panel is wrapped
+  @RequiredUIAccess
   @Nullable
   @Override
-  public JComponent createComponent() {
-    return mainPanel;
+  public Component createUIComponent(@NotNull Disposable parentDisposable) {
+    return TargetAWT.wrap(mainPanel);
   }
 
   @Override
@@ -180,7 +190,7 @@ public class FlutterSettingsConfigurable implements SearchableConfigurable {
     final FlutterSdk sdk = FlutterSdk.getFlutterSdk(myProject);
     final FlutterSettings settings = FlutterSettings.getInstance();
     final String sdkPathInModel = sdk == null ? "" : sdk.getHomePath();
-    final String sdkPathInUI = FileUtilRt.toSystemIndependentName(getSdkPathText());
+    final String sdkPathInUI = FileUtil.toSystemIndependentName(getSdkPathText());
 
     if (!sdkPathInModel.equals(sdkPathInUI)) {
       return true;
@@ -342,9 +352,9 @@ public class FlutterSettingsConfigurable implements SearchableConfigurable {
   }
 
   private void cancelActiveVersionProcess() {
-    final Process previous = activeVersionProcess.getAndSet(null);
-    if (previous != null && previous.isAlive()) {
-      previous.destroy();
+    final ProcessHandler previous = activeVersionProcess.getAndSet(null);
+    if (previous != null && !previous.isProcessTerminated()) {
+      previous.destroyProcess();
     }
   }
 
@@ -360,16 +370,20 @@ public class FlutterSettingsConfigurable implements SearchableConfigurable {
       return;
     }
 
-    final ModalityState modalityState = ModalityState.current();
+    final ModalityState modalityState = Application.get().getCurrentModalityState();
     ApplicationManager.getApplication().executeOnPooledThread(() -> {
       // "flutter --version" can take a long time on a slow network.
-      final Process process = sdk.flutterVersion().start();
-      if (process == null) {
+      final FlutterCommand command = sdk.flutterVersion();
+      final ProcessHandler handler;
+      try {
+        handler = ProcessHandlerBuilder.create(command.createGeneralCommandLine(null)).colored().build();
+      }
+      catch (ExecutionException e) {
+        LOG.error("Failed to start Flutter command: " + command.getSanitizedDisplayCommand(), e);
         return;
       }
-      activeVersionProcess.set(process);
+      activeVersionProcess.set(handler);
 
-      final ColoredProcessHandler handler = new ColoredProcessHandler(process, null);
       final CapturingProcessAdapter listener = new CapturingProcessAdapter();
       handler.addProcessListener(listener);
       handler.startNotify();
@@ -381,7 +395,7 @@ public class FlutterSettingsConfigurable implements SearchableConfigurable {
       final String singleLineVersion = lines.length > 0 ? lines[0] : "";
 
       OpenApiUtils.safeInvokeLater(() -> {
-        activeVersionProcess.compareAndSet(process, null);
+        activeVersionProcess.compareAndSet(handler, null);
         fullVersionString = stdout;
         updateVersionTextIfCurrent(sdk, singleLineVersion);
       }, modalityState);
@@ -409,9 +423,9 @@ public class FlutterSettingsConfigurable implements SearchableConfigurable {
   }
 
   @Override
-  @Nls
-  public String getDisplayName() {
-    return FLUTTER_SETTINGS_PAGE_NAME;
+  @NotNull
+  public LocalizeValue getDisplayName() {
+    return LocalizeValue.of(FLUTTER_SETTINGS_PAGE_NAME);
   }
 
   @Nullable
@@ -423,7 +437,7 @@ public class FlutterSettingsConfigurable implements SearchableConfigurable {
   @NotNull
   private String getSdkPathText() {
     final Object item = mySdkCombo.getEditor().getItem();
-    return item != null ? FileUtilRt.toSystemIndependentName(item.toString().trim()) : "";
+    return item != null ? FileUtil.toSystemIndependentName(item.toString().trim()) : "";
   }
 
   private void checkFontPackages(String value, String previous) {
@@ -442,16 +456,14 @@ public class FlutterSettingsConfigurable implements SearchableConfigurable {
   }
 
   private void displayNotification(String message) {
-    final Notification notification = new Notification(
-      FlutterMessages.FLUTTER_LOGGING_NOTIFICATION_GROUP_ID,
-      FlutterBundle.message("icon.preview.disallow.package.title"),
-      message,
-      NotificationType.INFORMATION);
-    notification.setIcon(FlutterIcons.Flutter);
-    Notifications.Bus.notify(notification, myProject);
+    NotificationService.getInstance().newInfo(FlutterSdkNotificationGroups.FLUTTER_LOGGING)
+      .title(FlutterBundle.messageValue("icon.preview.disallow.package.title"))
+      .content(LocalizeValue.of(message))
+      .icon(FlutterIcons.Flutter)
+      .notify(myProject);
   }
 
   public static void openFlutterSettings(@NotNull final Project project) {
-    ShowSettingsUtilImpl.showSettingsDialog(project, FlutterConstants.FLUTTER_SETTINGS_PAGE_ID, "");
+    ShowSettingsUtil.getInstance().showSettingsDialog(project, FlutterConstants.FLUTTER_SETTINGS_PAGE_ID, "");
   }
 }

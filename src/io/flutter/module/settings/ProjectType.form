@@ -8,7 +8,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <component id="2e1c4" class="com.intellij.openapi.ui.ComboBox" binding="projectTypeCombo" custom-create="true">
+      <component id="2e1c4" class="consulo.ui.ex.awt.ComboBox" binding="projectTypeCombo" custom-create="true">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>

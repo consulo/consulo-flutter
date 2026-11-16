@@ -14,9 +14,12 @@ import consulo.module.content.layer.event.ModuleRootEvent;
 import consulo.module.content.layer.event.ModuleRootListener;
 import consulo.content.library.PersistentLibraryKind;
 import consulo.virtualFileSystem.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileContentsChangedAdapter;
+import consulo.virtualFileSystem.event.VirtualFileEvent;
+import consulo.virtualFileSystem.event.VirtualFileListener;
+import consulo.virtualFileSystem.event.VirtualFileMoveEvent;
+import consulo.virtualFileSystem.event.VirtualFilePropertyEvent;
 import consulo.virtualFileSystem.VirtualFileManager;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import io.flutter.FlutterProjectDisposable;
@@ -46,18 +49,35 @@ public class FlutterPluginsLibraryManager extends AbstractLibraryManager<Flutter
 
   public void startWatching() {
     var project = getProject();
-    VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileContentsChangedAdapter() {
+    // Consulo: VirtualFileContentsChangedAdapter does not exist; the listener reacts to the same "after" events
+    VirtualFileManager.getInstance().addVirtualFileListener(new VirtualFileListener() {
       @Override
-      protected void onFileChange(@NotNull VirtualFile file) {
-        fileChanged(getProject(), file);
+      public void propertyChanged(@NotNull VirtualFilePropertyEvent event) {
+        fileChanged(getProject(), event.getFile());
       }
 
       @Override
-      protected void onBeforeFileChange(@NotNull VirtualFile file) {
+      public void contentsChanged(@NotNull VirtualFileEvent event) {
+        fileChanged(getProject(), event.getFile());
+      }
+
+      @Override
+      public void fileCreated(@NotNull VirtualFileEvent event) {
+        fileChanged(getProject(), event.getFile());
+      }
+
+      @Override
+      public void fileDeleted(@NotNull VirtualFileEvent event) {
+        fileChanged(getProject(), event.getFile());
+      }
+
+      @Override
+      public void fileMoved(@NotNull VirtualFileMoveEvent event) {
+        fileChanged(getProject(), event.getFile());
       }
     }, FlutterProjectDisposable.getInstance(project));
 
-    project.getMessageBus().connect().subscribe(ModuleRootListener.TOPIC, new ModuleRootListener() {
+    project.getMessageBus().connect().subscribe(ModuleRootListener.class, new ModuleRootListener() {
       @Override
       public void rootsChanged(@NotNull ModuleRootEvent event) {
         scheduleUpdate();
@@ -113,10 +133,10 @@ public class FlutterPluginsLibraryManager extends AbstractLibraryManager<Flutter
     ReadAction.nonBlocking(() -> getFlutterPluginPaths(PubRoots.forProject(project)))
       .expireWith(FlutterProjectDisposable.getInstance(project))
       .coalesceBy(this)
-      .finishOnUiThread(ModalityState.nonModal(), flutterPluginPaths -> {
+      .finishOnUiThread(application -> ModalityState.nonModal(), flutterPluginPaths -> {
         final Set<String> flutterPluginUrls = new HashSet<>();
         for (String path : flutterPluginPaths) {
-          flutterPluginUrls.add(VfsUtilCore.pathToUrl(path));
+          flutterPluginUrls.add(VirtualFileUtil.pathToUrl(path));
         }
         updateLibraryContent(flutterPluginUrls);
       })
