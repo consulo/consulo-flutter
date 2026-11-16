@@ -54,15 +54,16 @@ public class FlutterNewModuleSetupStep extends UnifiedProjectOrModuleNameStep<Fl
     if (!FlutterUtils.isAndroidStudio()) {
       peer.getHelpForm().showGettingStarted();
     }
-    builder.addBottom(TargetAWT.wrap(peer.getComponent()));
     myPeer = peer;
 
     final FlutterCreateAdditionalSettingsFields settingsFields =
       new FlutterCreateAdditionalSettingsFields(new FlutterCreateAdditionalSettings(), this::getFlutterSdk);
     // upstream does this when leaving the SDK page, before the settings page is shown
     settingsFields.updateProjectTypes();
+    // FormBuilder accepts labeled rows only before bottom components, so the SDK panel (a bottom component) goes last
     settingsFields.addSettingsFields(builder);
     mySettingsFields = settingsFields;
+    builder.addBottom(TargetAWT.wrap(peer.getComponent()));
   }
 
   @RequiredUIAccess

@@ -114,4 +114,14 @@ module io.flutter {
   exports org.dartlang.vm.service.internal;
   exports org.dartlang.vm.service.internal.websocket;
   exports org.dartlang.vm.service.logging;
+
+  // Gson deserializes into classes of these packages by reflection
+  opens io.flutter.logging to com.google.gson;
+  opens io.flutter.run to com.google.gson;
+  opens io.flutter.run.daemon to com.google.gson;
+  opens io.flutter.run.test to com.google.gson;
+  opens io.flutter.sdk to com.google.gson;
+  opens io.flutter.survey to com.google.gson;
+  opens io.flutter.test to com.google.gson;
+  opens io.flutter.vmService.frame to com.google.gson;
 }

@@ -28,7 +28,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 
 // Consulo: converted from Kotlin; icons are consulo.ui.image.Image (ColorIcon/EmptyIcon -> ImageEffects).
-@ExtensionImpl(order = "first")
+// Consulo: upstream order="first" is reserved for platform extensions
+@ExtensionImpl
 public class FlutterCompletionContributor extends CompletionContributor {
   private static final int ICON_SIZE = 16;
   private static final Image EMPTY_ICON = ImageEffects.empty(ICON_SIZE);

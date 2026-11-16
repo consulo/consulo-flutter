@@ -37,7 +37,8 @@
             <resource>
                 <directory>resources</directory>
                 <excludes>
-                    <!-- Consulo uses ICON-LIB and LOCALIZE-LIB, see tool/consulo/sync_upstream_resources.py -->
+                    <!-- Consulo uses ICON-LIB (see tool/consulo/sync_upstream_resources.py); an `icons` directory would also be a
+                         package split with the Dart module -->
                     <exclude>icons/**</exclude>
                     <exclude>META-INF/*.xml_</exclude>
                     <exclude>jxbrowser/**</exclude>
@@ -45,6 +46,40 @@
             </resource>
         </resources>
         <plugins>
+            <!-- FlutterBundle.properties and some icons are used by the forms (resource-bundle="io/flutter/FlutterBundle"); src/ can't be a
+                 resource root (see CONSULO.md, generate-icon), so the bundle is copied to the classes directly -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-form-bundles</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src</directory>
+                                    <includes>
+                                        <include>**/*.properties</include>
+                                    </includes>
+                                </resource>
+                                <!-- icons used by forms, moved into the io.flutter.icons package (see CONSULO.md) -->
+                                <resource>
+                                    <directory>resources/icons</directory>
+                                    <targetPath>io/flutter/icons</targetPath>
+                                    <includes>
+                                        <include>general/information.png</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- -Xmaxerrs: porting in progress -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

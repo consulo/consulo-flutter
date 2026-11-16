@@ -19,7 +19,8 @@ import java.util.List;
  * <p>
  * Currently this handles folding related to Flutter.Error events.
  */
-@ExtensionImpl(order = "last")
+// Consulo: upstream order="last" is reserved for platform extensions
+@ExtensionImpl
 public class FlutterConsoleLogFolding extends ConsoleFolding {
   @Override
   public boolean shouldFoldLine(@NotNull Project project, @NotNull String line) {

@@ -20,7 +20,8 @@ import org.jetbrains.annotations.NotNull;
  * as a ProjectActivity and backgroundPostStartupActivity extension.
  */
 // Consulo: upstream ProjectActivity (Kotlin, backgroundPostStartupActivity) -> BackgroundStartupActivity
-@ExtensionImpl(id = "FontPreviewStartupActivity", order = "last")
+// Consulo: upstream order="last" is reserved for platform extensions
+@ExtensionImpl(id = "FontPreviewStartupActivity")
 public class FontPreviewStartupActivity implements BackgroundStartupActivity {
   @Override
   public void runActivity(@NotNull Project project, @NotNull UIAccess uiAccess) {

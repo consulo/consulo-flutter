@@ -32,7 +32,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 // Consulo: upstream IconProvider is an IconDescriptorUpdater; the icon computed by getIcon() replaces the main icon
-@ExtensionImpl(order = "first")
+// Consulo: upstream order="first" is reserved for platform extensions
+@ExtensionImpl
 public class FlutterIconProvider implements IconDescriptorUpdater {
   @SuppressWarnings("DataFlowIssue") private static final @NotNull Image TEST_FILE =
     overlayIcons(DartFileType.INSTANCE.getIcon(), AllIcons.Nodes.JunitTestMark);

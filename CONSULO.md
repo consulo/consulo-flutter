@@ -30,6 +30,13 @@ It depends on the [consulo-dart](https://github.com/consulo/consulo-dart) plugin
 - `org.dartlang.analysis.server.protocol.ExtractWidgetOptions` / `RefactoringKind` are disabled (`.java_`):
   the Dart module has the same classes.
 
+- Forms: their text comes from `resource-bundle="io/flutter/FlutterBundle"`, so `src/**/*.properties` are copied to the
+  classes by a `maven-resources-plugin` execution (`src/` is not a resource root, see below). The `icons/general/information.png`
+  icon of `FlutterCreateParams.form` is copied into the `io.flutter.icons` package and the form points there.
+- `module-info` opens the packages Gson deserializes into (`io.flutter.run.daemon` events etc.) to `com.google.gson`.
+- Extension `order = "first"/"last"` is reserved for the owner plugin of an extension point in Consulo; upstream uses of it on
+  platform extension points are dropped with a `// Consulo:` comment.
+
 ## Registrations
 
 - Upstream `META-INF/plugin.xml` and the optional `*-contribs.xml` / `flutter-coverage.xml` are kept as `.xml_` as the list
