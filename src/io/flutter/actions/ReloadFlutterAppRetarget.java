@@ -5,11 +5,15 @@
  */
 package io.flutter.actions;
 
+import consulo.annotation.component.ActionImpl;
+import io.flutter.icons.FlutterIcons;
+
 import consulo.ui.ex.action.ActionPlaces;
 
 /**
  * A keystroke or toolbar invoked {@link ReloadFlutterApp} action.
  */
+@ActionImpl(id = "Flutter.Toolbar.ReloadAction")
 public class ReloadFlutterAppRetarget extends FlutterRetargetAppAction {
   public ReloadFlutterAppRetarget() {
     super(ReloadFlutterApp.ID,
@@ -18,5 +22,7 @@ public class ReloadFlutterAppRetarget extends FlutterRetargetAppAction {
           ActionPlaces.MAIN_TOOLBAR,
           ActionPlaces.NAVIGATION_BAR_TOOLBAR,
           ActionPlaces.MAIN_MENU);
+    // Consulo: icon of upstream plugin.xml <action>
+    getTemplatePresentation().setIcon(FlutterIcons.HotReload);
   }
 }

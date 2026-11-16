@@ -5,6 +5,9 @@
  */
 package io.flutter.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.flutter.localize.FlutterConsuloLocalize;
+
 import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.dataContext.DataManager;
 import consulo.ui.ex.action.AnAction;
@@ -72,6 +75,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+@ActionImpl(id = "Flutter.DeviceSelector")
 public class DeviceSelectorAction extends AnAction implements CustomComponentAction, DumbAware, AnActionWithSyncUpdate {
   private static final @NotNull Logger LOG = PluginLogger.createLogger(DeviceSelectorAction.class);
 
@@ -102,8 +106,12 @@ public class DeviceSelectorAction extends AnAction implements CustomComponentAct
 
   private @Nullable SelectDeviceAction selectedDeviceAction;
 
-  DeviceSelectorAction() {
+  public DeviceSelectorAction() {
     super();
+    // Consulo: text, description and icon of upstream plugin.xml <action>
+    getTemplatePresentation().setText(FlutterConsuloLocalize.actionFlutterDeviceselectorText());
+    getTemplatePresentation().setDescription(FlutterConsuloLocalize.actionFlutterDeviceselectorDescription());
+    getTemplatePresentation().setIcon(FlutterIcons.Mobile);
   }
 
   /**

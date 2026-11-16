@@ -12,4 +12,26 @@
 	<tags>
 		<tag>custom.language</tag>
 	</tags>
+
+	<!-- Consulo: actions are registered by @ActionImpl; @ActionImpl has no default keyboard shortcuts, so the upstream
+	     <keyboard-shortcut>s are declared here for the same ids (as consulo-git does for Git.Branches). An action listed here
+	     must have no @ActionImpl parents: its placement comes from @ActionImpl children of groups, or from <add-to-group> here. -->
+	<actions>
+		<action id="Flutter.Toolbar.ReloadAction" class="io.flutter.actions.ReloadFlutterAppRetarget">
+			<keyboard-shortcut keymap="$default" first-keystroke="ctrl BACK_SLASH"/>
+		</action>
+		<action id="Flutter.Toolbar.RestartAction" class="io.flutter.actions.RestartFlutterAppRetarget">
+			<keyboard-shortcut keymap="$default" first-keystroke="ctrl shift BACK_SLASH"/>
+		</action>
+		<action id="Flutter.Toolbar.ReloadAllAction" class="io.flutter.actions.ReloadAllFlutterAppsRetarget">
+			<keyboard-shortcut keymap="$default" first-keystroke="ctrl alt BACK_SLASH"/>
+		</action>
+		<action id="Flutter.Toolbar.RestartAllAction" class="io.flutter.actions.RestartAllFlutterAppsRetarget">
+			<keyboard-shortcut keymap="$default" first-keystroke="ctrl alt shift BACK_SLASH"/>
+		</action>
+		<action id="Flutter.ExtractWidget" class="io.flutter.actions.ExtractWidgetAction">
+			<add-to-group group-id="IntroduceActionsGroup" anchor="after" relative-to-action="ExtractMethod"/>
+			<keyboard-shortcut keymap="$default" first-keystroke="ctrl alt W"/>
+		</action>
+	</actions>
 </consulo-plugin>

@@ -5,6 +5,9 @@
  */
 package io.flutter.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.flutter.localize.FlutterConsuloLocalize;
+
 import consulo.dataContext.DataContext;
 import consulo.project.Project;
 import io.flutter.FlutterMessages;
@@ -13,7 +16,14 @@ import io.flutter.sdk.FlutterSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@ActionImpl(id = "flutter.pub.upgrade")
 public class FlutterPackagesUpgradeAction extends FlutterSdkAction {
+  public FlutterPackagesUpgradeAction() {
+    // Consulo: text, description and icon of upstream plugin.xml <action>
+    getTemplatePresentation().setText(FlutterConsuloLocalize.actionFlutterPubUpgradeText());
+    getTemplatePresentation().setDescription(FlutterConsuloLocalize.actionFlutterPubUpgradeDescription());
+  }
+
   @Override
   public void startCommand(@NotNull Project project, @NotNull FlutterSdk sdk, @Nullable PubRoot root, @NotNull DataContext context) {
     if (root == null) {

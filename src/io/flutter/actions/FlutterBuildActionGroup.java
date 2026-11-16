@@ -5,6 +5,14 @@
  */
 package io.flutter.actions;
 
+import consulo.annotation.component.ActionParentRef;
+import consulo.annotation.component.ActionRef;
+import consulo.annotation.component.ActionRefAnchor;
+import consulo.flutter.actions.FlutterBuildGroup;
+import consulo.annotation.component.ActionImpl;
+import consulo.ui.ex.action.AnSeparator;
+import consulo.flutter.localize.FlutterConsuloLocalize;
+
 import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
@@ -28,6 +36,10 @@ import io.flutter.utils.ProgressHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@ActionImpl(id = "FlutterBuildActionGroup", children = {
+  @ActionRef(type = AnSeparator.class),
+  @ActionRef(type = FlutterBuildGroup.class)
+}, parents = @ActionParentRef(value = @ActionRef(id = "BuildMenu"), anchor = ActionRefAnchor.FIRST))
 public class FlutterBuildActionGroup extends DefaultActionGroup implements AnActionWithSyncUpdate {
 
   public static void build(@NotNull Project project,
@@ -152,35 +164,70 @@ public class FlutterBuildActionGroup extends DefaultActionGroup implements AnAct
     }
   }
 
+  @ActionImpl(id = "flutter.build.aar")
   public static class AAR extends FlutterBuildAction {
+    public AAR() {
+      // Consulo: text, description and icon of upstream plugin.xml <action>
+      getTemplatePresentation().setText(FlutterConsuloLocalize.actionFlutterBuildAarText());
+      getTemplatePresentation().setDescription(FlutterConsuloLocalize.actionFlutterBuildAarDescription());
+    }
+
     @Override
     protected @NotNull BuildType buildType() {
       return BuildType.AAR;
     }
   }
 
+  @ActionImpl(id = "flutter.build.apk")
   public static class APK extends FlutterBuildAction {
+    public APK() {
+      // Consulo: text, description and icon of upstream plugin.xml <action>
+      getTemplatePresentation().setText(FlutterConsuloLocalize.actionFlutterBuildApkText());
+      getTemplatePresentation().setDescription(FlutterConsuloLocalize.actionFlutterBuildApkDescription());
+    }
+
     @Override
     protected @NotNull BuildType buildType() {
       return BuildType.APK;
     }
   }
 
+  @ActionImpl(id = "flutter.build.aab")
   public static class AppBundle extends FlutterBuildAction {
+    public AppBundle() {
+      // Consulo: text, description and icon of upstream plugin.xml <action>
+      getTemplatePresentation().setText(FlutterConsuloLocalize.actionFlutterBuildAabText());
+      getTemplatePresentation().setDescription(FlutterConsuloLocalize.actionFlutterBuildAabDescription());
+    }
+
     @Override
     protected @NotNull BuildType buildType() {
       return BuildType.APP_BUNDLE;
     }
   }
 
+  @ActionImpl(id = "flutter.build.bundle")
   public static class Bundle extends FlutterBuildAction {
+    public Bundle() {
+      // Consulo: text, description and icon of upstream plugin.xml <action>
+      getTemplatePresentation().setText(FlutterConsuloLocalize.actionFlutterBuildBundleText());
+      getTemplatePresentation().setDescription(FlutterConsuloLocalize.actionFlutterBuildBundleDescription());
+    }
+
     @Override
     protected @NotNull BuildType buildType() {
       return BuildType.BUNDLE;
     }
   }
 
+  @ActionImpl(id = "flutter.build.ios")
   public static class Ios extends FlutterBuildAction implements AnActionWithSyncUpdate {
+    public Ios() {
+      // Consulo: text, description and icon of upstream plugin.xml <action>
+      getTemplatePresentation().setText(FlutterConsuloLocalize.actionFlutterBuildIosText());
+      getTemplatePresentation().setDescription(FlutterConsuloLocalize.actionFlutterBuildIosDescription());
+    }
+
     @Override
     protected @NotNull BuildType buildType() {
       return BuildType.IOS;
@@ -193,7 +240,14 @@ public class FlutterBuildActionGroup extends DefaultActionGroup implements AnAct
     }
   }
 
+  @ActionImpl(id = "flutter.build.linux")
   public static class Linux extends FlutterBuildAction implements AnActionWithSyncUpdate {
+    public Linux() {
+      // Consulo: text, description and icon of upstream plugin.xml <action>
+      getTemplatePresentation().setText(FlutterConsuloLocalize.actionFlutterBuildLinuxText());
+      getTemplatePresentation().setDescription(FlutterConsuloLocalize.actionFlutterBuildLinuxDescription());
+    }
+
     @Override
     protected @NotNull BuildType buildType() {
       return BuildType.LINUX;
@@ -206,7 +260,14 @@ public class FlutterBuildActionGroup extends DefaultActionGroup implements AnAct
     }
   }
 
+  @ActionImpl(id = "flutter.build.macos")
   public static class Macos extends FlutterBuildAction implements AnActionWithSyncUpdate {
+    public Macos() {
+      // Consulo: text, description and icon of upstream plugin.xml <action>
+      getTemplatePresentation().setText(FlutterConsuloLocalize.actionFlutterBuildMacosText());
+      getTemplatePresentation().setDescription(FlutterConsuloLocalize.actionFlutterBuildMacosDescription());
+    }
+
     @Override
     protected @NotNull BuildType buildType() {
       return BuildType.MACOS;
@@ -219,7 +280,13 @@ public class FlutterBuildActionGroup extends DefaultActionGroup implements AnAct
     }
   }
 
+  @ActionImpl(id = "flutter.build.web")
   public static class Web extends FlutterBuildAction {
+    public Web() {
+      // Consulo: text, description and icon of upstream plugin.xml <action>
+      getTemplatePresentation().setText(FlutterConsuloLocalize.actionFlutterBuildWebText());
+      getTemplatePresentation().setDescription(FlutterConsuloLocalize.actionFlutterBuildWebDescription());
+    }
 
     @Override
     protected @NotNull BuildType buildType() {
@@ -227,7 +294,14 @@ public class FlutterBuildActionGroup extends DefaultActionGroup implements AnAct
     }
   }
 
+  @ActionImpl(id = "flutter.build.windows")
   public static class Windows extends FlutterBuildAction implements AnActionWithSyncUpdate {
+    public Windows() {
+      // Consulo: text, description and icon of upstream plugin.xml <action>
+      getTemplatePresentation().setText(FlutterConsuloLocalize.actionFlutterBuildWindowsText());
+      getTemplatePresentation().setDescription(FlutterConsuloLocalize.actionFlutterBuildWindowsDescription());
+    }
+
     @Override
     protected @NotNull BuildType buildType() {
       return BuildType.WINDOWS;
