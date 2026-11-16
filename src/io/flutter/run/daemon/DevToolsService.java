@@ -26,7 +26,7 @@ public class DevToolsService {
 
   @NotNull
   public static DevToolsService getInstance(@NotNull final Project project) {
-    return Objects.requireNonNull(project.getService(DevToolsService.class));
+    return Objects.requireNonNull(project.getInstance(DevToolsService.class));
   }
 
   private DevToolsService(@NotNull final Project project) {
@@ -103,7 +103,7 @@ public class DevToolsService {
 
     // Start the DevTools server.
     devToolsServerTask = new DevToolsServerTask(project, "Starting DevTools", devToolsFutureRef);
-    devToolsServerProgressIndicator = new BackgroundableProcessIndicator(project, devToolsServerTask);
+    devToolsServerProgressIndicator = new BackgroundableProcessIndicator(devToolsServerTask); // Consulo: the project comes from the task
     ProgressManager.getInstance()
       .runProcessWithProgressAsynchronously(
         devToolsServerTask, devToolsServerProgressIndicator);

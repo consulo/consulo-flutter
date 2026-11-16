@@ -14,7 +14,7 @@ import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.XDebuggerManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.VisibleForTesting;
+import com.google.common.annotations.VisibleForTesting;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

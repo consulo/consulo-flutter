@@ -8,6 +8,8 @@ package io.flutter.run.test;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationTypeBase;
 import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.ConfigurationTypeUtil;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import io.flutter.icons.FlutterIcons;
 import io.flutter.run.FlutterRunConfigurationType;
@@ -19,13 +21,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public class FlutterTestConfigType extends ConfigurationTypeBase {
   protected FlutterTestConfigType() {
-    super("FlutterTestConfigType", "Flutter Test", "description", FlutterIcons.Flutter_test);
+    super("FlutterTestConfigType", LocalizeValue.localizeTODO("Flutter Test"), LocalizeValue.localizeTODO("description"), FlutterIcons.Flutter_test);
 
     addFactory(new Factory(this));
   }
 
   public static FlutterTestConfigType getInstance() {
-    return CONFIGURATION_TYPE_EP.findExtensionOrFail(FlutterTestConfigType.class);
+    return ConfigurationTypeUtil.findConfigurationType(FlutterTestConfigType.class);
   }
 
   private static class Factory extends ConfigurationFactory {

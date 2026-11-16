@@ -9,7 +9,7 @@ import consulo.execution.action.ConfigurationContext;
 import consulo.execution.action.ConfigurationFromContext;
 import consulo.execution.action.RunConfigurationProducer;
 import consulo.module.content.ProjectFileIndex;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.util.PsiTreeUtil;
@@ -44,7 +44,7 @@ public class FlutterRunConfigurationProducer extends RunConfigurationProducer<Sd
   @Override
   protected boolean setupConfigurationFromContext(final @NotNull SdkRunConfig config,
                                                   final @NotNull ConfigurationContext context,
-                                                  final @NotNull Ref<PsiElement> sourceElement) {
+                                                  final @NotNull SimpleReference<PsiElement> sourceElement) {
     final VirtualFile main = getFlutterEntryFile(context, true, true);
     if (main == null) return false;
 

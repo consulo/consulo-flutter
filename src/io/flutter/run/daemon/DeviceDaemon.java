@@ -18,7 +18,6 @@ import consulo.ui.ex.awt.DialogWrapper;
 import consulo.ui.ex.awt.Messages;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
-import com.jetbrains.lang.dart.analytics.Analytics;
 import io.flutter.FlutterMessages;
 import io.flutter.FlutterUtils;
 import io.flutter.android.IntelliJAndroidSdk;
@@ -306,7 +305,6 @@ class DeviceDaemon {
       for (String param : parameters) {
         result.addParameter(param);
       }
-      Analytics.updateEnvironment(result);
       return result;
     }
 

@@ -23,15 +23,14 @@ import consulo.execution.configuration.RuntimeConfigurationError;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
-import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
+import java.util.List;
 import consulo.project.Project;
 import consulo.language.psi.PsiElement;
 import consulo.language.editor.refactoring.event.RefactoringElementListener;
 import com.jetbrains.lang.dart.sdk.DartConfigurable;
 import com.jetbrains.lang.dart.sdk.DartSdk;
 import io.flutter.FlutterBundle;
-import io.flutter.analytics.Analytics;
-import io.flutter.analytics.AnalyticsConstants;
 import io.flutter.dart.DartPlugin;
 import io.flutter.pub.PubRoot;
 import io.flutter.run.common.RunMode;
@@ -54,9 +53,10 @@ public class SdkAttachConfig extends SdkRunConfig {
     return null;
   }
 
+  // Consulo: run configurations are edited by fragments
   @NotNull
   @Override
-  public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
+  public List<RunConfigurationFragment<?>> createFragments() {
     throw new IllegalStateException("Attach configurations are not editable");
   }
 
@@ -84,7 +84,6 @@ public class SdkAttachConfig extends SdkRunConfig {
 
     final LaunchState launcher = new AttachState(env, mainFile.getAppDir(), mainFile.getFile(), this, createAppCallback);
     addConsoleFilters(launcher, env, mainFile, module);
-    Analytics.recordRunOrDebugSession(AnalyticsConstants.MECHANISM_FLUTTER_ATTACH, executor, getProject());
     return launcher;
   }
 

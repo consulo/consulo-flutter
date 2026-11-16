@@ -10,7 +10,7 @@ import io.flutter.sdk.XcodeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.Icon;
+import consulo.ui.image.Image;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -104,7 +104,7 @@ public class FlutterDevice {
     return myCategory != null && (myCategory.equals("web"));
   }
 
-  public Icon getIcon() {
+  public Image getIcon() {
     if (isDesktop()) {
       return FlutterIcons.Desktop;
     }

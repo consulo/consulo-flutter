@@ -7,6 +7,7 @@ package io.flutter.run;
 
 import consulo.webBrowser.BrowserLauncher;
 import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.logging.Logger;
 import consulo.ui.ex.action.DumbAwareAction;
@@ -28,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class OpenDevToolsAction extends DumbAwareAction {
+public class OpenDevToolsAction extends DumbAwareAction implements AnActionWithSyncUpdate {
   private static final @NotNull Logger LOG = PluginLogger.createLogger(OpenDevToolsAction.class);
   private static final String title = "Open Flutter DevTools in Browser";
   private @Nullable ObservatoryConnector myConnector;
@@ -67,7 +68,7 @@ public class OpenDevToolsAction extends DumbAwareAction {
 
   @Override
   public void actionPerformed(@NotNull final AnActionEvent event) {
-    Project project = event.getProject();
+    Project project = event.getData(Project.KEY);
     if (project == null) {
       return;
     }

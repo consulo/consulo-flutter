@@ -6,21 +6,22 @@
 package io.flutter.run;
 
 import com.google.common.collect.ImmutableMap;
-import consulo.application.internal.JobScheduler;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.ide.impl.idea.ide.actions.SaveAllAction;
 import consulo.project.ui.notification.Notification;
 import consulo.project.ui.notification.NotificationGroup;
-import com.intellij.notification.NotificationGroupManager;
+import consulo.project.ui.notification.NotificationService;
+import consulo.flutter.notification.FlutterRunNotificationGroups;
+import consulo.localize.LocalizeValue;
 import consulo.project.ui.notification.NotificationType;
 import consulo.disposer.Disposable;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import com.intellij.openapi.actionSystem.AnActionResult;
-import consulo.language.editor.CommonDataKeys;
+import consulo.dataContext.DataContext;
 import consulo.ui.ex.action.event.AnActionListener;
 import consulo.application.ApplicationManager;
 import consulo.ui.ModalityState;
-import consulo.ide.impl.idea.openapi.application.PathManager;
+import consulo.container.boot.ContainerPathManager;
 import consulo.logging.Logger;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
@@ -86,11 +87,8 @@ public class FlutterReloadManager implements Disposable {
         return null;
       }
 
-      NotificationGroupManager manager = NotificationGroupManager.getInstance();
-      if (manager == null) {
-        return null;
-      }
-      NotificationGroup group = manager.getNotificationGroup(notificationGroupId);
+      // Consulo: no NotificationGroupManager, the groups are FlutterRunNotificationGroups
+      NotificationGroup group = FlutterRunNotificationGroups.get(notificationGroupId);
       toolWindowNotificationGroups.put(toolWindowId, group);
     }
     return toolWindowNotificationGroups.get(toolWindowId);
@@ -110,7 +108,7 @@ public class FlutterReloadManager implements Disposable {
 
   @Nullable
   public static FlutterReloadManager getInstance(@NotNull Project project) {
-    return project.getService(FlutterReloadManager.class);
+    return project.getInstance(FlutterReloadManager.class);
   }
 
   private FlutterReloadManager(@NotNull Project project) {
@@ -118,11 +116,12 @@ public class FlutterReloadManager implements Disposable {
 
     final MessageBusConnection connection =
       ApplicationManager.getApplication().getMessageBus().connect(this);
-    connection.subscribe(AnActionListener.TOPIC, new AnActionListener() {
+    connection.subscribe(AnActionListener.class, new AnActionListener() {
       private @Nullable Project eventProject;
       private @Nullable Editor eventEditor;
 
-      public void beforeActionPerformed(@NotNull AnAction action, @NotNull AnActionEvent event) {
+      @Override
+      public void beforeActionPerformed(@NotNull AnAction action, @NotNull DataContext dataContext, @NotNull AnActionEvent event) {
         // In case of hot-reload breakages, see: https://github.com/flutter/flutter-intellij/issues/6996
         if (!(action instanceof SaveAllAction)) {
           return;
@@ -131,8 +130,8 @@ public class FlutterReloadManager implements Disposable {
         // Save the current project value here. If we access later (in afterActionPerformed), we can get
         // exceptions if another event occurs before afterActionPerformed is called.
         try {
-          eventProject = event.getProject();
-          eventEditor = CommonDataKeys.EDITOR.getData(event.getDataContext());
+          eventProject = event.getData(Project.KEY);
+          eventEditor = event.getDataContext().getData(Editor.KEY);
         }
         catch (Throwable t) {
           // A catch-all, so any exceptions don't bubble through to the users.
@@ -140,7 +139,8 @@ public class FlutterReloadManager implements Disposable {
         }
       }
 
-      public void afterActionPerformed(@NotNull AnAction action, @NotNull AnActionEvent event, @NotNull AnActionResult result) {
+      @Override
+      public void afterActionPerformed(@NotNull AnAction action, @NotNull DataContext dataContext, @NotNull AnActionEvent event) {
         // In case of hot-reload breakages, see: https://github.com/flutter/flutter-intellij/issues/6996
         if (!(action instanceof SaveAllAction)) {
           return;
@@ -164,7 +164,7 @@ public class FlutterReloadManager implements Disposable {
         }
       }
     });
-    connection.subscribe(FileDocumentManagerListener.TOPIC, new FileDocumentManagerListener() {
+    connection.subscribe(FileDocumentManagerListener.class, new FileDocumentManagerListener() {
       @Override
       public void beforeAllDocumentsSaving() {
         if (!FlutterSettings.getInstance().isReloadOnSave()) return;
@@ -219,7 +219,7 @@ public class FlutterReloadManager implements Disposable {
       return;
     }
 
-    @NotNull String configPath = PathManager.getConfigDir().toString();
+    @NotNull String configPath = ContainerPathManager.get().getConfigPath();
     if (SystemInfo.isWindows) {
       configPath = configPath.replace('\\', '/');
     }
@@ -254,7 +254,7 @@ public class FlutterReloadManager implements Disposable {
     // Transition the app to an about-to-reload state.
     final FlutterApp.State previousAppState = app.transitionStartingHotReload();
 
-    JobScheduler.getScheduler().schedule(() -> {
+    AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> {
       clearLastNotification();
 
       if (!app.isConnected()) {
@@ -283,7 +283,7 @@ public class FlutterReloadManager implements Disposable {
           // Make sure the reloading message is displayed for at least 2 seconds (so it doesn't just flash by).
           final long delay = Math.max(0, 2000 - (System.currentTimeMillis() - startTime));
 
-          JobScheduler.getScheduler().schedule(() -> UIUtil.invokeLaterIfNeeded(() -> {
+          AppExecutorUtil.getAppScheduledExecutorService().schedule(() -> UIUtil.invokeLaterIfNeeded(() -> {
             if (notification != null) {
               notification.expire();
             }
@@ -381,25 +381,22 @@ public class FlutterReloadManager implements Disposable {
       LOG.error("Could not find notification group for toolWindowId: " + DartProblemsView.TOOLWINDOW_ID);
       return;
     }
-    final Notification notification = notificationGroup.createNotification(
-      title, content, isError ? NotificationType.ERROR : NotificationType.INFORMATION);
+    final Notification.Builder builder = NotificationService.getInstance()
+      .newOfType(notificationGroup, isError ? NotificationType.ERROR : NotificationType.INFORMATION)
+      .title(LocalizeValue.of(title))
+      .content(LocalizeValue.of(content));
 
     if (dartProblemsView != null && !dartProblemsView.isVisible()) {
-      notification.addAction(new AnAction("View Issues") {
-        @Override
-        public void actionPerformed(@NotNull AnActionEvent event) {
-          notification.expire();
-
-          final ToolWindow dartProblemsView = ToolWindowManager.getInstance(myProject).getToolWindow(DartProblemsView.TOOLWINDOW_ID);
-          if (dartProblemsView != null) {
-            dartProblemsView.activate(null);
-          }
+      builder.addClosingAction(LocalizeValue.localizeTODO("View Issues"), () -> {
+        final ToolWindow dartProblemsView1 = ToolWindowManager.getInstance(myProject).getToolWindow(DartProblemsView.TOOLWINDOW_ID);
+        if (dartProblemsView1 != null) {
+          dartProblemsView1.activate(null);
         }
       });
     }
 
-    notification.setIcon(FlutterIcons.Flutter);
-    notification.notify(myProject);
+    builder.icon(FlutterIcons.Flutter);
+    final Notification notification = builder.notifyAndGet(myProject);
 
     lastNotification = notification;
   }
@@ -415,10 +412,11 @@ public class FlutterReloadManager implements Disposable {
       return null;
     }
 
-    final Notification notification =
-      notificationGroup.createNotification(content, isError ? NotificationType.ERROR : NotificationType.INFORMATION);
-    notification.setIcon(FlutterIcons.Flutter);
-    notification.notify(myProject);
+    final Notification.Builder builder = NotificationService.getInstance()
+      .newOfType(notificationGroup, isError ? NotificationType.ERROR : NotificationType.INFORMATION)
+      .content(LocalizeValue.of(content))
+      .icon(FlutterIcons.Flutter);
+    final Notification notification = builder.notifyAndGet(myProject);
 
     lastNotification = notification;
 
@@ -435,10 +433,8 @@ public class FlutterReloadManager implements Disposable {
 
   private void removeRunNotifications(FlutterApp app) {
     final String toolWindowId = app.getMode() == RunMode.DEBUG ? ToolWindowId.DEBUG : ToolWindowId.RUN;
-    final Balloon balloon = ToolWindowManager.getInstance(myProject).getToolWindowBalloon(toolWindowId);
-    if (balloon != null) {
-      balloon.hide();
-    }
+    // Consulo: no getToolWindowBalloon, the manager hides the balloon itself
+    ToolWindowManager.getInstance(myProject).hideToolWindowBalloon(toolWindowId);
   }
 
   private boolean hasErrorsInFile(@NotNull Document document) {

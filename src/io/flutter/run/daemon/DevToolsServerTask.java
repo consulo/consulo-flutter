@@ -12,11 +12,9 @@ import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.flutter.notification.FlutterRunNotificationGroups;
+import consulo.localize.LocalizeValue;
+import consulo.project.ui.notification.NotificationService;
 import consulo.logging.Logger;
 import consulo.component.ProcessCanceledException;
 import consulo.application.progress.ProgressIndicator;
@@ -27,7 +25,6 @@ import consulo.project.event.ProjectManagerListener;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.application.util.registry.Registry;
-import com.jetbrains.lang.dart.analytics.Analytics;
 import com.jetbrains.lang.dart.ide.devtools.DartDevToolsService;
 import com.jetbrains.lang.dart.ide.toolingDaemon.DartToolingDaemonService;
 import io.flutter.FlutterMessages;
@@ -248,8 +245,6 @@ class DevToolsServerTask extends Task.Backgroundable {
       result.addParameter(argument);
     }
 
-    Analytics.updateEnvironment(result);
-
     return result;
   }
 
@@ -267,18 +262,13 @@ class DevToolsServerTask extends Task.Backgroundable {
 
   private void showErrorNotification(String errorTitle, String errorDetails) {
     OpenApiUtils.safeInvokeLater(() -> {
-      final Notification notification = new Notification(FlutterMessages.FLUTTER_NOTIFICATION_GROUP_ID,
-                                                         "DevTools",
-                                                         errorTitle + " " + errorDetails,
-                                                         NotificationType.WARNING);
-
-      notification.addAction(new AnAction("Dismiss") {
-        @Override
-        public void actionPerformed(@NotNull AnActionEvent event) {
-          notification.expire();
-        }
-      });
-      Notifications.Bus.notify(notification, project);
+      NotificationService.getInstance()
+        .newWarn(FlutterRunNotificationGroups.FLUTTER_MESSAGES)
+        .title(LocalizeValue.localizeTODO("DevTools"))
+        .content(LocalizeValue.of(errorTitle + " " + errorDetails))
+        .addClosingAction(LocalizeValue.localizeTODO("Dismiss"), () -> {
+        })
+        .notify(project);
     });
   }
 }

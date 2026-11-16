@@ -15,13 +15,16 @@ import consulo.execution.configuration.RunnerSettings;
 import consulo.execution.coverage.CoverageEnabledConfiguration;
 import consulo.process.event.ProcessEvent;
 import consulo.process.ProcessHandler;
-import com.intellij.execution.runners.DefaultProgramRunnerKt;
+import consulo.document.FileDocumentManager;
+import consulo.execution.ExecutionResult;
+import consulo.execution.runner.RunContentBuilder;
+import consulo.process.ExecutionException;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.runner.GenericProgramRunner;
 import consulo.execution.ui.RunContentDescriptor;
 import consulo.logging.Logger;
 import consulo.virtualFileSystem.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import io.flutter.FlutterBundle;
 import io.flutter.logging.PluginLogger;
 import io.flutter.run.test.TestConfig;
@@ -64,8 +67,8 @@ public class FlutterCoverageProgramRunner extends GenericProgramRunner<RunnerSet
   @Override
   @Nullable
   protected RunContentDescriptor doExecute(final @NotNull RunProfileState state,
-                                           final @NotNull ExecutionEnvironment env) {
-    final RunContentDescriptor result = DefaultProgramRunnerKt.executeState(state, env, this);
+                                           final @NotNull ExecutionEnvironment env) throws ExecutionException {
+    final RunContentDescriptor result = executeState(state, env);
     if (result == null) {
       return null;
     }
@@ -82,6 +85,19 @@ public class FlutterCoverageProgramRunner extends GenericProgramRunner<RunnerSet
     return result;
   }
 
+  /**
+   * Consulo: IntelliJ's {@code DefaultProgramRunnerKt.executeState} (what {@link consulo.execution.runner.DefaultProgramRunner} does).
+   */
+  private @Nullable RunContentDescriptor executeState(@NotNull RunProfileState state, @NotNull ExecutionEnvironment env)
+    throws ExecutionException {
+    FileDocumentManager.getInstance().saveAllDocuments();
+    final ExecutionResult executionResult = state.execute(env.getExecutor(), this);
+    if (executionResult == null) {
+      return null;
+    }
+    return new RunContentBuilder(executionResult, env).showRunContent(env.getContentToReuse());
+  }
+
   private void processCoverage(ExecutionEnvironment env) {
     if (!(env.getRunProfile() instanceof TestConfig runConfig)) return;
     final CoverageEnabledConfiguration configuration = CoverageEnabledConfiguration.getOrCreate(runConfig);
@@ -91,8 +107,8 @@ public class FlutterCoverageProgramRunner extends GenericProgramRunner<RunnerSet
     final Path path = Paths.get(coverageFilePath);
     final Path cov = path.getParent();
     if (cov == null || cov.getParent() == null) return;
-    VfsUtil.markDirtyAndRefresh(false, false, true, LocalFileSystem.getInstance().findFileByPath(cov.getParent().toString()));
-    VfsUtil.markDirtyAndRefresh(false, true, true, LocalFileSystem.getInstance().findFileByPath(cov.toString()));
+    VirtualFileUtil.markDirtyAndRefresh(false, false, true, LocalFileSystem.getInstance().findFileByPath(cov.getParent().toString()));
+    VirtualFileUtil.markDirtyAndRefresh(false, true, true, LocalFileSystem.getInstance().findFileByPath(cov.toString()));
     if (Files.exists(path)) {
       @Nullable final RunnerSettings settings = env.getRunnerSettings();
       if (settings != null) {

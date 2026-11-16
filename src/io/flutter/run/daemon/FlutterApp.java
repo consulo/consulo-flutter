@@ -196,7 +196,7 @@ public class FlutterApp implements Disposable {
   public static List<FlutterApp> allFromProjectProcess(@NotNull Project project) {
     final List<FlutterApp> allRunningApps = new ArrayList<>();
     final List<RunContentDescriptor> runningProcesses =
-      RunContentManager.getInstance(project).getAllDescriptors();
+      project.getInstance(RunContentManager.class).getAllDescriptors();
     for (RunContentDescriptor descriptor : runningProcesses) {
       final ProcessHandler process = descriptor.getProcessHandler();
       if (process != null) {

@@ -10,7 +10,8 @@ import consulo.execution.lineMarker.ExecutorAction;
 import consulo.execution.lineMarker.RunLineMarkerContributor;
 import consulo.execution.test.TestIconMapper;
 import consulo.execution.test.TestStateInfo;
-import consulo.application.AllIcons;
+import consulo.execution.icon.ExecutionIconGroup;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.document.Document;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
@@ -20,15 +21,17 @@ import consulo.language.psi.PsiFile;
 import consulo.language.psi.PsiInvalidElementAccessException;
 import consulo.language.impl.ast.LeafElement;
 import java.util.function.Function;
-import com.intellij.util.Time;
+import com.jetbrains.lang.dart.DartLanguage;
 import com.jetbrains.lang.dart.psi.DartCallExpression;
+import consulo.language.Language;
 import com.jetbrains.lang.dart.psi.DartId;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.Icon;
+import consulo.ui.image.Image;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Utility for creating {@link RunLineMarkerContributor}s for tests.
@@ -41,6 +44,13 @@ public abstract class TestLineMarkerContributor extends RunLineMarkerContributor
 
   protected TestLineMarkerContributor(@NotNull CommonTestConfigUtils testConfigUtils) {
     this.testConfigUtils = testConfigUtils;
+  }
+
+  // Consulo: the language is part of the extension (upstream registers it with language="Dart")
+  @NotNull
+  @Override
+  public Language getLanguage() {
+    return DartLanguage.INSTANCE;
   }
 
   @Nullable
@@ -60,10 +70,10 @@ public abstract class TestLineMarkerContributor extends RunLineMarkerContributor
         if (dartId.getParent().getParent() instanceof DartCallExpression dartCallExpression) {
           final TestType testCall = testConfigUtils.asTestCall(dartCallExpression);
           if (testCall != null) {
-            final Icon icon = getTestStateIcon(element, testCall.getIcon());
+            final Image icon = getTestStateIcon(element, testCall.getIcon());
             final Function<PsiElement, String> tooltipProvider =
               psiElement -> testCall.getTooltip(psiElement, testConfigUtils);
-            return new RunLineMarkerContributor.Info(icon, ExecutorAction.getActions(), tooltipProvider);
+            return new RunLineMarkerContributor.Info(icon, tooltipProvider, ExecutorAction.getActions());
           }
         }
       }
@@ -74,7 +84,7 @@ public abstract class TestLineMarkerContributor extends RunLineMarkerContributor
   }
 
   @NotNull
-  private static Icon getTestStateIcon(@NotNull PsiElement element, @NotNull Icon defaultIcon) {
+  private static Image getTestStateIcon(@NotNull PsiElement element, @NotNull Image defaultIcon) {
     // SMTTestProxy maps test run data to a URI derived from a location hint produced by `package:test`.
     // If we can find corresponding data, we can provide state-aware icons. If not, we default to
     // a standard Run state.
@@ -111,13 +121,13 @@ public abstract class TestLineMarkerContributor extends RunLineMarkerContributor
               if (magnitude != null) {
                 switch (magnitude) {
                   case IGNORED_INDEX:
-                    return AllIcons.RunConfigurations.TestState.Yellow2;
+                    return PlatformIconGroup.runconfigurationsTestignored(); // Consulo: no TestState.Yellow2 gutter icon
                   case ERROR_INDEX:
                   case FAILED_INDEX:
-                    return AllIcons.RunConfigurations.TestState.Red2;
+                    return ExecutionIconGroup.gutterRunerror();
                   case PASSED_INDEX:
                   case COMPLETE_INDEX:
-                    return AllIcons.RunConfigurations.TestState.Green2;
+                    return ExecutionIconGroup.gutterRunsuccess();
                   default:
                 }
               }
@@ -131,6 +141,6 @@ public abstract class TestLineMarkerContributor extends RunLineMarkerContributor
   }
 
   private static Date getSinceDate() {
-    return new Date(System.currentTimeMillis() - Time.DAY);
+    return new Date(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1));
   }
 }

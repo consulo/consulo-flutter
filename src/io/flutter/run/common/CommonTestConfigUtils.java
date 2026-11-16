@@ -13,7 +13,7 @@ import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import consulo.application.util.CachedValue;
 import consulo.application.util.CachedValueProvider;
-import consulo.application.util.CachedValuesManager;
+import consulo.language.psi.util.LanguageCachedValueUtil;
 import consulo.language.psi.PsiModificationTracker;
 import consulo.language.psi.util.PsiTreeUtil;
 import com.jetbrains.lang.dart.psi.DartCallExpression;
@@ -158,7 +158,7 @@ public abstract class CommonTestConfigUtils {
       return null;
     }
 
-    final Map<String, Optional<TestType>> cache = CachedValuesManager.getCachedValue(file, CUSTOM_TEST_CACHE_KEY, () ->
+    final Map<String, Optional<TestType>> cache = LanguageCachedValueUtil.getCachedValue(file, CUSTOM_TEST_CACHE_KEY, () ->
       CachedValueProvider.Result.create(new ConcurrentHashMap<>(), PsiModificationTracker.MODIFICATION_COUNT)
     );
 

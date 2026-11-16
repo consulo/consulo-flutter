@@ -17,9 +17,8 @@ import consulo.execution.test.ui.BaseTestsOutputConsoleView;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.document.FileDocumentManager;
 import consulo.module.Module;
-import consulo.ide.impl.idea.openapi.module.ModuleUtil;
+import consulo.language.util.ModuleUtilCore;
 import consulo.project.Project;
-import consulo.project.util.ProjectUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import com.jetbrains.lang.dart.ide.runner.DartConsoleFilter;
@@ -120,7 +119,7 @@ public class TestLaunchState extends CommandLineState {
     final ConsoleProps props = ConsoleProps.forPub(config, executor, resolver);
     final BaseTestsOutputConsoleView console = SMTestRunnerConnectionUtil.createConsole(ConsoleProps.pubFrameworkName, props);
 
-    final Module module = ModuleUtil.findModuleForFile(testFileOrDir, project);
+    final Module module = ModuleUtilCore.findModuleForFile(testFileOrDir, project);
     console.addMessageFilter(new DartConsoleFilter(project, getTestFileOrDir()));
     final String baseDir = getBaseDir();
     if (baseDir != null) {
@@ -137,7 +136,7 @@ public class TestLaunchState extends CommandLineState {
     if (root != null) {
       return root.getPath();
     }
-    final VirtualFile baseDir = ProjectUtil.guessProjectDir(config.getProject());
+    final VirtualFile baseDir = config.getProject().getBaseDir(); // Consulo: no ProjectUtil.guessProjectDir
     return baseDir == null ? null : baseDir.getPath();
   }
 
