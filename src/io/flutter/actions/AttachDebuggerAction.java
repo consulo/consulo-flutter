@@ -5,6 +5,10 @@
  */
 package io.flutter.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.flutter.localize.FlutterConsuloLocalize;
+import io.flutter.icons.FlutterIcons;
+
 import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.execution.ProgramRunnerUtil;
 import consulo.execution.RunManager;
@@ -40,7 +44,14 @@ import javax.swing.*;
 import java.util.List;
 import java.util.function.Consumer;
 
+@ActionImpl(id = "AttachDebuggerAction")
 public class AttachDebuggerAction extends FlutterSdkAction implements AnActionWithSyncUpdate {
+  public AttachDebuggerAction() {
+    // Consulo: text, description and icon of upstream plugin.xml <action>
+    getTemplatePresentation().setText(FlutterConsuloLocalize.actionAttachdebuggeractionText());
+    getTemplatePresentation().setDescription(FlutterConsuloLocalize.actionAttachdebuggeractionDescription());
+    getTemplatePresentation().setIcon(FlutterIcons.AttachDebugger);
+  }
 
   // Is 'flutter attach' running for a project?
   // The three states are true, false, and non-existent (null).

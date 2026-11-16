@@ -5,6 +5,9 @@
  */
 package io.flutter.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.flutter.localize.FlutterConsuloLocalize;
+
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
@@ -15,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import consulo.ui.image.Image;
 
+@ActionImpl(id = "io.flutter.RestartDaemon")
 public class RestartFlutterDaemonAction extends AnAction {
 
   /**
@@ -28,8 +32,12 @@ public class RestartFlutterDaemonAction extends AnAction {
   /**
    * A default constructor, invoked by plugin.xml contributions.
    */
-  RestartFlutterDaemonAction() {
+  public RestartFlutterDaemonAction() {
     super();
+    // Consulo: text, description and icon of upstream plugin.xml <action>
+    getTemplatePresentation().setText(FlutterConsuloLocalize.actionIoFlutterRestartdaemonText());
+    getTemplatePresentation().setDescription(FlutterConsuloLocalize.actionIoFlutterRestartdaemonDescription());
+    getTemplatePresentation().setIcon(FlutterIcons.Flutter);
   }
 
   /**

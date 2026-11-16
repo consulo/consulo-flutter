@@ -5,6 +5,9 @@
  */
 package io.flutter.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.flutter.localize.FlutterConsuloLocalize;
+
 import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.application.CommonBundle;
 import consulo.ui.ex.action.AnActionEvent;
@@ -37,7 +40,13 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
+@ActionImpl(id = "Flutter.ExtractWidget")
 public class ExtractWidgetAction extends DumbAwareAction implements AnActionWithSyncUpdate {
+  public ExtractWidgetAction() {
+    // Consulo: text, description and icon of upstream plugin.xml <action>
+    getTemplatePresentation().setText(FlutterConsuloLocalize.actionFlutterExtractwidgetText());
+  }
+
   @Override
   public void actionPerformed(@NotNull AnActionEvent event) {
     final DataContext dataContext = event.getDataContext();

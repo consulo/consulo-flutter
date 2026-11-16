@@ -5,6 +5,9 @@
  */
 package io.flutter.actions;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.flutter.localize.FlutterConsuloLocalize;
+
 import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
@@ -29,7 +32,13 @@ import io.flutter.utils.ProgressHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@ActionImpl(id = "flutter.xcode.open")
 public class OpenInXcodeAction extends AnAction implements AnActionWithSyncUpdate {
+  public OpenInXcodeAction() {
+    // Consulo: text, description and icon of upstream plugin.xml <action>
+    getTemplatePresentation().setText(FlutterConsuloLocalize.actionFlutterXcodeOpenText());
+    getTemplatePresentation().setDescription(FlutterConsuloLocalize.actionFlutterXcodeOpenDescription());
+  }
 
   @Nullable
   static VirtualFile findProjectFile(@NotNull AnActionEvent event) {

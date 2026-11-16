@@ -35,6 +35,18 @@ It depends on the [consulo-dart](https://github.com/consulo/consulo-dart) plugin
 - Upstream `META-INF/plugin.xml` and the optional `*-contribs.xml` / `flutter-coverage.xml` are kept as `.xml_` as the list
   of upstream registrations; Consulo registrations are annotations (`@ExtensionImpl`, `@ActionImpl`, `@ServiceImpl`,
   `@TopicImpl`). After an upstream merge, compare its diff with the annotations.
+- Actions get text/description/icon of their upstream `<action>`/`<group>` in their constructor, from the hand-edited
+  `resources/LOCALIZE-LIB/en_US/consulo.flutter.FlutterConsuloLocalize.yaml` (`action.<id>.text` / `.description`;
+  `FlutterBundle.properties` has no action keys). Groups without a class upstream are `consulo.flutter.actions.*Group`.
+  Upstream registers `FlutterGettingStartedAction` and `OpenDevToolsAction` under two ids each; the second ids are the
+  subclasses `consulo.flutter.actions.FlutterHelpAction` and `OpenDevToolsInBrowserAction`.
+- Toolbar: Consulo has only the old UI `ToolbarRunGroup`. `Flutter.MainToolbarActions` (device selector) goes there before
+  `RunConfiguration` (upstream new UI `RunToolbarMainActionGroup`); `Flutter.MainToolbarActionsLegacy` is not registered.
+  `MainToolBarRunActionsGroup` (upstream new UI `MainToolbarRight`) goes there after `RunnerActions`, its actions have no
+  parents of their own (upstream adds them to `ToolbarRunGroup` one by one for the old UI).
+- `@ActionImpl` has no default keyboard shortcuts: `META-INF/plugin.xml` repeats `<action id class>` with the upstream
+  `<keyboard-shortcut>` (as consulo-git does for `Git.Branches`). Such an action must not have `@ActionImpl` parents
+  (its placement comes from `@ActionImpl` children of a group, or from `<add-to-group>` in that XML entry).
 - Upstream tests (`testSrc`, `testData`) use the IntelliJ test framework and are not built (`maven.test.skip`).
 
 ## Missing Consulo APIs

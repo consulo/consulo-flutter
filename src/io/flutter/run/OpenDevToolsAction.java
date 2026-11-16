@@ -5,6 +5,9 @@
  */
 package io.flutter.run;
 
+import consulo.annotation.component.ActionImpl;
+import consulo.flutter.localize.FlutterConsuloLocalize;
+
 import consulo.webBrowser.BrowserLauncher;
 import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionWithSyncUpdate;
@@ -29,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Objects;
 
+@ActionImpl(id = "flutter.devtools.open")
 public class OpenDevToolsAction extends DumbAwareAction implements AnActionWithSyncUpdate {
   private static final @NotNull Logger LOG = PluginLogger.createLogger(OpenDevToolsAction.class);
   private static final String title = "Open Flutter DevTools in Browser";
@@ -36,6 +40,9 @@ public class OpenDevToolsAction extends DumbAwareAction implements AnActionWithS
   private final Computable<Boolean> myIsApplicable;
 
   public OpenDevToolsAction() {
+    // Consulo: text, description and icon of upstream plugin.xml <action>
+    getTemplatePresentation().setText(FlutterConsuloLocalize.actionFlutterDevtoolsOpenText());
+    getTemplatePresentation().setDescription(FlutterConsuloLocalize.actionFlutterDevtoolsOpenDescription());
     myConnector = null;
     myIsApplicable = null;
   }

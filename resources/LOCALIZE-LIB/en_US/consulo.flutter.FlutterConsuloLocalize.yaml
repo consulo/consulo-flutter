@@ -1,0 +1,124 @@
+# Consulo-only messages (not from upstream FlutterBundle.properties), edited by hand
+# Action texts of upstream META-INF/plugin.xml_ <actions>
+action.AttachDebuggerAction.description:
+    text: 'Attach debugger to a Flutter process embedded in an Android app'
+action.AttachDebuggerAction.text:
+    text: 'Flutter Attach'
+action.Flutter.DeviceSelector.description:
+    text: 'Flutter Device Selection'
+action.Flutter.DeviceSelector.text:
+    text: 'Flutter Device Selection'
+action.Flutter.DeviceSelectorRefresher.description:
+    text: 'Refresh device list'
+action.Flutter.DeviceSelectorRefresher.text:
+    text: 'Refresh Device List'
+action.Flutter.ExtractWidget.text:
+    text: 'Extract Flutter Widget...'
+action.Flutter.FlutterHelp.text:
+    text: 'Flutter Plugin Help'
+action.Flutter.Menu.RunProfileAction.description:
+    text: 'Run Flutter app in profile mode'
+action.Flutter.Menu.RunProfileAction.text:
+    text: 'Run in Flutter Profile Mode'
+action.Flutter.Menu.RunReleaseAction.description:
+    text: 'Run Flutter app in release mode'
+action.Flutter.Menu.RunReleaseAction.text:
+    text: 'Run in Flutter release mode'
+action.flutter.build.aab.description:
+    text: 'Building a Flutter app for Google Play Store distribution'
+action.flutter.build.aab.text:
+    text: 'Build App Bundle'
+action.flutter.build.aar.description:
+    text: 'Building a Flutter module for Android add-to-app'
+action.flutter.build.aar.text:
+    text: 'Build AAR'
+action.flutter.build.apk.description:
+    text: 'Building a Flutter app for general distribution'
+action.flutter.build.apk.text:
+    text: 'Build APK'
+action.flutter.build.bundle.description:
+    text: 'Building the Flutter assets directory'
+action.flutter.build.bundle.text:
+    text: 'Build Assets Bundle'
+action.flutter.build.ios.description:
+    text: 'Building a Flutter app for Apple App Store distribution'
+action.flutter.build.ios.text:
+    text: 'Build iOS'
+action.flutter.build.linux.description:
+    text: 'Building a Flutter app for Linux'
+action.flutter.build.linux.text:
+    text: 'Build Linux'
+action.flutter.build.macos.description:
+    text: 'Building a Flutter app for macOS'
+action.flutter.build.macos.text:
+    text: 'Build macOS'
+action.flutter.build.web.description:
+    text: 'Building a Flutter app for web'
+action.flutter.build.web.text:
+    text: 'Build Web'
+action.flutter.build.windows.description:
+    text: 'Building a Flutter app for Windows'
+action.flutter.build.windows.text:
+    text: 'Build Windows'
+action.flutter.clean.description:
+    text: 'Run ''flutter clean'''
+action.flutter.clean.text:
+    text: 'Flutter Clean'
+action.flutter.devtools.open.description:
+    text: 'Open Flutter DevTools in Browser'
+action.flutter.devtools.open.text:
+    text: 'Open Flutter DevTools in Browser'
+action.flutter.doctor.description:
+    text: 'Run ''flutter doctor'''
+action.flutter.doctor.text:
+    text: 'Flutter Doctor'
+action.flutter.gettingStarted.description:
+    text: 'View the online getting started documentation'
+action.flutter.gettingStarted.text:
+    text: 'Getting Started'
+action.flutter.pub.add.description:
+    text: 'Run ''flutter pub add'''
+action.flutter.pub.add.text:
+    text: 'Flutter Pub Add'
+action.flutter.pub.get.description:
+    text: 'Run ''flutter pub get'''
+action.flutter.pub.get.text:
+    text: 'Flutter Pub Get'
+action.flutter.pub.upgrade.description:
+    text: 'Run ''flutter pub upgrade'''
+action.flutter.pub.upgrade.text:
+    text: 'Flutter Pub Upgrade'
+action.flutter.submitFeedback.description:
+    text: 'Provide feedback for the Flutter plugin'
+action.flutter.submitFeedback.text:
+    text: 'Submit Feedback...'
+action.flutter.upgrade.description:
+    text: 'Run ''flutter upgrade'''
+action.flutter.upgrade.text:
+    text: 'Flutter Upgrade'
+action.flutter.xcode.open.description:
+    text: 'Launch Xcode to edit the iOS module as a top-level project'
+action.flutter.xcode.open.text:
+    text: 'Open iOS/macOS Module in Xcode'
+action.io.flutter.OpenDevToolsAction.description:
+    text: 'Open Flutter DevTools in Browser'
+action.io.flutter.OpenDevToolsAction.text:
+    text: 'Open Flutter DevTools in Browser'
+action.io.flutter.RefreshToolWindow.description:
+    text: 'Refresh current tool window contents'
+action.io.flutter.RefreshToolWindow.text:
+    text: 'Refresh Tool Window'
+action.io.flutter.RestartDaemon.description:
+    text: 'Restart Flutter Daemon'
+action.io.flutter.RestartDaemon.text:
+    text: 'Restart Flutter Daemon'
+group.FlutterBuildGroup.text:
+    text: 'Flutter'
+group.FlutterToolsActionGroup.description:
+    text: 'Flutter Tools'
+group.FlutterToolsActionGroup.text:
+    text: 'Flutter'
+group.FlutterToolsGroup.description:
+    text: 'Flutter Tools'
+group.FlutterToolsGroup.text:
+    text: 'Flutter'
