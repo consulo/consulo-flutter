@@ -18,7 +18,6 @@ package consulo.flutter.notification;
 import com.jetbrains.lang.dart.ide.errorTreeView.DartProblemsView;
 import consulo.annotation.component.ExtensionImpl;
 import consulo.localize.LocalizeValue;
-import consulo.project.ui.notification.NotificationDisplayType;
 import consulo.project.ui.notification.NotificationGroup;
 import consulo.project.ui.notification.NotificationGroupContributor;
 import consulo.project.ui.wm.ToolWindowId;
@@ -41,13 +40,9 @@ public class FlutterRunNotificationGroups implements NotificationGroupContributo
     NotificationGroup.toolWindowGroup("flutter-analysis", LocalizeValue.localizeTODO("Flutter Analysis"), DartProblemsView.TOOLWINDOW_ID);
 
   /**
-   * The "Flutter Messages" group ({@link FlutterMessages#FLUTTER_NOTIFICATION_GROUP_ID}), registered by the plugin's main
-   * notification groups, not here. Notifications are routed by group id, so this instance only carries the id.
-   * TODO: replace with the main group constant once both are merged.
+   * The "Flutter Messages" group ({@link FlutterMessages#FLUTTER_NOTIFICATION_GROUP_ID}), registered by {@link FlutterNotificationGroups}.
    */
-  public static final NotificationGroup FLUTTER_MESSAGES =
-    new NotificationGroup(FlutterMessages.FLUTTER_NOTIFICATION_GROUP_ID, LocalizeValue.localizeTODO("Flutter Messages"),
-                          NotificationDisplayType.BALLOON, true);
+  public static final NotificationGroup FLUTTER_MESSAGES = FlutterNotificationGroups.FLUTTER_MESSAGES;
 
   private static final List<NotificationGroup> ALL = List.of(FLUTTER_RUN, FLUTTER_DEBUG, FLUTTER_ANALYSIS);
 
