@@ -229,7 +229,7 @@ public class FlutterApp implements Disposable {
     LOG.info(FlutterCommand.safeCommandLog(command));
 
     Consumer<String> onTextAvailable = null;
-    final ProcessHandler process = new MostlySilentColoredProcessHandler(command, onTextAvailable);
+    final ProcessHandler process = MostlySilentColoredProcessHandler.create(command, onTextAvailable);
 
     final DaemonApi api = new DaemonApi(process);
     final FlutterApp app = new FlutterApp(project, mode, device, process, env, api, command);

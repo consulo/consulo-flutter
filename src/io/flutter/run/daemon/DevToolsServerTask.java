@@ -126,7 +126,7 @@ class DevToolsServerTask extends Task.Backgroundable {
 
   private void setUpInDevMode(@NotNull GeneralCommandLine command) {
     try {
-      this.process = new MostlySilentColoredProcessHandler(command);
+      this.process = MostlySilentColoredProcessHandler.create(command);
       this.process.addProcessListener(new ProcessAdapter() {
         @Override
         public void onTextAvailable(@NotNull ProcessEvent event, @NotNull Key outputType) {
@@ -146,7 +146,7 @@ class DevToolsServerTask extends Task.Backgroundable {
 
   private void setUpWithDart(GeneralCommandLine command) {
     try {
-      this.process = new MostlySilentColoredProcessHandler(command);
+      this.process = MostlySilentColoredProcessHandler.create(command);
       this.process.addProcessListener(new ProcessAdapter() {
         @Override
         public void onTextAvailable(@NotNull ProcessEvent event, @NotNull Key outputType) {

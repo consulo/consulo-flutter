@@ -145,7 +145,7 @@ public class WidgetPreviewPanel extends SimpleToolWindowPanel implements Disposa
         final FlutterCommand command = sdk.widgetPreview(root, isVerboseMode, dtdUri, devToolsUri);
         LOG.info(command.getDisplayCommand());
 
-        final ProcessHandler handler = new MostlySilentColoredProcessHandler(command.createGeneralCommandLine(project));
+        final ProcessHandler handler = MostlySilentColoredProcessHandler.create(command.createGeneralCommandLine(project));
         flutterProcessRef.set(handler);
         handler.addProcessListener(new WidgetPreviewListener(urlFuture, isVerboseMode));
         handler.startNotify();

@@ -208,7 +208,7 @@ class DeviceDaemon {
       final int daemonId = nextDaemonId.incrementAndGet();
       LOG.info("starting Flutter device daemon #" + daemonId + ": " + toString(FlutterSettings.getInstance().isFilePathLoggingEnabled()));
       // The mostly silent process handler reduces CPU usage of the daemon process.
-      final ProcessHandler process = new MostlySilentColoredProcessHandler(toCommandLine());
+      final ProcessHandler process = MostlySilentColoredProcessHandler.create(toCommandLine());
 
       boolean succeeded = false;
       try {

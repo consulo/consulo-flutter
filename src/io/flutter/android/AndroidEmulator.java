@@ -72,7 +72,7 @@ public class AndroidEmulator {
 
     try {
       final StringBuilder stdout = new StringBuilder();
-      final ColoredProcessHandler process = new MostlySilentColoredProcessHandler(cmd);
+      final ColoredProcessHandler process = MostlySilentColoredProcessHandler.create(cmd);
       listener = new ProcessAdapter() {
         @Override
         public void onTextAvailable(@NotNull ProcessEvent event, @NotNull Key outputType) {

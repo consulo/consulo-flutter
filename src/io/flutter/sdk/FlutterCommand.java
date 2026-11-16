@@ -253,7 +253,7 @@ public class FlutterCommand {
     try {
       final GeneralCommandLine commandLine = createGeneralCommandLine(project);
       LOG.info(safeCommandLog(commandLine));
-      handler = new MostlySilentColoredProcessHandler(commandLine);
+      handler = MostlySilentColoredProcessHandler.create(commandLine);
       handler.addProcessListener(new ProcessAdapter() {
         @Override
         public void processTerminated(@NotNull final ProcessEvent event) {

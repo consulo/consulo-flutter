@@ -6,14 +6,15 @@
 package io.flutter.utils;
 
 import consulo.process.ExecutionException;
+import consulo.process.ProcessHandler;
+import consulo.process.ProcessHandlerBuilder;
 import consulo.process.cmd.GeneralCommandLine;
-import consulo.process.internal.BaseOSProcessHandler;
-import com.intellij.execution.process.ColoredProcessHandler;
-import consulo.process.internal.UnixProcessManager;
-import consulo.util.dataholder.Key;
-import consulo.application.util.SystemInfo;
+import consulo.process.event.ProcessEvent;
+import consulo.process.event.ProcessListener;
 import consulo.process.io.BaseOutputReader;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -34,48 +35,33 @@ import java.util.function.Consumer;
  * in the IntelliJ log.  See {@link BaseOSProcessHandler}'s {@code SimpleOutputReader.beforeSleeping}
  * for more information.
  */
-public class MostlySilentColoredProcessHandler extends ColoredProcessHandler {
-  private GeneralCommandLine commandLine;
-  private Consumer<String> onTextAvailable;
+public class MostlySilentColoredProcessHandler {
+  // Consulo: the colored OS process handler is internal and can't be subclassed, so this builds an equivalent handler:
+  // colored output, `forMostlySilentProcess` reader options, and SIGINT to the process tree on Unix (soft kill)
+  // as upstream's doDestroyProcess override. onTextAvailable gets the decoded text, as upstream's coloredTextAvailable.
+  private MostlySilentColoredProcessHandler() {
+  }
 
-  public MostlySilentColoredProcessHandler(@NotNull GeneralCommandLine commandLine)
+  public static @NotNull ProcessHandler create(@NotNull GeneralCommandLine commandLine) throws ExecutionException {
+    return create(commandLine, null);
+  }
+
+  public static @NotNull ProcessHandler create(@NotNull GeneralCommandLine commandLine, @Nullable Consumer<String> onTextAvailable)
     throws ExecutionException {
-    this(commandLine, null);
-  }
-
-  public MostlySilentColoredProcessHandler(@NotNull GeneralCommandLine commandLine, Consumer<String> onTextAvailable)
-          throws ExecutionException {
-    super(commandLine);
-    this.commandLine = commandLine;
-    this.onTextAvailable = onTextAvailable;
-  }
-
-  @NotNull
-  @Override
-  protected BaseOutputReader.Options readerOptions() {
-    return BaseOutputReader.Options.forMostlySilentProcess();
-  }
-
-  @Override
-  protected void doDestroyProcess() {
-    final Process process = getProcess();
-    if (SystemInfo.isUnix && shouldDestroyProcessRecursively() && processCanBeKilledByOS(process)) {
-      final boolean result = UnixProcessManager.sendSigIntToProcessTree(process);
-      if (!result) {
-        super.doDestroyProcess();
-      }
-    }
-    else {
-      super.doDestroyProcess();
-    }
-  }
-
-  @Override
-  public void coloredTextAvailable(@NotNull String text, @NotNull Key outputType) {
-    super.coloredTextAvailable(text, outputType);
-
+    ProcessHandler handler = ProcessHandlerBuilder.create(commandLine)
+      .colored()
+      .killable()
+      .shouldKillProcessSoftly(true)
+      .readerOptions(BaseOutputReader.Options.forMostlySilentProcess())
+      .build();
     if (onTextAvailable != null) {
-      onTextAvailable.accept(text);
+      handler.addProcessListener(new ProcessListener() {
+        @Override
+        public void onTextAvailable(@NotNull ProcessEvent event, @NotNull Key outputType) {
+          onTextAvailable.accept(event.getText());
+        }
+      });
     }
+    return handler;
   }
 }
