@@ -8,7 +8,6 @@ package io.flutter.view;
 import com.google.common.annotations.VisibleForTesting;
 import consulo.webBrowser.BrowserLauncher;
 import consulo.disposer.Disposable;
-import consulo.component.persist.Storage;
 import consulo.logging.Logger;
 import consulo.application.progress.EmptyProgressIndicator;
 import consulo.application.progress.ProgressManager;
@@ -16,8 +15,6 @@ import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.internal.ToolWindowManagerEx;
-import com.intellij.serviceContainer.NonInjectable;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
@@ -28,10 +25,6 @@ import io.flutter.actions.RefreshToolWindowAction;
 import io.flutter.devtools.DevToolsIdeFeature;
 import io.flutter.devtools.DevToolsUrl;
 import io.flutter.devtools.DevToolsUtils;
-import io.flutter.jxbrowser.FailureType;
-import io.flutter.jxbrowser.InstallationFailedReason;
-import io.flutter.jxbrowser.JxBrowserManager;
-import io.flutter.jxbrowser.JxBrowserStatus;
 import io.flutter.logging.PluginLogger;
 import io.flutter.run.FlutterDevice;
 import io.flutter.run.daemon.DevToolsInstance;
@@ -42,14 +35,13 @@ import io.flutter.sdk.FlutterSdkVersion;
 import io.flutter.settings.FlutterSettings;
 import io.flutter.toolwindow.InspectorViewToolWindowManagerListener;
 import io.flutter.utils.AsyncUtils;
-import io.flutter.utils.JxBrowserUtils;
 import io.flutter.utils.LabelInput;
 import io.flutter.utils.OpenApiUtils;
 import org.dartlang.vm.service.VmService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.Icon;
+import consulo.ui.image.Image;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -57,20 +49,16 @@ import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
-@com.intellij.openapi.components.State(
-  name = "InspectorView",
-  storages = {@Storage("$WORKSPACE_FILE$")}
-)
+// Consulo: upstream @State is dropped, this service has no persistent state.
 public class InspectorView implements Disposable {
   private static final @NotNull Logger LOG = PluginLogger.createLogger(InspectorView.class);
 
   public static final @NotNull String TOOL_WINDOW_ID = "Flutter Inspector";
 
+  // Consulo: the JxBrowser labels are unused
   protected static final String INSTALLATION_IN_PROGRESS_LABEL = "Installing JxBrowser and DevTools...";
   protected static final String INSTALLATION_TIMED_OUT_LABEL =
     "Waiting for JxBrowser installation timed out. Restart your IDE to try again.";
@@ -89,22 +77,16 @@ public class InspectorView implements Disposable {
 
   private InspectorViewToolWindowManagerListener toolWindowListener;
   private int devToolsInstallCount = 0;
-  private final @NotNull JxBrowserUtils jxBrowserUtils;
-  private final @NotNull JxBrowserManager jxBrowserManager;
+  // Consulo: JxBrowser is dropped (JxBrowserManager, JxBrowserUtils and the installation handling).
 
   public InspectorView(@NotNull Project project) {
-    this(project, JxBrowserManager.getInstance(), new JxBrowserUtils(), new ViewUtils());
+    this(project, new ViewUtils());
   }
 
   @VisibleForTesting
-  @NonInjectable
   protected InspectorView(@NotNull Project project,
-                          @NotNull JxBrowserManager jxBrowserManager,
-                          @NotNull JxBrowserUtils jxBrowserUtils,
                           ViewUtils viewUtils) {
     myProject = project;
-    this.jxBrowserUtils = jxBrowserUtils;
-    this.jxBrowserManager = jxBrowserManager;
     this.viewUtils = viewUtils != null ? viewUtils : new ViewUtils();
   }
 
@@ -131,7 +113,7 @@ public class InspectorView implements Disposable {
     final FlutterDevice device = app.device();
     final List<FlutterDevice> existingDevices = new ArrayList<>();
     final String tabName = device.getUniqueName(existingDevices);
-    final Icon tabIcon = device.getIcon();
+    final Image tabIcon = device.getIcon();
 
     if (emptyContent != null) {
       contentManager.removeContent(emptyContent, true);
@@ -178,7 +160,7 @@ public class InspectorView implements Disposable {
       final ProgressManager progressManager = ProgressManager.getInstance();
       progressManager.runProcess(task, new EmptyProgressIndicator());
 
-      toolWindow.setTitleActions(List.of(new RefreshToolWindowAction(TOOL_WINDOW_ID)));
+      toolWindow.setTitleActions(new RefreshToolWindowAction(TOOL_WINDOW_ID));
     }
     else {
       BrowserLauncher.getInstance().browse(
@@ -213,10 +195,6 @@ public class InspectorView implements Disposable {
       return;
     }
     OpenApiUtils.safeInvokeLater(() -> debugActiveHelper(app));
-  }
-
-  protected void handleJxBrowserInstalled(FlutterApp app, ToolWindow toolWindow, DevToolsIdeFeature ideFeature) {
-    presentDevTools(app, toolWindow, true, ideFeature);
   }
 
   private void presentDevTools(FlutterApp app, ToolWindow toolWindow, boolean isEmbedded, DevToolsIdeFeature ideFeature) {
@@ -299,92 +277,6 @@ public class InspectorView implements Disposable {
     });
   }
 
-  protected void handleJxBrowserInstallationInProgress(FlutterApp app, ToolWindow toolWindow,
-                                                       DevToolsIdeFeature ideFeature) {
-    presentOpenDevToolsOptionWithMessage(app, toolWindow, INSTALLATION_IN_PROGRESS_LABEL, ideFeature);
-
-    if (jxBrowserManager.getStatus().equals(JxBrowserStatus.INSTALLED)) {
-      handleJxBrowserInstalled(app, toolWindow, ideFeature);
-    }
-    else {
-      startJxBrowserInstallationWaitingThread(app, toolWindow, ideFeature);
-    }
-  }
-
-  protected void startJxBrowserInstallationWaitingThread(FlutterApp app, ToolWindow toolWindow,
-                                                         DevToolsIdeFeature ideFeature) {
-    OpenApiUtils.safeExecuteOnPooledThread(() -> {
-      waitForJxBrowserInstallation(app, toolWindow, ideFeature);
-    });
-  }
-
-  protected void waitForJxBrowserInstallation(FlutterApp app, ToolWindow toolWindow,
-                                              DevToolsIdeFeature ideFeature) {
-    try {
-      final JxBrowserStatus newStatus = jxBrowserManager.waitForInstallation(INSTALLATION_WAIT_LIMIT_SECONDS);
-
-      handleUpdatedJxBrowserStatusOnEventThread(app, toolWindow, newStatus, ideFeature);
-    }
-    catch (TimeoutException e) {
-      presentOpenDevToolsOptionWithMessage(app, toolWindow, INSTALLATION_TIMED_OUT_LABEL, ideFeature);
-    }
-  }
-
-  protected void handleUpdatedJxBrowserStatusOnEventThread(
-    FlutterApp app,
-    ToolWindow toolWindow,
-    JxBrowserStatus jxBrowserStatus,
-    DevToolsIdeFeature ideFeature) {
-    AsyncUtils.invokeLater(() -> handleUpdatedJxBrowserStatus(app, toolWindow, jxBrowserStatus, ideFeature));
-  }
-
-  protected void handleUpdatedJxBrowserStatus(
-    FlutterApp app,
-    ToolWindow toolWindow,
-    JxBrowserStatus jxBrowserStatus,
-    DevToolsIdeFeature ideFeature) {
-    if (Objects.equals(jxBrowserStatus, JxBrowserStatus.INSTALLED)) {
-      handleJxBrowserInstalled(app, toolWindow, ideFeature);
-    }
-    else if (jxBrowserStatus.equals(JxBrowserStatus.INSTALLATION_FAILED)) {
-      handleJxBrowserInstallationFailed(app, toolWindow, ideFeature);
-    }
-    else {
-      // newStatus can be null if installation is interrupted or stopped for another reason.
-      presentOpenDevToolsOptionWithMessage(app, toolWindow, INSTALLATION_WAIT_FAILED, ideFeature);
-    }
-  }
-
-  protected void handleJxBrowserInstallationFailed(FlutterApp app, ToolWindow toolWindow,
-                                                   DevToolsIdeFeature ideFeature) {
-    final List<LabelInput> inputs = new ArrayList<>();
-    final LabelInput openDevToolsLabel = openDevToolsLabel(app, toolWindow, ideFeature);
-
-    final InstallationFailedReason latestFailureReason = jxBrowserManager.getLatestFailureReason();
-
-    if (!jxBrowserUtils.licenseIsSet()) {
-      // If the license isn't available, allow the user to open the equivalent page in a non-embedded browser window.
-      inputs.add(new LabelInput("The JxBrowser license could not be found."));
-      inputs.add(openDevToolsLabel);
-    }
-    else if (latestFailureReason != null && Objects.equals(latestFailureReason.failureType, FailureType.SYSTEM_INCOMPATIBLE)) {
-      // If we know the system is incompatible, skip retry link and offer to open in browser.
-      inputs.add(new LabelInput(latestFailureReason.detail));
-      inputs.add(openDevToolsLabel);
-    }
-    else {
-      // Allow the user to manually restart or open the equivalent page in a non-embedded browser window.
-      inputs.add(new LabelInput("JxBrowser installation failed."));
-      inputs.add(new LabelInput("Retry installation?", (linkLabel, data) -> {
-        jxBrowserManager.retryFromFailed(app.getProject());
-        handleJxBrowserInstallationInProgress(app, toolWindow, ideFeature);
-      }));
-      inputs.add(openDevToolsLabel);
-    }
-
-    viewUtils.presentClickableLabel(toolWindow, inputs);
-  }
-
   protected void presentOpenDevToolsOptionWithMessage(FlutterApp app,
                                                       ToolWindow toolWindow,
                                                       String message,
@@ -397,7 +289,7 @@ public class InspectorView implements Disposable {
 
   private void debugActiveHelper(@NotNull FlutterApp app) {
     final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(myProject);
-    if (!(toolWindowManager instanceof ToolWindowManagerEx)) {
+    if (toolWindowManager == null) {
       return;
     }
 
@@ -437,32 +329,8 @@ public class InspectorView implements Disposable {
   }
 
   private void displayEmbeddedBrowser(FlutterApp app, ToolWindow toolWindow, DevToolsIdeFeature ideFeature) {
-    if (FlutterSettings.getInstance().isEnableJcefBrowser()) {
-      presentDevTools(app, toolWindow, true, ideFeature);
-    }
-    else {
-      displayEmbeddedBrowserIfJxBrowser(app, toolWindow, ideFeature);
-    }
-  }
-
-  private void displayEmbeddedBrowserIfJxBrowser(FlutterApp app, ToolWindow toolWindow,
-                                                 DevToolsIdeFeature ideFeature) {
-    final JxBrowserManager manager = jxBrowserManager;
-    final JxBrowserStatus jxBrowserStatus = manager.getStatus();
-
-    if (jxBrowserStatus.equals(JxBrowserStatus.INSTALLED)) {
-      handleJxBrowserInstalled(app, toolWindow, ideFeature);
-    }
-    else if (jxBrowserStatus.equals(JxBrowserStatus.INSTALLATION_IN_PROGRESS)) {
-      handleJxBrowserInstallationInProgress(app, toolWindow, ideFeature);
-    }
-    else if (jxBrowserStatus.equals(JxBrowserStatus.INSTALLATION_FAILED)) {
-      handleJxBrowserInstallationFailed(app, toolWindow, ideFeature);
-    }
-    else if (jxBrowserStatus.equals(JxBrowserStatus.NOT_INSTALLED) || jxBrowserStatus.equals(JxBrowserStatus.INSTALLATION_SKIPPED)) {
-      manager.setUp(myProject.getName());
-      handleJxBrowserInstallationInProgress(app, toolWindow, ideFeature);
-    }
+    // Consulo: no JxBrowser; use the embedded browser when one is available, otherwise open DevTools in the external browser.
+    presentDevTools(app, toolWindow, FlutterUtils.embeddedBrowser(myProject) != null, ideFeature);
   }
 
   private void updateForEmptyContent(@NotNull ToolWindow toolWindow) {

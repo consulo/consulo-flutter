@@ -5,8 +5,6 @@
  */
 package io.flutter.utils;
 
-import com.intellij.util.lang.UrlClassLoader;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
@@ -63,7 +61,8 @@ public class FileUtils {
    * @param paths       list of file paths to load.
    */
   public void loadPaths(ClassLoader classLoader, List<Path> paths) {
-    final UrlClassLoader urlClassLoader = (UrlClassLoader)classLoader;
-    urlClassLoader.addFiles(paths);
+    // Consulo: TODO plugin class loaders can not load extra files (upstream: ((UrlClassLoader)classLoader).addFiles(paths));
+    // only JxBrowser used this, which is dropped.
+    throw new UnsupportedOperationException("Loading paths into a class loader is not supported");
   }
 }

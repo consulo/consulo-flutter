@@ -7,19 +7,15 @@ package io.flutter.utils;
 
 import consulo.execution.RunManager;
 import consulo.execution.RunnerAndConfigurationSettings;
-import com.thaiopensource.relaxng.output.xsd.basic.Facet;
-import com.intellij.facet.FacetManager;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.FileEditorManager;
 import consulo.module.Module;
-import com.intellij.openapi.module.ModuleType;
-import com.intellij.openapi.module.ModuleTypeManager;
 import consulo.project.DumbService;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.serviceContainer.AlreadyDisposedException;
+import consulo.component.ComponentManagerDisposedException;
 import consulo.fileEditor.EditorNotifications;
 import com.jetbrains.lang.dart.sdk.DartSdk;
 import com.jetbrains.lang.dart.util.PubspecYamlUtil;
@@ -44,10 +40,10 @@ public class FlutterModuleUtils {
   }
 
   /**
-   * This provides the {@link ModuleType} ID for Flutter modules to be assigned by the {@link io.flutter.module.FlutterModuleBuilder} and
+   * This provides the ModuleType ID for Flutter modules to be assigned by the {@link io.flutter.module.FlutterModuleBuilder} and
    * elsewhere in the Flutter plugin.
    * <p/>
-   * For Flutter module detection however, {@link ModuleType}s should not be used to determine Flutterness.
+   * For Flutter module detection however, ModuleTypes should not be used to determine Flutterness.
    */
   @SuppressWarnings("SameReturnValue")
   @NotNull
@@ -55,12 +51,10 @@ public class FlutterModuleUtils {
     return "JAVA_MODULE";
   }
 
-  public static ModuleType<?> getFlutterModuleType() {
-    return ModuleTypeManager.getInstance().findByID(getModuleTypeIDForFlutter());
-  }
+  // Consulo: there are no module types, getFlutterModuleType() is dropped.
 
   /**
-   * Return true if the passed module is of a Flutter type. Before version M16 this plugin had its own Flutter {@link ModuleType}.
+   * Return true if the passed module is of a Flutter type. Before version M16 this plugin had its own Flutter ModuleType.
    * Post M16 a Flutter module is defined by the following:
    * <p>
    * <code>
@@ -225,7 +219,7 @@ public class FlutterModuleUtils {
       return;
     }
 
-    final RunnerAndConfigurationSettings settings = runManager.createConfiguration(project.getName(), configType.getFactory());
+    final RunnerAndConfigurationSettings settings = runManager.createRunConfiguration(project.getName(), configType.getFactory());
     final SdkRunConfig config = (SdkRunConfig)settings.getConfiguration();
 
     // Set config name.
@@ -291,7 +285,7 @@ public class FlutterModuleUtils {
 
       return false;
     }
-    catch (AlreadyDisposedException ignored) {
+    catch (ComponentManagerDisposedException ignored) {
       return false;
     }
   }
@@ -325,10 +319,9 @@ public class FlutterModuleUtils {
   public static boolean isInFlutterAndroidModule(@NotNull Project project, @NotNull VirtualFile file) {
     final Module module = FlutterBuildActionGroup.findFlutterModule(project, file);
     if (module != null) {
-      for (Facet<?> facet : FacetManager.getInstance(module).getAllFacets()) {
-        if ("Android".equals(facet.getName())) {
-          return declaresFlutter(project);
-        }
+      // Consulo: module extensions instead of facets
+      if (module.getExtension("android") != null) {
+        return declaresFlutter(project);
       }
     }
     return false;
@@ -338,7 +331,7 @@ public class FlutterModuleUtils {
    * Set the passed module to the module type used by Flutter, defined by {@link #getModuleTypeIDForFlutter()}.
    */
   public static void setFlutterModuleType(@NotNull Module module) {
-    module.setModuleType(getModuleTypeIDForFlutter());
+    // Consulo: there are no module types; Flutter support is the enabled Dart module extension (see enableDartSDK).
   }
 
   public static void setFlutterModuleWithoutReload(@NotNull Module module, @NotNull Project project) {

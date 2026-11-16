@@ -5,9 +5,8 @@
  */
 package io.flutter;
 
-import com.intellij.ide.actions.ShowSettingsUtilImpl;
+import consulo.ide.setting.ShowSettingsUtil;
 import consulo.component.PropertiesComponent;
-import consulo.application.internal.ApplicationInfo;
 import consulo.logging.Logger;
 import consulo.container.plugin.PluginId;
 import consulo.module.Module;
@@ -16,17 +15,17 @@ import consulo.module.content.layer.ContentEntry;
 import consulo.module.content.ModuleRootManager;
 import consulo.module.content.layer.orderEntry.ModuleSourceOrderEntry;
 import consulo.module.content.layer.orderEntry.OrderEntry;
-import com.intellij.openapi.roots.SourceFolder;
+import consulo.language.content.LanguageContentFolderScopes;
+import consulo.module.content.layer.ContentFolder;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
 import consulo.language.psi.PsiFile;
 import com.jetbrains.lang.dart.DartFileType;
 import com.jetbrains.lang.dart.psi.DartFile;
-import io.flutter.jxbrowser.EmbeddedJxBrowser;
 import io.flutter.jxbrowser.JxBrowserStatus;
 import io.flutter.logging.PluginLogger;
 import io.flutter.pub.PubRoot;
@@ -36,7 +35,6 @@ import io.flutter.utils.AndroidUtils;
 import io.flutter.utils.FlutterModuleUtils;
 import io.flutter.utils.OpenApiUtils;
 import io.flutter.view.EmbeddedBrowser;
-import io.flutter.view.EmbeddedJcefBrowser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.SystemIndependent;
@@ -99,19 +97,8 @@ public class FlutterUtils {
   }
 
   public static boolean isAndroidStudio() {
-    try {
-      // The class is available if the IDE has the "Android" plugin installed or is Android Studio.
-      final Class<?> ideInfoClass = Class.forName("com.android.tools.idea.IdeInfo");
-      final Method getInstance = ideInfoClass.getMethod("getInstance");
-      final Object instance = getInstance.invoke(null);
-      final Method isAndroidStudio = ideInfoClass.getMethod("isAndroidStudio");
-      return (Boolean)isAndroidStudio.invoke(instance);
-    }
-    catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
-      // Fall back to checking application name
-      // e.g., "Android Studio Meerkat | 2024.3.1"
-      return ApplicationInfo.getInstance().getFullApplicationName().startsWith("Android Studio");
-    }
+    // Consulo: never Android Studio (upstream checks com.android.tools.idea.IdeInfo or the application name)
+    return false;
   }
 
   @Deprecated
@@ -233,13 +220,14 @@ public class FlutterUtils {
     final VirtualFile virtualFile = file.getContainingFile().getVirtualFile();
     boolean foundSourceRoot = false;
     for (ContentEntry entry : entries) {
-      for (SourceFolder folder : entry.getSourceFolders()) {
+      // Consulo: content folders instead of source folders
+      for (ContentFolder folder : entry.getFolders(LanguageContentFolderScopes.productionAndTest())) {
         final VirtualFile folderFile = folder.getFile();
         if (folderFile == null) {
           continue;
         }
-        if (folderFile.equals(VfsUtil.getCommonAncestor(folderFile, virtualFile))) {
-          if (folder.getRootType().isForTests()) {
+        if (folderFile.equals(VirtualFileUtil.getCommonAncestor(folderFile, virtualFile))) {
+          if (LanguageContentFolderScopes.test().test(folder.getType())) {
             return true; // Test file is in a directory marked as a test source root, but not named 'test'.
           }
           else {
@@ -283,7 +271,7 @@ public class FlutterUtils {
   }
 
   public static void openFlutterSettings(@Nullable Project project) {
-    ShowSettingsUtilImpl.showSettingsDialog(project, FlutterConstants.FLUTTER_SETTINGS_PAGE_ID, "");
+    ShowSettingsUtil.getInstance().showSettingsDialog(project, FlutterConstants.FLUTTER_SETTINGS_PAGE_ID, "");
   }
 
   /**
@@ -562,14 +550,17 @@ public class FlutterUtils {
       return null;
     }
 
-    FlutterSettings settings = FlutterSettings.getInstance();
-
-    return settings.isEnableJcefBrowser()
-           ? EmbeddedJcefBrowser.getInstance(project)
-           : EmbeddedJxBrowser.getInstance(project);
+    // Consulo: JxBrowser is dropped and the JCEF browser is not ported yet (EmbeddedJcefBrowser.java_);
+    // callers fall back to the external browser.
+    // Upstream: settings.isEnableJcefBrowser() ? EmbeddedJcefBrowser.getInstance(project) : EmbeddedJxBrowser.getInstance(project)
+    return null;
   }
 
   public static boolean embeddedBrowserAvailable(JxBrowserStatus status) {
+    // Consulo: no embedded browser implementation is available yet, see embeddedBrowser().
+    if (true) {
+      return false;
+    }
     return Objects.equals(status, JxBrowserStatus.INSTALLED) ||
            status.equals(JxBrowserStatus.INSTALLATION_SKIPPED) && FlutterSettings.getInstance()
              .isEnableJcefBrowser();

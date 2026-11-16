@@ -5,7 +5,7 @@
  */
 package io.flutter.utils;
 
-import com.intellij.openapi.editor.colors.ColorKey;
+import consulo.colorScheme.EditorColorKey;
 import consulo.codeEditor.EditorColors;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +15,7 @@ public class UIUtils {
    * changed, they are all changed.
    */
   @NotNull
-  public static ColorKey getEditorNotificationBackgroundColor() {
+  public static EditorColorKey getEditorNotificationBackgroundColor() {
     return EditorColors.GUTTER_BACKGROUND;
   }
 

@@ -7,7 +7,7 @@ package io.flutter.utils;
 
 import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.util.ColorUtil;
-import consulo.desktop.awt.ui.impl.image.LayeredIcon;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import consulo.ui.ex.awt.util.GraphicsUtil;
 import consulo.ui.ex.awt.UIUtil;
 import io.flutter.icons.FlutterIcons;
@@ -43,8 +43,12 @@ public class CustomIconMaker {
     if (!iconCache.containsKey(mapKey)) {
       final Icon baseIcon = isAbstract ? kind.abstractIcon : kind.icon;
 
-      final Icon icon = LayeredIcon.layeredIcon(() -> new Icon[]{baseIcon, new Icon() {
+      // Consulo: no public LayeredIcon, the text icon paints the base icon itself
+      final Icon icon = new Icon() {
         public void paintIcon(Component c, Graphics g, int x, int y) {
+          if (baseIcon != null) {
+            baseIcon.paintIcon(c, g, x, y);
+          }
           final Graphics2D g2 = (Graphics2D)g.create();
 
           try {
@@ -74,7 +78,7 @@ public class CustomIconMaker {
         public int getIconHeight() {
           return baseIcon != null ? baseIcon.getIconHeight() : 13;
         }
-      }});
+      };
 
       iconCache.put(mapKey, icon);
     }
@@ -101,9 +105,9 @@ public class CustomIconMaker {
   }
 
   public enum IconKind {
-    kClass("class", FlutterIcons.CustomClass, FlutterIcons.CustomClassAbstract),
-    kMethod("method", FlutterIcons.CustomMethod, FlutterIcons.CustomMethodAbstract),
-    kInfo("info", FlutterIcons.CustomInfo);
+    kClass("class", TargetAWT.to(FlutterIcons.CustomClass), TargetAWT.to(FlutterIcons.CustomClassAbstract)),
+    kMethod("method", TargetAWT.to(FlutterIcons.CustomMethod), TargetAWT.to(FlutterIcons.CustomMethodAbstract)),
+    kInfo("info", TargetAWT.to(FlutterIcons.CustomInfo));
 
     public final String name;
     public final Icon icon;

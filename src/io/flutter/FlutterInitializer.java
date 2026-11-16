@@ -7,29 +7,23 @@ package io.flutter;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import consulo.webBrowser.BrowserLauncher;
-import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
+import consulo.container.plugin.PluginManager;
 import consulo.application.ui.event.UISettingsListener;
-import consulo.project.ui.notification.Notification;
-import consulo.project.ui.notification.NotificationType;
-import consulo.project.ui.notification.Notifications;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.flutter.notification.FlutterNotificationGroups;
+import consulo.localize.LocalizeValue;
+import consulo.project.ui.notification.NotificationService;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
-import consulo.ui.ModalityState;
 import consulo.application.ReadAction;
 import consulo.colorScheme.event.EditorColorsListener;
-import consulo.colorScheme.EditorColorsManager;
 import consulo.container.plugin.PluginId;
 import consulo.fileEditor.FileEditorManager;
 import consulo.module.Module;
 import consulo.module.event.ModuleListener;
 import consulo.project.Project;
-import consulo.module.content.ProjectRootManager;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.component.messagebus.MessageBusConnection;
-import io.flutter.android.IntelliJAndroidSdk;
 import io.flutter.dart.DtdUtils;
 import io.flutter.devtools.DevToolsExtensionsViewFactory;
 import io.flutter.devtools.DevToolsUtils;
@@ -150,7 +144,7 @@ public class FlutterInitializer extends FlutterProjectActivity {
         return null;
       })
       .expireWith(FlutterProjectDisposable.getInstance(project))
-      .finishOnUiThread(ModalityState.defaultModalityState(), result -> {
+      .finishOnUiThread(Application.get().getDefaultModalityState(), result -> {
         edtInitialization(finalHasFlutterModule, project);
       })
       .submit(AppExecutorUtil.getAppExecutorService());
@@ -164,10 +158,11 @@ public class FlutterInitializer extends FlutterProjectActivity {
       initializeToolWindows(project);
     }
     else {
-      project.getMessageBus().connect().subscribe(ModuleListener.TOPIC, new ModuleListener() {
+      project.getMessageBus().connect().subscribe(ModuleListener.class, new ModuleListener() {
+        // Consulo: moduleAdded per module instead of modulesAdded
         @Override
-        public void modulesAdded(@NotNull Project project, @NotNull List<? extends Module> modules) {
-          if (!toolWindowsInitialized && modules.stream().anyMatch(FlutterModuleUtils::isFlutterModule)) {
+        public void moduleAdded(@NotNull Project project, @NotNull Module module) {
+          if (!toolWindowsInitialized && FlutterModuleUtils.isFlutterModule(module)) {
             initializeToolWindows(project);
           }
         }
@@ -175,17 +170,14 @@ public class FlutterInitializer extends FlutterProjectActivity {
     }
 
     if (hasFlutterModule
-        && PluginManagerCore.getPlugin(PluginId.getId("org.jetbrains.android")) != null
+        && PluginManager.findPlugin(PluginId.getId("org.jetbrains.android")) != null
         && !FlutterModuleUtils.hasAndroidModule(project)) {
       List<Module> modules = FlutterModuleUtils.findModulesWithFlutterContents(project);
       for (Module module : modules) {
         if (module.isDisposed() || !FlutterModuleUtils.isFlutterModule(module)) continue;
-        VirtualFile moduleFile = module.getModuleFile();
-        if (moduleFile == null) continue;
-        VirtualFile baseDir = moduleFile.getParent();
-        if (baseDir.getName().equals(".idea")) {
-          baseDir = baseDir.getParent();
-        }
+        // Consulo: modules have no .iml file, use the module directory
+        VirtualFile baseDir = module.getModuleDir();
+        if (baseDir == null) continue;
         boolean isModule = false;
         try { // TODO(messick) Rewrite this loop to eliminate the need for this try-catch
           FlutterModuleBuilder.addAndroidModule(project, null, baseDir.getPath(), module.getName(), isModule);
@@ -224,7 +216,7 @@ public class FlutterInitializer extends FlutterProjectActivity {
     // Send unsupported SDK notifications if relevant.
     checkSdkVersionNotification(project);
 
-    showAndroidStudioBotNotification(project);
+    // Consulo: the Android Studio Gemini notification is dropped (Android Studio only).
 
     setUpDtdAnalytics(project);
   }
@@ -247,10 +239,10 @@ public class FlutterInitializer extends FlutterProjectActivity {
     Thread t1 = new Thread(() -> {
       if (busSubscribed) return;
       final MessageBusConnection connection = ApplicationManager.getApplication().getMessageBus().connect();
-      connection.subscribe(EditorColorsManager.TOPIC, (EditorColorsListener)scheme -> {
+      connection.subscribe(EditorColorsListener.class, (EditorColorsListener)scheme -> {
         sendThemeChangedEvent(project);
       });
-      connection.subscribe(UISettingsListener.TOPIC, (UISettingsListener)scheme -> {
+      connection.subscribe(UISettingsListener.class, (UISettingsListener)scheme -> {
         sendThemeChangedEvent(project);
       });
       busSubscribed = true;
@@ -334,22 +326,16 @@ public class FlutterInitializer extends FlutterProjectActivity {
       final FlutterSettings settings = FlutterSettings.getInstance();
       if (settings.isSdkVersionOutdatedWarningAcknowledged(version.getVersionText(), false)) return;
       OpenApiUtils.safeInvokeLater(() -> {
-        final Notification notification = new Notification(FlutterMessages.FLUTTER_NOTIFICATION_GROUP_ID,
-                                                           "Flutter SDK requires update",
-                                                           "Support for v" +
-                                                           version.getVersionText() +
-                                                           " of the Flutter SDK has been removed and we are no longer fixing issues that" +
-                                                           " result from this version. Consider updating to a more recent Flutter SDK.",
-                                                           NotificationType.WARNING);
-
-        notification.addAction(new AnAction("Dismiss") {
-          @Override
-          public void actionPerformed(@NotNull AnActionEvent event) {
-            settings.setSdkVersionOutdatedWarningAcknowledged(version.getVersionText(), false, true);
-            notification.expire();
-          }
-        });
-        Notifications.Bus.notify(notification, project);
+        NotificationService.getInstance()
+          .newWarn(FlutterNotificationGroups.FLUTTER_MESSAGES)
+          .title(LocalizeValue.localizeTODO("Flutter SDK requires update"))
+          .content(LocalizeValue.of("Support for v" +
+                                    version.getVersionText() +
+                                    " of the Flutter SDK has been removed and we are no longer fixing issues that" +
+                                    " result from this version. Consider updating to a more recent Flutter SDK."))
+          .addClosingAction(LocalizeValue.localizeTODO("Dismiss"),
+                            () -> settings.setSdkVersionOutdatedWarningAcknowledged(version.getVersionText(), false, true))
+          .notify(project);
       });
       return;
     }
@@ -360,13 +346,6 @@ public class FlutterInitializer extends FlutterProjectActivity {
       if (settings.isSdkVersionOutdatedWarningAcknowledged(version.getVersionText(), true)) return;
 
       OpenApiUtils.safeInvokeLater(() -> {
-        final Notification notification = new Notification(FlutterMessages.FLUTTER_NOTIFICATION_GROUP_ID,
-                                                           "Flutter SDK requires update",
-                                                           "Support for v" +
-                                                           version.getVersionText() +
-                                                           " of the Flutter SDK will be removed in an upcoming release of the Flutter " +
-                                                           "plugin. Consider updating to a more recent Flutter SDK.",
-                                                           NotificationType.WARNING);
         // TODO(jwren) If we can get a URL on the Flutter website with the appropriate information, we should include it in the
         //  notification as an action:
         // notification.addAction(new AnAction("More Info") {
@@ -378,54 +357,18 @@ public class FlutterInitializer extends FlutterProjectActivity {
         //    notification.expire();
         //  }
         //});
-
-        notification.addAction(new AnAction("Dismiss") {
-          @Override
-          public void actionPerformed(@NotNull AnActionEvent event) {
-            settings.setSdkVersionOutdatedWarningAcknowledged(version.getVersionText(), true, true);
-            notification.expire();
-          }
-        });
-        Notifications.Bus.notify(notification, project);
+        NotificationService.getInstance()
+          .newWarn(FlutterNotificationGroups.FLUTTER_MESSAGES)
+          .title(LocalizeValue.localizeTODO("Flutter SDK requires update"))
+          .content(LocalizeValue.of("Support for v" +
+                                    version.getVersionText() +
+                                    " of the Flutter SDK will be removed in an upcoming release of the Flutter " +
+                                    "plugin. Consider updating to a more recent Flutter SDK."))
+          .addClosingAction(LocalizeValue.localizeTODO("Dismiss"),
+                            () -> settings.setSdkVersionOutdatedWarningAcknowledged(version.getVersionText(), true, true))
+          .notify(project);
       });
     }
-  }
-
-  private void showAndroidStudioBotNotification(@NotNull Project project) {
-    // Return if not a Flutter project
-    FlutterSdk sdk = FlutterSdk.getFlutterSdk(project);
-    if (sdk == null) return;
-
-    // Return if not in Android Studio
-    if (!FlutterUtils.isAndroidStudio()) return;
-
-    // Return if notification has been shown already
-    final FlutterSettings settings = FlutterSettings.getInstance();
-    if (settings.isAndroidStudioBotAcknowledged()) return;
-
-    ApplicationManager.getApplication().invokeLater(() -> {
-      //noinspection DialogTitleCapitalization
-      final Notification notification = new Notification(FlutterMessages.FLUTTER_NOTIFICATION_GROUP_ID,
-                                                         "Try Gemini in Android Studio",
-                                                         "",
-                                                         NotificationType.INFORMATION);
-      notification.addAction(new AnAction("More Info") {
-        @Override
-        public void actionPerformed(@NotNull AnActionEvent event) {
-          BrowserLauncher.getInstance().browse("https://developer.android.com/gemini-in-android", null);
-          settings.setAndroidStudioBotAcknowledgedKey(true);
-          notification.expire();
-        }
-      });
-      notification.addAction(new AnAction("Dismiss") {
-        @Override
-        public void actionPerformed(@NotNull AnActionEvent event) {
-          settings.setAndroidStudioBotAcknowledgedKey(true);
-          notification.expire();
-        }
-      });
-      Notifications.Bus.notify(notification, project);
-    });
   }
 
   private void initializeToolWindows(@NotNull final Project project) {
@@ -440,15 +383,7 @@ public class FlutterInitializer extends FlutterProjectActivity {
    * Automatically set Android SDK based on ANDROID_HOME.
    */
   private void ensureAndroidSdk(@NotNull Project project) {
-    if (ProjectRootManager.getInstance(project).getProjectSdk() != null) {
-      return; // Don't override user's settings.
-    }
-
-    final IntelliJAndroidSdk wanted = IntelliJAndroidSdk.fromEnvironment();
-    if (wanted == null) {
-      return; // ANDROID_HOME not set or Android SDK not created in IDEA; not clear what to do.
-    }
-
-    OpenApiUtils.safeRunWriteAction(() -> wanted.setCurrent(project));
+    // Consulo: there is no project SDK to set, SDKs are selected per module extension.
+    // Upstream: if no project SDK is set, IntelliJAndroidSdk.fromEnvironment().setCurrent(project).
   }
 }

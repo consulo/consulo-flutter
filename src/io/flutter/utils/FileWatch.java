@@ -241,7 +241,7 @@ public class FileWatch {
         if (bus == null) {
           final Application app = ApplicationManager.getApplication();
           bus = app.getMessageBus().connect();
-          bus.subscribe(VirtualFileManager.VFS_CHANGES, this);
+          bus.subscribe(BulkFileListener.class, this);
         }
       }
       else {

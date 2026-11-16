@@ -5,27 +5,44 @@
  */
 package io.flutter.editor;
 
+import consulo.annotation.access.RequiredReadAction;
+import consulo.fileEditor.EditorNotificationBuilder;
+import consulo.fileEditor.EditorNotificationProvider;
 import consulo.fileEditor.FileEditor;
+import consulo.localize.LocalizeValue;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import consulo.ide.impl.idea.ui.EditorNotificationPanel;
-import consulo.fileEditor.EditorNotificationProvider;
-import consulo.ui.ex.awt.HyperlinkLabel;
-import io.flutter.icons.FlutterIcons;
 import io.flutter.FlutterUtils;
+import io.flutter.icons.FlutterIcons;
 import io.flutter.pub.PubRoot;
 import io.flutter.sdk.FlutterSdk;
-import io.flutter.utils.UIUtils;
+import jakarta.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import javax.swing.*;
-import java.util.function.Function;
+
+import java.util.function.Supplier;
 
 public final class FlutterPubspecNotificationProvider implements EditorNotificationProvider {
+  @NotNull private final Project project;
+
+  @Inject
+  public FlutterPubspecNotificationProvider(@NotNull Project project) {
+    this.project = project;
+  }
+
+  @NotNull
+  @Override
+  public String getId() {
+    return "flutter.pubspec.notification";
+  }
+
+  // Consulo: EditorNotificationProvider fills an EditorNotificationBuilder instead of returning a panel factory
+  @RequiredReadAction
   @Nullable
   @Override
-  public Function<? super @NotNull FileEditor, ? extends @Nullable JComponent> collectNotificationData(@NotNull Project project,
-                                                                                                       @NotNull VirtualFile file) {
+  public EditorNotificationBuilder buildNotification(@NotNull VirtualFile file,
+                                                     @NotNull FileEditor fileEditor,
+                                                     @NotNull Supplier<EditorNotificationBuilder> builderFactory) {
     // We only show this notification inside of local pubspec files.
     if (!PubRoot.isPubspec(file) || !file.isInLocalFileSystem()) {
       return null;
@@ -41,41 +58,43 @@ public final class FlutterPubspecNotificationProvider implements EditorNotificat
       return null;
     }
 
-    return fileEditor -> new FlutterPubspecActionsPanel(fileEditor, project, flutterSdk);
+    return new FlutterPubspecActionsPanel(file, project, flutterSdk).fill(builderFactory.get());
   }
 
-  static class FlutterPubspecActionsPanel extends EditorNotificationPanel {
+  static class FlutterPubspecActionsPanel {
     @NotNull final VirtualFile myFile;
     @NotNull final Project myProject;
     @NotNull final FlutterSdk myFlutterSdk;
 
-    FlutterPubspecActionsPanel(@NotNull FileEditor fileEditor, @NotNull Project project, @NotNull FlutterSdk flutterSdk) {
-      super(UIUtils.getEditorNotificationBackgroundColor());
-
-      myFile = fileEditor.getFile();
+    FlutterPubspecActionsPanel(@NotNull VirtualFile file, @NotNull Project project, @NotNull FlutterSdk flutterSdk) {
+      myFile = file;
       myProject = project;
       myFlutterSdk = flutterSdk;
+    }
 
-      icon(FlutterIcons.Flutter);
-      text("Flutter commands");
+    @NotNull
+    EditorNotificationBuilder fill(@NotNull EditorNotificationBuilder builder) {
+      builder.withIcon(FlutterIcons.Flutter);
+      builder.withText(LocalizeValue.localizeTODO("Flutter commands"));
 
       // "flutter.pub.get"
-      HyperlinkLabel label = createActionLabel("Pub get", () -> runPubGet(false));
-      label.setToolTipText("Install referenced packages");
+      builder.withAction(LocalizeValue.localizeTODO("Pub get"), LocalizeValue.localizeTODO("Install referenced packages"),
+                         e -> runPubGet(false));
 
       // "flutter.pub.upgrade"
-      label = createActionLabel("Pub upgrade", () -> runPubGet(true));
-      label.setToolTipText("Upgrade referenced packages to the latest versions");
+      builder.withAction(LocalizeValue.localizeTODO("Pub upgrade"),
+                         LocalizeValue.localizeTODO("Upgrade referenced packages to the latest versions"),
+                         e -> runPubGet(true));
 
-     // "flutter.pub.outdated"
-      label = createActionLabel("Pub outdated", this::runPubOutdated);
-      label.setToolTipText("Analyze packages to determine which ones can be upgraded");
+      // "flutter.pub.outdated"
+      builder.withAction(LocalizeValue.localizeTODO("Pub outdated"),
+                         LocalizeValue.localizeTODO("Analyze packages to determine which ones can be upgraded"),
+                         e -> runPubOutdated());
 
-      if (myLinksPanel != null) {
-        myLinksPanel.add(new JSeparator(SwingConstants.VERTICAL));
-      }
-      label = createActionLabel("Flutter doctor", "flutter.doctor");
-      label.setToolTipText("Validate installed tools and their versions");
+      // Consulo: no separator between the links; the tooltip "Validate installed tools and their versions" is not supported
+      // for action references.
+      builder.withAction(LocalizeValue.localizeTODO("Flutter doctor"), "flutter.doctor");
+      return builder;
     }
 
     private void runPubGet(boolean upgrade) {

@@ -16,13 +16,13 @@ import consulo.ui.ex.awt.LinkLabel;
 import consulo.ui.ex.content.Content;
 import consulo.ui.ex.content.ContentManager;
 import consulo.ui.ex.awt.JBUI;
+import consulo.ui.image.Image;
 import io.flutter.utils.AsyncUtils;
 import io.flutter.utils.LabelInput;
 import io.flutter.utils.OpenApiUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -93,7 +93,7 @@ public abstract class EmbeddedBrowser {
 
   public void openPanel(@NotNull ToolWindow toolWindow,
                         @NotNull String tabName,
-                        @Nullable Icon tabIcon,
+                        @Nullable Image tabIcon,
                         @NotNull BrowserUrlProvider browserUrlProvider,
                         @NotNull Consumer<String> onBrowserUnavailable) {
     openPanel(toolWindow, tabName, tabIcon, browserUrlProvider, onBrowserUnavailable, null);
@@ -101,7 +101,7 @@ public abstract class EmbeddedBrowser {
 
   public void openPanel(@NotNull ToolWindow toolWindow,
                         @NotNull String tabName,
-                        @Nullable Icon tabIcon,
+                        @Nullable Image tabIcon,
                         @NotNull BrowserUrlProvider browserUrlProvider,
                         @NotNull Consumer<String> onBrowserUnavailable,
                         @Nullable String warningMessage) {
