@@ -9,7 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
-import com.intellij.execution.process.ColoredProcessHandler;
+import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.process.ProcessOutputType;
@@ -17,18 +17,18 @@ import consulo.logging.Logger;
 import consulo.document.FileDocumentManager;
 import consulo.module.Module;
 import consulo.project.Project;
-import consulo.content.OrderRootType;
-import consulo.content.library.Library;
-import consulo.content.library.LibraryTable;
-import consulo.content.library.LibraryTablesRegistrar;
 import consulo.util.dataholder.Key;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.virtualFileSystem.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.virtualFileSystem.VirtualFileManager;
-import consulo.ui.ex.awt.internal.EDT;
+import consulo.application.Application;
+import consulo.content.bundle.Sdk;
+import consulo.dart.module.extension.DartModuleExtension;
+import consulo.language.util.ModuleUtilCore;
+import consulo.module.ModuleManager;
 import com.jetbrains.lang.dart.sdk.DartSdk;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterUtils;
@@ -139,11 +139,21 @@ public class FlutterSdk {
     if (project.isDisposed()) {
       return null;
     }
-    final Library lib = getDartSdkLibrary(project);
-    if (lib == null) {
-      return null;
+    // Consulo: the Dart SDK is a Consulo SDK selected in the Dart module extension, not the "Dart SDK" project library
+    for (Module module : ModuleManager.getInstance(project).getModules()) {
+      final DartModuleExtension extension = ModuleUtilCore.getExtension(module, DartModuleExtension.class);
+      final Sdk sdk = extension == null ? null : extension.getSdk();
+      final String homePath = sdk == null ? null : sdk.getHomePath();
+      if (homePath == null) continue;
+      final String dartPath = FileUtil.toSystemIndependentName(homePath);
+      if (dartPath.endsWith(DART_SDK_SUFFIX)) {
+        final VirtualFile home = LocalFileSystem.getInstance().findFileByPath(dartPath.substring(0, dartPath.length() - DART_SDK_SUFFIX.length()));
+        if (home != null) {
+          return saveSdkInCache(home);
+        }
+      }
     }
-    return getFlutterFromDartSdkLibrary(lib);
+    return null;
   }
 
   @Nullable
@@ -166,33 +176,6 @@ public class FlutterSdk {
       }
     }
     return Objects.requireNonNull(projectSdkCache.get(cacheKey));
-  }
-
-  @Nullable
-  private static Library getDartSdkLibrary(@NotNull Project project) {
-    LibraryTablesRegistrar registrar = LibraryTablesRegistrar.getInstance();
-    if (registrar == null) return null;
-    final LibraryTable libraryTable = registrar.getLibraryTable(project);
-    for (Library lib : libraryTable.getLibraries()) {
-      if (lib != null && "Dart SDK".equals(lib.getName())) {
-        return lib;
-      }
-    }
-    return null;
-  }
-
-  @Nullable
-  private static FlutterSdk getFlutterFromDartSdkLibrary(@NotNull Library lib) {
-    assert OrderRootType.CLASSES != null;
-    final String[] urls = lib.getUrls(OrderRootType.CLASSES);
-    for (String url : urls) {
-      if (url != null && url.endsWith(DART_CORE_SUFFIX)) {
-        final String flutterUrl = url.substring(0, url.length() - DART_CORE_SUFFIX.length());
-        final VirtualFile home = VirtualFileManager.getInstance().findFileByUrl(flutterUrl);
-        return home == null ? null : saveSdkInCache(home);
-      }
-    }
-    return null;
   }
 
   @NotNull
@@ -475,8 +458,8 @@ public class FlutterSdk {
       return null;
     }
 
-    if (EDT.isCurrentThreadEdt()) {
-      VfsUtil.markDirtyAndRefresh(false, true, true, baseDir); // Need this for AS.
+    if (Application.get().isDispatchThread()) {
+      VirtualFileUtil.markDirtyAndRefresh(false, true, true, baseDir); // Need this for AS.
     }
     else {
       baseDir.refresh(false, true); // The current thread must NOT be in a read action.
@@ -677,7 +660,7 @@ public class FlutterSdk {
   // Do not run this on EDT.
   @Nullable
   private String returnOutputOfQuery(@NotNull FlutterCommand command) {
-    final ColoredProcessHandler process = command.startProcess(false);
+    final ProcessHandler process = command.startProcess(false);
     if (process == null) {
       return null;
     }

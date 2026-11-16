@@ -6,14 +6,15 @@
 package io.flutter.module;
 
 import consulo.application.AllIcons;
-import com.intellij.ide.util.projectWizard.WizardContext;
 import consulo.application.ApplicationManager;
 import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.Messages;
 import consulo.ui.ex.awt.TextComponentAccessor;
 import consulo.ui.ex.awt.ValidationInfo;
-import com.intellij.openapi.util.io.FileUtilRt;
+import consulo.localize.LocalizeValue;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
 import consulo.ui.ex.awt.ComboboxWithBrowseButton;
 import consulo.ui.ex.awt.event.DocumentAdapter;
@@ -38,7 +39,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.text.JTextComponent;
 
 public class FlutterGeneratorPeer {
-  private final WizardContext myContext;
   private JPanel myMainPanel;
   private ComboboxWithBrowseButton mySdkPathComboWithBrowse;
   private JBLabel myVersionContent;
@@ -47,11 +47,11 @@ public class FlutterGeneratorPeer {
   private JScrollPane errorPane;
   private SettingsHelpForm myHelpForm;
 
-  public FlutterGeneratorPeer(WizardContext context) {
-    myContext = context;
+  // Consulo: there is no IntelliJ WizardContext; upstream only stored it
+  public FlutterGeneratorPeer() {
 
     errorIcon.setText("");
-    errorIcon.setIcon(AllIcons.Actions.Lightning);
+    errorIcon.setIcon(TargetAWT.to(AllIcons.Actions.Lightning));
     Messages.installHyperlinkSupport(errorText);
 
     // Hide pending real content.
@@ -71,8 +71,9 @@ public class FlutterGeneratorPeer {
     // it is so FlutterSdkUtil can resolve the dialog's real modality state.
     UiNotifyConnector.doWhenFirstShown(sdkCombo, () -> populateSdkCombo(sdkCombo));
 
-    mySdkPathComboWithBrowse.addBrowseFolderListener(null, FileChooserDescriptorFactory.createSingleFolderDescriptor()
-      .withTitle(FlutterBundle.message("flutter.sdk.browse.path.label")), TextComponentAccessor.STRING_COMBOBOX_WHOLE_TEXT);
+    mySdkPathComboWithBrowse.addBrowseFolderListener(FlutterBundle.messageValue("flutter.sdk.browse.path.label"), LocalizeValue.empty(), null,
+                                                     FileChooserDescriptorFactory.createSingleFolderDescriptor(),
+                                                     TextComponentAccessor.STRING_COMBOBOX_WHOLE_TEXT);
     mySdkPathComboWithBrowse.getComboBox().addActionListener(e -> fillSdkCache());
     fillSdkCache();
 
@@ -131,7 +132,7 @@ public class FlutterGeneratorPeer {
   public boolean validate() {
     final ValidationInfo info = validateSdk();
     if (info != null) {
-      errorText.setText(XmlStringUtil.wrapInHtml(info.message));
+      errorText.setText(XmlStringUtil.wrapInHtml(info.message.get()));
     }
     errorIcon.setVisible(info != null);
     errorPane.setVisible(info != null);
@@ -155,7 +156,7 @@ public class FlutterGeneratorPeer {
 
   @NotNull
   public String getSdkComboPath() {
-    return FileUtilRt.toSystemIndependentName(getSdkEditor().getItem().toString().trim());
+    return FileUtil.toSystemIndependentName(getSdkEditor().getItem().toString().trim());
   }
 
   @NotNull

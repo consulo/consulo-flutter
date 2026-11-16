@@ -5,18 +5,15 @@
  */
 package io.flutter.sdk;
 
-import consulo.project.Project;
 import consulo.content.library.LibraryType;
-import consulo.content.library.NewLibraryConfiguration;
 import consulo.content.library.PersistentLibraryKind;
 import consulo.content.library.ui.LibraryEditorComponent;
 import consulo.content.library.ui.LibraryPropertiesEditor;
-import consulo.virtualFileSystem.VirtualFile;
 import io.flutter.icons.FlutterIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 public class FlutterPluginLibraryType extends LibraryType<FlutterPluginLibraryProperties> {
   public static final String FLUTTER_PLUGINS_LIBRARY_NAME = "Flutter Plugins";
@@ -40,11 +37,7 @@ public class FlutterPluginLibraryType extends LibraryType<FlutterPluginLibraryPr
     return null;
   }
 
-  @Nullable
-  @Override
-  public NewLibraryConfiguration createNewLibrary(@NotNull JComponent component, @Nullable VirtualFile file, @NotNull Project project) {
-    return null;
-  }
+  // Consulo: createNewLibrary() is asynchronous; the default fails without a roots descriptor, as upstream returns null
 
   @Nullable
   @Override
@@ -53,7 +46,8 @@ public class FlutterPluginLibraryType extends LibraryType<FlutterPluginLibraryPr
   }
 
   @Nullable
-  public Icon getIcon(@Nullable FlutterPluginLibraryProperties properties) {
+  @Override
+  public Image getIcon() {
     return FlutterIcons.Flutter;
   }
 }

@@ -9,7 +9,6 @@ import com.google.common.annotations.VisibleForTesting;
 import consulo.webBrowser.BrowserUtil;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
-import consulo.codeEditor.EditorColors;
 import consulo.fileEditor.FileEditor;
 import consulo.fileEditor.TextEditor;
 import consulo.project.Project;
@@ -17,9 +16,10 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDocumentManager;
 import consulo.language.psi.PsiFile;
 import consulo.language.psi.util.PsiTreeUtil;
-import consulo.ide.impl.idea.ui.EditorNotificationPanel;
+import consulo.annotation.access.RequiredReadAction;
+import consulo.fileEditor.EditorNotificationBuilder;
 import consulo.fileEditor.EditorNotificationProvider;
-import consulo.ui.ex.awt.HyperlinkLabel;
+import consulo.localize.LocalizeValue;
 import com.jetbrains.lang.dart.psi.DartClass;
 import io.flutter.icons.FlutterIcons;
 import io.flutter.sdk.FlutterSdk;
@@ -27,11 +27,10 @@ import io.flutter.utils.OpenApiUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 public class FlutterSampleNotificationProvider implements EditorNotificationProvider {
@@ -41,10 +40,19 @@ public class FlutterSampleNotificationProvider implements EditorNotificationProv
     this.project = project;
   }
 
+  @NotNull
+  @Override
+  public String getId() {
+    return "flutter.sample.notifications";
+  }
+
+  // Consulo: EditorNotificationProvider fills an EditorNotificationBuilder instead of returning a panel factory
+  @RequiredReadAction
   @Nullable
   @Override
-  public Function<? super @NotNull FileEditor, ? extends @Nullable JComponent> collectNotificationData(@NotNull Project project,
-                                                                                                       @NotNull VirtualFile file) {
+  public EditorNotificationBuilder buildNotification(@NotNull VirtualFile file,
+                                                     @NotNull FileEditor fileEditor,
+                                                     @NotNull Supplier<EditorNotificationBuilder> builderFactory) {
     final FlutterSdk sdk = FlutterSdk.getFlutterSdk(project);
     if (sdk == null) {
       return null;
@@ -58,16 +66,17 @@ public class FlutterSampleNotificationProvider implements EditorNotificationProv
       return null;
     }
 
-    return fileEditor -> createPanelForSamples(fileEditor, project, file, filePath, sdk, flutterPackagePath);
+    return createPanelForSamples(fileEditor, project, file, filePath, sdk, flutterPackagePath, builderFactory);
   }
 
   @Nullable
-  private EditorNotificationPanel createPanelForSamples(@NotNull FileEditor fileEditor,
+  private EditorNotificationBuilder createPanelForSamples(@NotNull FileEditor fileEditor,
                                                         @NotNull Project project,
                                                         @NotNull VirtualFile file,
                                                         @NotNull String filePath,
                                                         @NotNull FlutterSdk sdk,
-                                                        @NotNull String flutterPackagePath) {
+                                                        @NotNull String flutterPackagePath,
+                                                        @NotNull Supplier<EditorNotificationBuilder> builderFactory) {
     if (!(fileEditor instanceof TextEditor textEditor)) {
       return null;
     }
@@ -90,7 +99,7 @@ public class FlutterSampleNotificationProvider implements EditorNotificationProv
     });
 
     if (samples != null && !samples.isEmpty()) {
-      return new FlutterSampleActionsPanel(samples);
+      return FlutterSampleActionsPanel.fill(builderFactory.get(), samples);
     }
     return null;
   }
@@ -168,30 +177,25 @@ public class FlutterSampleNotificationProvider implements EditorNotificationProv
   }
 }
 
-class FlutterSampleActionsPanel extends EditorNotificationPanel {
-  FlutterSampleActionsPanel(@NotNull List<FlutterSample> samples) {
-    //noinspection DataFlowIssue
-    super(EditorColors.GUTTER_BACKGROUND);
-
-    icon(FlutterIcons.Flutter);
-    text("View example on flutter.dev");
-
-    for (int i = 0; i < samples.size(); i++) {
-      if (i != 0) {
-        //noinspection DataFlowIssue
-        myLinksPanel.add(new JSeparator(SwingConstants.VERTICAL));
-      }
-
-      final FlutterSample sample = samples.get(i);
-      assert sample != null;
-
-      final HyperlinkLabel label = createActionLabel(sample.getClassName(), () -> browseTo(sample));
-      label.setToolTipText(sample.getHostedDocsUrl());
-    }
+// Consulo: the notification panel is built by EditorNotificationBuilder; there are no separators between the links
+final class FlutterSampleActionsPanel {
+  private FlutterSampleActionsPanel() {
   }
 
-  private void browseTo(@NotNull FlutterSample sample) {
+  @NotNull
+  static EditorNotificationBuilder fill(@NotNull EditorNotificationBuilder builder, @NotNull List<FlutterSample> samples) {
+    builder.withIcon(FlutterIcons.Flutter);
+    builder.withText(LocalizeValue.localizeTODO("View example on flutter.dev"));
+
+    for (final FlutterSample sample : samples) {
+      assert sample != null;
+
+      builder.withAction(LocalizeValue.of(sample.getClassName()), LocalizeValue.of(sample.getHostedDocsUrl()), e -> browseTo(sample));
+    }
+    return builder;
+  }
+
+  private static void browseTo(@NotNull FlutterSample sample) {
     BrowserUtil.browse(sample.getHostedDocsUrl());
   }
 }
-

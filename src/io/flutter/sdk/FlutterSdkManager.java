@@ -5,7 +5,7 @@
  */
 package io.flutter.sdk;
 
-import consulo.application.internal.JobScheduler;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
 import consulo.project.ProjectManager;
@@ -33,7 +33,7 @@ public class FlutterSdkManager implements Disposable {
 
   @NotNull
   public static FlutterSdkManager getInstance(@NotNull Project project) {
-    return Objects.requireNonNull(project.getService(FlutterSdkManager.class));
+    return Objects.requireNonNull(project.getInstance(FlutterSdkManager.class));
   }
 
   private FlutterSdkManager(@NotNull Project project) {
@@ -46,7 +46,7 @@ public class FlutterSdkManager implements Disposable {
     libraryTable.addListener(libraryTableListener);
 
     // TODO(devoncarew): We should replace this polling solution with listeners to project structure changes.
-    final ScheduledFuture timer = JobScheduler.getScheduler().scheduleWithFixedDelay(
+    final ScheduledFuture timer = AppExecutorUtil.getAppScheduledExecutorService().scheduleWithFixedDelay(
       this::checkForFlutterSdkChange, 1, 1, TimeUnit.SECONDS);
 
     Disposer.register(this, () -> {
@@ -118,7 +118,7 @@ public class FlutterSdkManager implements Disposable {
     }
 
     @Override
-    public void afterLibraryRenamed(@NotNull Library library, @Nullable String newName) {
+    public void afterLibraryRenamed(@NotNull Library library) {
       // Since we key off name, test to be safe.
       checkForFlutterSdkChange();
     }

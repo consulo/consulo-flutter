@@ -13,7 +13,8 @@ import com.google.gson.JsonParser;
 import consulo.process.ExecutionException;
 import consulo.component.PropertiesComponent;
 import consulo.application.ApplicationManager;
-import com.intellij.openapi.application.ApplicationNamesInfo;
+import consulo.application.Application;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.ui.ModalityState;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -43,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -64,7 +66,7 @@ public class FlutterSdkUtil {
    * Return the environment variable value to use when shelling out to the Flutter command-line tool.
    */
   public String getFlutterHostEnvValue() {
-    final String clientId = ApplicationNamesInfo.getInstance().getFullProductName().replaceAll(" ", "-");
+    final String clientId = Application.get().getName().get().replaceAll(" ", "-");
     final String existingVar = java.lang.System.getenv(FLUTTER_HOST_ENV);
     return existingVar == null ? clientId : (existingVar + ":" + clientId);
   }
@@ -80,10 +82,11 @@ public class FlutterSdkUtil {
     // Add the new value first; this ensures that it's the 'default' flutter sdk.
     allPaths.add(newPath);
 
-    final PropertiesComponent props = PropertiesComponent.getInstance();
+    final PropertiesComponent props = ApplicationPropertiesComponent.getInstance();
 
     // Add the existing known paths.
-    final List<String> oldPaths = props.getList(propertyKey);
+    final String[] oldPathValues = props.getValues(propertyKey);
+    final List<String> oldPaths = oldPathValues == null ? null : Arrays.asList(oldPathValues);
     if (oldPaths != null) {
       allPaths.addAll(oldPaths);
     }
@@ -112,7 +115,7 @@ public class FlutterSdkUtil {
     // Resolve on the EDT while combo is safe to query. Requires combo to already be showing,
     // otherwise this falls back to non-modal and the update below never runs under a dialog.
     final ModalityState modalityState = combo.isShowing()
-      ? ModalityState.stateForComponent(combo)
+      ? Application.get().getModalityStateForComponent(combo)
       : ModalityState.nonModal();
 
     // Now, run the slow operation (finding valid SDK paths) on a background thread.
@@ -171,7 +174,8 @@ public class FlutterSdkUtil {
     }
 
     // use the list of paths they've entered in the past
-    final List<String> knownPaths = PropertiesComponent.getInstance().getList(FLUTTER_SDK_KNOWN_PATHS);
+    final String[] knownPathValues = ApplicationPropertiesComponent.getInstance().getValues(FLUTTER_SDK_KNOWN_PATHS);
+    final List<String> knownPaths = knownPathValues == null ? null : Arrays.asList(knownPathValues);
     if (knownPaths != null) {
       paths.addAll(knownPaths);
     }

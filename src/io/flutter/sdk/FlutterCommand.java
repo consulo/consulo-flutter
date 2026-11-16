@@ -9,7 +9,9 @@ import com.google.common.collect.ImmutableList;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.util.CapturingProcessAdapter;
-import com.intellij.execution.process.ColoredProcessHandler;
+import consulo.process.NativeProcessHandler;
+import consulo.process.ProcessHandler;
+import consulo.process.ProcessHandlerBuilder;
 import consulo.process.event.ProcessEvent;
 import consulo.process.event.ProcessListener;
 import consulo.process.util.ProcessOutput;
@@ -25,7 +27,6 @@ import io.flutter.FlutterMessages;
 import io.flutter.android.IntelliJAndroidSdk;
 import io.flutter.console.FlutterConsoles;
 import io.flutter.dart.DartPlugin;
-import com.jetbrains.lang.dart.analytics.Analytics;
 import io.flutter.logging.PluginLogger;
 import io.flutter.utils.MostlySilentColoredProcessHandler;
 import io.flutter.utils.ProcessAdapter;
@@ -138,7 +139,7 @@ public class FlutterCommand {
    */
   public Process start(@Nullable Consumer<ProcessOutput> onDone, @Nullable ProcessListener processListener) {
     // TODO(skybrian) add Project parameter if it turns out later that we need to set ANDROID_HOME.
-    final ColoredProcessHandler handler = startProcessOrShowError(null);
+    final ProcessHandler handler = startProcessOrShowError(null);
     if (handler == null) {
       return null;
     }
@@ -162,7 +163,8 @@ public class FlutterCommand {
     // Transition to "running" state.
     handler.startNotify();
 
-    return handler.getProcess();
+    // Consulo: the Process is available from a native (local) process handler only
+    return handler instanceof NativeProcessHandler nativeHandler ? nativeHandler.getProcess() : null;
   }
 
   /**
@@ -173,8 +175,8 @@ public class FlutterCommand {
    * <p>
    * If unable to start (for example, if a command is already running), returns null.
    */
-  public ColoredProcessHandler startInConsole(@NotNull Project project) {
-    final ColoredProcessHandler handler = startProcessOrShowError(project);
+  public ProcessHandler startInConsole(@NotNull Project project) {
+    final ProcessHandler handler = startProcessOrShowError(project);
     if (handler != null) {
       FlutterConsoles.displayProcessLater(handler, project, null, handler::startNotify);
     }
@@ -190,7 +192,7 @@ public class FlutterCommand {
    * If unable to start (for example, if a command is already running), returns null.
    */
   public Process startInModuleConsole(@NotNull Module module, @Nullable Runnable onDone, @Nullable ProcessListener processListener) {
-    final ColoredProcessHandler handler = startProcessOrShowError(module.getProject());
+    final ProcessHandler handler = startProcessOrShowError(module.getProject());
     if (handler == null) {
       return null;
     }
@@ -207,7 +209,8 @@ public class FlutterCommand {
     });
 
     FlutterConsoles.displayProcessLater(handler, module.getProject(), module, handler::startNotify);
-    return handler.getProcess();
+    // Consulo: the Process is available from a native (local) process handler only
+    return handler instanceof NativeProcessHandler nativeHandler ? nativeHandler.getProcess() : null;
   }
 
   @Override
@@ -221,11 +224,11 @@ public class FlutterCommand {
    * Returns the handler if successfully started.
    */
   @Nullable
-  public ColoredProcessHandler startProcess(boolean sendAnalytics) {
+  public ProcessHandler startProcess(boolean sendAnalytics) {
     try {
       final GeneralCommandLine commandLine = createGeneralCommandLine(null);
       LOG.info(safeCommandLog(commandLine));
-      return new ColoredProcessHandler(commandLine);
+      return ProcessHandlerBuilder.create(commandLine).colored().build();
     }
     catch (ExecutionException e) {
       FlutterMessages.showError(
@@ -249,7 +252,7 @@ public class FlutterCommand {
       DartPlugin.setPubActionInProgress(true);
     }
 
-    final ColoredProcessHandler handler;
+    final ProcessHandler handler;
     try {
       final GeneralCommandLine commandLine = createGeneralCommandLine(project);
       LOG.info(safeCommandLog(commandLine));
@@ -280,7 +283,7 @@ public class FlutterCommand {
    * Returns the handler if successfully started, or null if there was a problem.
    */
   @Nullable
-  public ColoredProcessHandler startProcessOrShowError(@Nullable Project project) {
+  public ProcessHandler startProcessOrShowError(@Nullable Project project) {
     final FlutterCommandStartResult result = startProcess(project);
     if (result.status == FlutterCommandStartResultStatus.EXCEPTION && result.exception != null) {
       FlutterMessages.showError(
@@ -312,8 +315,6 @@ public class FlutterCommand {
     }
     line.addParameters(type.subCommand);
     line.addParameters(args);
-
-    Analytics.updateEnvironment(line);
 
     return line;
   }

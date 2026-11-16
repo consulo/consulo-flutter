@@ -8,9 +8,9 @@ package io.flutter.sdk;
 import consulo.process.ExecutionException;
 import consulo.process.cmd.GeneralCommandLine;
 import consulo.process.local.OSProcessUtil;
-import consulo.platform.ProcessInfo;
+import consulo.process.ProcessInfo;
 import consulo.process.util.ProcessOutput;
-import consulo.process.local.ExecUtil;
+import consulo.process.util.CapturingProcessUtil;
 import consulo.project.Project;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import io.flutter.FlutterBundle;
@@ -18,7 +18,7 @@ import io.flutter.FlutterMessages;
 import io.flutter.utils.SystemUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.VisibleForTesting;
+import com.google.common.annotations.VisibleForTesting;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class XcodeUtils {
   private static final int XCODE_SELECT_TIMEOUT_MS = 5000;
 
   public static boolean isSimulatorRunning() {
-    final ProcessInfo[] processInfos = OSProcessUtil.getProcessList();
+    final List<ProcessInfo> processInfos = OSProcessUtil.getProcessList();
     for (ProcessInfo info : processInfos) {
       // Xcode 27 replaced Simulator.app with DeviceHub.app.
       final String name = info.getExecutableName();
@@ -97,7 +97,7 @@ public class XcodeUtils {
   private static String findSimulatorApp() {
     try {
       final ProcessOutput output =
-        ExecUtil.execAndGetOutput(new GeneralCommandLine("xcode-select", "--print-path"), XCODE_SELECT_TIMEOUT_MS);
+        CapturingProcessUtil.execAndGetOutput(new GeneralCommandLine("xcode-select", "--print-path"), XCODE_SELECT_TIMEOUT_MS);
       if (output.getExitCode() == 0) {
         return getSimulatorAppPath(output.getStdout().trim());
       }

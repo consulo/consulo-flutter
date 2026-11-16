@@ -31,7 +31,7 @@ public class AndroidEmulatorManager {
 
   @NotNull
   public static AndroidEmulatorManager getInstance(@NotNull Project project) {
-    return Objects.requireNonNull(project.getService(AndroidEmulatorManager.class));
+    return Objects.requireNonNull(project.getInstance(AndroidEmulatorManager.class));
   }
 
   private final @NotNull Project project;

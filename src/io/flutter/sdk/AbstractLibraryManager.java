@@ -9,9 +9,16 @@ import consulo.application.WriteAction;
 import consulo.module.Module;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import com.intellij.openapi.roots.*;
-import consulo.content.internal.LibraryEx;
-import com.intellij.openapi.roots.libraries.*;
+import consulo.content.base.BinariesOrderRootType;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryProperties;
+import consulo.content.library.LibraryTable;
+import consulo.content.library.LibraryTablesRegistrar;
+import consulo.content.library.PersistentLibraryKind;
+import consulo.module.content.ModuleRootManager;
+import consulo.module.content.layer.ModifiableRootModel;
+import consulo.module.content.layer.orderEntry.LibraryOrderEntry;
+import consulo.module.content.layer.orderEntry.OrderEntry;
 import consulo.util.lang.StringUtil;
 import io.flutter.utils.FlutterModuleUtils;
 import io.flutter.utils.OpenApiUtils;
@@ -77,25 +84,25 @@ public abstract class AbstractLibraryManager<K extends LibraryProperties> {
                               return lib;
                             });
 
-    final Set<String> existingUrls = new HashSet<>(Arrays.asList(library.getUrls(OrderRootType.CLASSES)));
+    final Set<String> existingUrls = new HashSet<>(Arrays.asList(library.getUrls(BinariesOrderRootType.ID)));
     if (contentUrls.containsAll(existingUrls) && existingUrls.containsAll(contentUrls)) {
       // No changes needed.
       return;
     }
 
     OpenApiUtils.safeRunWriteAction(() -> {
-      final LibraryEx.ModifiableModelEx model = (LibraryEx.ModifiableModelEx)library.getModifiableModel();
+      final Library.ModifiableModel model = library.getModifiableModel();
 
       final Set<String> existingCopy = new HashSet<>(existingUrls);
       existingUrls.removeAll(contentUrls);
       contentUrls.removeAll(existingCopy);
 
       for (String url : existingUrls) {
-        model.removeRoot(url, OrderRootType.CLASSES);
+        model.removeRoot(url, BinariesOrderRootType.ID);
       }
 
       for (String url : contentUrls) {
-        model.addRoot(url, OrderRootType.CLASSES);
+        model.addRoot(url, BinariesOrderRootType.ID);
       }
 
       DumbService.getInstance(project).runWhenSmart(() -> {

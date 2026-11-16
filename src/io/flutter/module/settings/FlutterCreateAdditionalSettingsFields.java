@@ -5,8 +5,8 @@
  */
 package io.flutter.module.settings;
 
-import com.intellij.ide.util.projectWizard.SettingsStep;
-import com.intellij.openapi.ui.DialogPanel;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.util.FormBuilder;
 import consulo.ui.ex.awt.event.DocumentAdapter;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
@@ -34,7 +34,7 @@ public class FlutterCreateAdditionalSettingsFields {
   private final FlutterCreateParams createParams;
   private SettingsHelpForm helpForm;
   @SuppressWarnings("FieldCanBeLocal")
-  private DialogPanel panel;
+  private JPanel panel;
 
   public FlutterCreateAdditionalSettingsFields(FlutterCreateAdditionalSettings additionalSettings,
                                                Supplier<? extends FlutterSdk> getSdk) {
@@ -90,8 +90,10 @@ public class FlutterCreateAdditionalSettingsFields {
       helpForm.adjustContrast(projectType);
     }
     orgField.setEnabled(projectType != FlutterProjectType.PACKAGE);
-    UIUtil.setEnabled(androidLanguageRadios.getComponent(), areLanguageFeaturesVisible, true, true);
-    UIUtil.setEnabled(platformsForm.getComponent(), areLanguageFeaturesVisible, true, true);
+    UIUtil.setEnabled(androidLanguageRadios.getComponent(), areLanguageFeaturesVisible, true);
+    if (platformsForm.getComponent() != null) {
+      UIUtil.setEnabled(platformsForm.getComponent(), areLanguageFeaturesVisible, true);
+    }
   }
 
   private void changeSettingsItemVisibility(JComponent component, boolean areLanguageFeaturesVisible) {
@@ -111,25 +113,27 @@ public class FlutterCreateAdditionalSettingsFields {
     label.setVisible(areLanguageFeaturesVisible);
   }
 
-  public void addSettingsFields(@NotNull SettingsStep settingsStep) {
-    settingsStep.addSettingsField(FlutterBundle.message("flutter.module.create.settings.description.label"), descriptionField);
-    settingsStep.addSettingsField(FlutterBundle.message("flutter.module.create.settings.type.label"),
-                                  projectTypeForm.getComponent());
-    settingsStep.addSettingsField(FlutterBundle.message("flutter.module.create.settings.radios.org.label"), orgField);
+  // Consulo: the fields are added to the form of the Consulo new module wizard step (consulo.flutter.sdk.FlutterNewModuleSetupStep)
+  // instead of the IntelliJ SettingsStep; addSettingsField -> addLabeled, addSettingsComponent -> addBottom
+  public void addSettingsFields(@NotNull FormBuilder settingsStep) {
+    settingsStep.addLabeled(FlutterBundle.messageValue("flutter.module.create.settings.description.label"), TargetAWT.wrap(descriptionField));
+    settingsStep.addLabeled(FlutterBundle.messageValue("flutter.module.create.settings.type.label"),
+                            TargetAWT.wrap(projectTypeForm.getComponent()));
+    settingsStep.addLabeled(FlutterBundle.messageValue("flutter.module.create.settings.radios.org.label"), TargetAWT.wrap(orgField));
     addBorder(androidLanguageRadios.getComponent(), false);
-    settingsStep.addSettingsField(FlutterBundle.message("flutter.module.create.settings.radios.android.label"),
-                                  androidLanguageRadios.getComponent());
+    settingsStep.addLabeled(FlutterBundle.messageValue("flutter.module.create.settings.radios.android.label"),
+                            TargetAWT.wrap(androidLanguageRadios.getComponent()));
     panel = platformsForm.panel(settings);
     addBorder(panel, true);
-    settingsStep.addSettingsField(FlutterBundle.message("flutter.module.create.settings.platforms.label"), panel);
+    settingsStep.addLabeled(FlutterBundle.messageValue("flutter.module.create.settings.platforms.label"), TargetAWT.wrap(panel));
 
 
     if (!FlutterUtils.isAndroidStudio()) {
       // In IntelliJ the help form appears on the second page of the wizard, along with the project type selection drop-down.
-      settingsStep.addSettingsComponent(new SettingsHelpForm().getComponent());
+      settingsStep.addBottom(TargetAWT.wrap(new SettingsHelpForm().getComponent()));
     }
 
-    settingsStep.addSettingsComponent(createParams.setInitialValues().getComponent());
+    settingsStep.addBottom(TargetAWT.wrap(createParams.setInitialValues().getComponent()));
   }
 
   private void addBorder(JComponent c, boolean left) {
