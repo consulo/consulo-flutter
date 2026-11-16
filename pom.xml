@@ -43,18 +43,6 @@
                     <exclude>jxbrowser/**</exclude>
                 </excludes>
             </resource>
-            <resource>
-                <directory>src</directory>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                    <exclude>**/*.java_</exclude>
-                    <exclude>**/*.kt</exclude>
-                    <exclude>**/*.kt_</exclude>
-                    <exclude>**/*.form</exclude>
-                    <exclude>**/*.properties</exclude>
-                    <exclude>**/ABOUT.md</exclude>
-                </excludes>
-            </resource>
         </resources>
         <plugins>
             <!-- -Xmaxerrs: porting in progress -->
@@ -75,6 +63,7 @@
                 <configuration>
                     <dependencies>
                         <dependency>com.jetbrains.lang.dart</dependency>
+                        <dependency>consulo.lsp</dependency>
                         <dependency>org.jetbrains.plugins.yaml</dependency>
                     </dependencies>
                     <packaging>
@@ -487,6 +476,12 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>com.jetbrains.lang.dart</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>consulo.plugin</groupId>
+            <artifactId>consulo.lsp.api</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>

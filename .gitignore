@@ -48,3 +48,4 @@ lib/kotlin*
 .gradle
 /build/
 gradle-app.setting
+target/

@@ -37,6 +37,7 @@ module io.flutter {
   requires consulo.language.editor.ui.api;
   requires consulo.language.impl;
   requires consulo.localize.api;
+  requires consulo.lsp.api;
   requires consulo.logging.api;
   requires consulo.module.api;
   requires consulo.module.content.api;

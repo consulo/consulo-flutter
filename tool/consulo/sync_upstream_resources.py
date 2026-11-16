@@ -73,6 +73,9 @@ def sync_icons():
         for name in sorted(filenames):
             if not name.endswith(('.svg', '.png')):
                 continue
+            if '@20x20' in name:
+                # new UI tool window size variants; Consulo scales the 16x16 icon
+                continue
             rel = os.path.relpath(dirpath, src)
             dark = name.endswith(('_dark.svg', '_dark.png'))
             target = name.replace('_dark.', '.') if dark else name
