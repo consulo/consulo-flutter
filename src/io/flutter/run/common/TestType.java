@@ -5,12 +5,12 @@
  */
 package io.flutter.run.common;
 
-import consulo.application.AllIcons;
+import consulo.execution.icon.ExecutionIconGroup;
 import consulo.language.psi.PsiElement;
 import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
+import consulo.ui.image.Image;
 
 /**
  * Different scopes of test that can be run on a Flutter app.
@@ -20,13 +20,13 @@ import javax.swing.*;
  */
 public enum TestType {
   // Note that mapping elements to their most specific enclosing function call depends on the ordering from most to least specific.
-  SINGLE(AllIcons.RunConfigurations.TestState.Run),
-  GROUP(AllIcons.RunConfigurations.TestState.Run_run),
+  SINGLE(ExecutionIconGroup.gutterRun()),
+  GROUP(ExecutionIconGroup.gutterRerun()),
   /**
    * This {@link TestType} doesn't know how to detect main methods.
    * The logic to detect main methods is in {@link CommonTestConfigUtils}.
    */
-  MAIN(AllIcons.RunConfigurations.TestState.Run_run) {
+  MAIN(ExecutionIconGroup.gutterRerun()) {
     @NotNull
     public String getTooltip(@NotNull PsiElement element) {
       return "Run Tests";
@@ -34,14 +34,14 @@ public enum TestType {
   };
 
   @NotNull
-  private final Icon myIcon;
+  private final Image myIcon;
 
-  TestType(@NotNull Icon icon) {
+  TestType(@NotNull Image icon) {
     myIcon = icon;
   }
 
   @NotNull
-  public Icon getIcon() {
+  public Image getIcon() {
     return myIcon;
   }
 

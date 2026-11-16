@@ -11,7 +11,7 @@ import consulo.execution.configuration.RuntimeConfigurationError;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.virtualFileSystem.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtilCore;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.lang.StringUtil;
 import consulo.process.cmd.ParametersListUtil;
@@ -284,7 +284,7 @@ public class TestFields {
   @Nullable
   private String adjustArgs(@NotNull PubRoot root, @NotNull VirtualFile fileOrDir, @NotNull Project project) {
     final VirtualFile testDir = root.getIntegrationTestDir();
-    if (testDir == null || !VfsUtilCore.isAncestor(testDir, fileOrDir, false)) {
+    if (testDir == null || !VirtualFileUtil.isAncestor(testDir, fileOrDir, false)) {
       return additionalArgs;
     }
 

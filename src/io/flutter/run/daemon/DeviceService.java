@@ -7,15 +7,14 @@ package io.flutter.run.daemon;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import consulo.application.internal.JobScheduler;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.process.ExecutionException;
 import consulo.disposer.Disposable;
-import consulo.application.internal.ApplicationInfo;
+import consulo.application.Application;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.project.DumbService;
 import consulo.project.Project;
-import consulo.module.content.internal.ProjectRootManagerEx;
 import consulo.disposer.Disposer;
 import io.flutter.FlutterMessages;
 import io.flutter.FlutterUtils;
@@ -84,7 +83,8 @@ public class DeviceService implements Disposable {
     Disposer.register(this, () -> sdkManager.removeListener(sdkListener));
 
     // Watch for Java SDK changes. (Used to get the value of ANDROID_HOME.)
-    ProjectRootManagerEx.getInstanceEx(project).addProjectJdkListener(this::refreshDeviceDaemon);
+    // Consulo: there is no project JDK, so there is no project JDK listener
+    //ProjectRootManagerEx.getInstanceEx(project).addProjectJdkListener(this::refreshDeviceDaemon);
   }
 
   @Override
@@ -214,9 +214,9 @@ public class DeviceService implements Disposable {
     }
 
     // Display as a notification to the user.
-    final ApplicationInfo info = ApplicationInfo.getInstance();
+    // Consulo: ApplicationInfo is internal, the application name is used
     FlutterMessages.showWarning(
-      "Flutter daemon terminated", "Consider re-starting " + info.getVersionName() + ".",
+      "Flutter daemon terminated", "Consider re-starting " + Application.get().getName().get() + ".",
       project);
   }
 
@@ -267,8 +267,8 @@ public class DeviceService implements Disposable {
   public void restart() {
     if (project.isDisposed()) return;
     refreshInProgress = true;
-    JobScheduler.getScheduler().schedule(this::shutDown, 0, TimeUnit.SECONDS);
-    JobScheduler.getScheduler().schedule(this::refreshDeviceDaemon, 4, TimeUnit.SECONDS);
+    AppExecutorUtil.getAppScheduledExecutorService().schedule(this::shutDown, 0, TimeUnit.SECONDS);
+    AppExecutorUtil.getAppScheduledExecutorService().schedule(this::refreshDeviceDaemon, 4, TimeUnit.SECONDS);
   }
 
   private void shutDown() {

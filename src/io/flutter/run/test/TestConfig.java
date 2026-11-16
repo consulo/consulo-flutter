@@ -13,17 +13,17 @@ import consulo.execution.configuration.LocatableConfigurationBase;
 import consulo.execution.configuration.RunConfiguration;
 import consulo.execution.RuntimeConfigurationException;
 import consulo.execution.runner.ExecutionEnvironment;
-import consulo.execution.test.TestConsoleProperties;
-import com.intellij.execution.testframework.actions.ConsolePropertiesProvider;
-import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.test.sm.runner.SMRunnerConsolePropertiesProvider;
+import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.project.Project;
 import consulo.util.xml.serializer.InvalidDataException;
 import consulo.util.xml.serializer.WriteExternalException;
-import io.flutter.analytics.Analytics;
-import io.flutter.analytics.AnalyticsConstants;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * A configuration for running Flutter tests.
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
  * Note that using that window causes additional analysis to occur, which creates a bunch of spurious errors.
  * IntelliJ has its own rules for Android files, and Flutter doesn't follow some of them.
  */
-public class TestConfig extends LocatableConfigurationBase<CommandLineState> implements ConsolePropertiesProvider {
+public class TestConfig extends LocatableConfigurationBase implements SMRunnerConsolePropertiesProvider { // Consulo: no ConsolePropertiesProvider
   @NotNull
   private TestFields fields = TestFields.forFile("");
 
@@ -69,10 +69,11 @@ public class TestConfig extends LocatableConfigurationBase<CommandLineState> imp
     return result;
   }
 
+  // Consulo: run configurations are edited by fragments
   @NotNull
   @Override
-  public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-    return new TestForm(getProject());
+  public List<RunConfigurationFragment<?>> createFragments() {
+    return List.of(new TestForm());
   }
 
   @Nullable
@@ -89,13 +90,12 @@ public class TestConfig extends LocatableConfigurationBase<CommandLineState> imp
   @NotNull
   @Override
   public CommandLineState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment env) throws ExecutionException {
-    Analytics.recordRunOrDebugSession(AnalyticsConstants.MECHANISM_FLUTTER_TESTS, executor, getProject());
     return TestLaunchState.create(env, this);
   }
 
   @Nullable
   @Override
-  public TestConsoleProperties createTestConsoleProperties(@NotNull Executor exec) {
+  public SMTRunnerConsoleProperties createTestConsoleProperties(@NotNull Executor exec) {
     return new FlutterTestConsoleProperties(this, exec);
   }
 }

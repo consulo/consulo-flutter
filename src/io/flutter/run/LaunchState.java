@@ -25,7 +25,7 @@ import consulo.execution.ui.RunContentDescriptor;
 import consulo.execution.ui.RunContentManager;
 import consulo.application.AllIcons;
 import consulo.ui.ex.action.AnAction;
-import consulo.ui.Separator;
+import consulo.ui.ex.action.AnSeparator;
 import consulo.logging.Logger;
 import consulo.document.FileDocumentManager;
 import consulo.project.Project;
@@ -53,7 +53,7 @@ import io.flutter.run.daemon.FlutterApp;
 import io.flutter.toolwindow.ToolWindowBadgeUpdater;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.VisibleForTesting;
+import com.google.common.annotations.VisibleForTesting;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -225,7 +225,7 @@ public class LaunchState extends CommandLineState {
       project,
       "No connected devices found; please connect a device, or see flutter.dev/setup for getting started instructions.",
       "No Connected Devices Found",
-      new String[]{Messages.getOkButton()}, 0, AllIcons.General.InformationDialog);
+      new String[]{Messages.OK_BUTTON}, 0, AllIcons.General.InformationDialog);
   }
 
   @NotNull
@@ -273,7 +273,7 @@ public class LaunchState extends CommandLineState {
                                                            app.getConnector().getBrowserUrl() != null;
     final List<AnAction> actions = new ArrayList<>(Arrays.asList(
       super.createActions(console, app.getProcessHandler(), getEnvironment().getExecutor())));
-    actions.add(new Separator());
+    actions.add(AnSeparator.create());
     actions.add(new OpenDevToolsAction(app, observatoryAvailable));
 
     if (app.getMode() == RunMode.RUN && app.getLaunchMode().supportsReload()) {
@@ -401,7 +401,7 @@ public class LaunchState extends CommandLineState {
 
       // See if we should issue a hot-reload.
       final List<RunContentDescriptor> runningProcesses =
-        RunContentManager.getInstance(env.getProject()).getAllDescriptors();
+        env.getProject().getInstance(RunContentManager.class).getAllDescriptors();
 
       final ProcessHandler process = getRunningAppProcess(launchState.runConfig);
       if (process != null) {
@@ -462,7 +462,7 @@ public class LaunchState extends CommandLineState {
     final Project project = config.getProject();
     if (project != null) {
       final List<RunContentDescriptor> runningProcesses =
-        RunContentManager.getInstance(project).getAllDescriptors();
+        project.getInstance(RunContentManager.class).getAllDescriptors();
 
       for (RunContentDescriptor descriptor : runningProcesses) {
         if (descriptor == null) continue;

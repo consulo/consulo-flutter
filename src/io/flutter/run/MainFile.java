@@ -7,6 +7,7 @@ package io.flutter.run;
 
 import consulo.application.ApplicationManager;
 import consulo.lsp.compat.BaseProjectDirectories;
+import consulo.virtualFileSystem.util.VirtualFileUtil;
 import consulo.project.Project;
 import consulo.util.io.FileUtil;
 import consulo.util.lang.StringUtil;
@@ -123,7 +124,12 @@ public class MainFile {
     // Do a speedy check for containment over accessing the file index (which we did historically)
     // but is very slow and unacceptably blocks the UI thread.
     // See: https://github.com/flutter/flutter-intellij/issues/8089
-    return file != null && BaseProjectDirectories.getInstance(project).contains(file);
+    // Consulo: BaseProjectDirectories has no contains(), check the base directories
+    if (file == null) return false;
+    for (VirtualFile dir : BaseProjectDirectories.getBaseDirectories(project)) {
+      if (VirtualFileUtil.isAncestor(dir, file, false)) return true;
+    }
+    return false;
   }
 
   private static MainFile.Result error(@NotNull String message) {

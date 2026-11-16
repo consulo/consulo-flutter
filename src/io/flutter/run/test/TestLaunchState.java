@@ -19,7 +19,6 @@ import consulo.document.FileDocumentManager;
 import consulo.module.Module;
 import consulo.ide.impl.idea.openapi.module.ModuleUtil;
 import consulo.project.Project;
-import consulo.project.util.ProjectUtil;
 import consulo.util.dataholder.Key;
 import consulo.virtualFileSystem.VirtualFile;
 import com.jetbrains.lang.dart.ide.runner.DartConsoleFilter;
@@ -137,7 +136,7 @@ public class TestLaunchState extends CommandLineState {
     if (root != null) {
       return root.getPath();
     }
-    final VirtualFile baseDir = ProjectUtil.guessProjectDir(config.getProject());
+    final VirtualFile baseDir = config.getProject().getBaseDir(); // Consulo: no ProjectUtil.guessProjectDir
     return baseDir == null ? null : baseDir.getPath();
   }
 

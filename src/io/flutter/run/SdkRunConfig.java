@@ -10,7 +10,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonPrimitive;
 import consulo.process.ExecutionException;
 import consulo.execution.executor.Executor;
-import com.intellij.execution.configurations.*;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.LocatableConfigurationBase;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.configuration.RuntimeConfigurationError;
+import consulo.execution.RuntimeConfigurationException;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.language.editor.refactoring.event.RefactoringListenerProvider;
 import consulo.execution.ui.console.TextConsoleBuilder;
 import consulo.execution.ui.console.UrlFilter;
 import consulo.execution.runner.ExecutionEnvironment;
@@ -19,7 +25,7 @@ import consulo.application.ReadAction;
 import consulo.logging.Logger;
 import consulo.module.Module;
 import consulo.language.util.ModuleUtilCore;
-import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.execution.configuration.fragment.RunConfigurationFragment;
 import consulo.project.Project;
 import consulo.disposer.Disposer;
 import consulo.util.xml.serializer.InvalidDataException;
@@ -39,8 +45,6 @@ import consulo.util.xml.serializer.XmlSerializer;
 import com.jetbrains.lang.dart.ide.runner.DartConsoleFilter;
 import io.flutter.FlutterProjectDisposable;
 import io.flutter.FlutterUtils;
-import io.flutter.analytics.Analytics;
-import io.flutter.analytics.AnalyticsConstants;
 import io.flutter.console.FlutterConsoleFilter;
 import io.flutter.logging.PluginLogger;
 import io.flutter.run.common.RunMode;
@@ -54,13 +58,14 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 
 /**
  * Run configuration used for launching a Flutter app using the Flutter SDK.
  */
-public class SdkRunConfig extends LocatableConfigurationBase<LaunchState>
+public class SdkRunConfig extends LocatableConfigurationBase
   implements LaunchState.RunConfig, RefactoringListenerProvider, RunConfigurationWithSuppressedDefaultRunAction {
 
   private static final @NotNull Logger LOG = PluginLogger.createLogger(SdkRunConfig.class);
@@ -86,10 +91,11 @@ public class SdkRunConfig extends LocatableConfigurationBase<LaunchState>
     fields.checkRunnable(getProject());
   }
 
+  // Consulo: run configurations are edited by fragments
   @NotNull
   @Override
-  public SettingsEditor<? extends RunConfiguration> getConfigurationEditor() {
-    return new FlutterConfigurationEditorForm(getProject());
+  public List<RunConfigurationFragment<?>> createFragments() {
+    return List.of(new FlutterConfigurationEditorForm());
   }
 
   public static class RecursiveDeleter extends SimpleFileVisitor<Path> {
@@ -204,7 +210,6 @@ public class SdkRunConfig extends LocatableConfigurationBase<LaunchState>
 
     final LaunchState launcher = new LaunchState(env, mainFile.getAppDir(), mainFile.getFile(), this, createAppCallback);
     addConsoleFilters(launcher, env, mainFile, null /* look up the module in an async read context */);
-    Analytics.recordRunOrDebugSession(AnalyticsConstants.MECHANISM_FLUTTER_APP, executor, getProject());
     return launcher;
   }
 

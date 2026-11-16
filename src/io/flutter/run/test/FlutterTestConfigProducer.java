@@ -8,7 +8,7 @@ package io.flutter.run.test;
 import consulo.execution.action.ConfigurationContext;
 import consulo.execution.action.ConfigurationFromContext;
 import consulo.execution.action.RunConfigurationProducer;
-import consulo.util.lang.ref.Ref;
+import consulo.util.lang.ref.SimpleReference;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.language.psi.PsiDirectory;
 import consulo.language.psi.PsiElement;
@@ -42,7 +42,7 @@ public class FlutterTestConfigProducer extends RunConfigurationProducer<TestConf
   @Override
   protected boolean setupConfigurationFromContext(@NotNull TestConfig config,
                                                   @NotNull ConfigurationContext context,
-                                                  @NotNull Ref<PsiElement> sourceElement) {
+                                                  @NotNull SimpleReference<PsiElement> sourceElement) {
     if (!isFlutterContext(context)) return false;
 
     final PsiElement elt = context.getPsiLocation();

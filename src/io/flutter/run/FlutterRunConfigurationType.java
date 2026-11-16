@@ -8,7 +8,7 @@ package io.flutter.run;
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationTypeBase;
 import consulo.execution.configuration.RunConfiguration;
-import com.intellij.execution.configurations.RunConfigurationSingletonPolicy;
+import consulo.execution.configuration.ConfigurationTypeUtil;
 import consulo.project.Project;
 import consulo.language.psi.search.FileTypeIndex;
 import consulo.language.psi.scope.GlobalSearchScope;
@@ -23,8 +23,8 @@ public class FlutterRunConfigurationType extends ConfigurationTypeBase {
   private final Factory factory;
 
   public FlutterRunConfigurationType() {
-    super("FlutterRunConfigurationType", FlutterBundle.message("runner.flutter.configuration.name"),
-          FlutterBundle.message("runner.flutter.configuration.description"), FlutterIcons.Flutter);
+    super("FlutterRunConfigurationType", FlutterBundle.messageValue("runner.flutter.configuration.name"),
+          FlutterBundle.messageValue("runner.flutter.configuration.description"), FlutterIcons.Flutter);
 
     factory = new Factory(this);
     addFactory(factory);
@@ -43,7 +43,7 @@ public class FlutterRunConfigurationType extends ConfigurationTypeBase {
   }
 
   public static FlutterRunConfigurationType getInstance() {
-    return CONFIGURATION_TYPE_EP.findExtensionOrFail(FlutterRunConfigurationType.class);
+    return ConfigurationTypeUtil.findConfigurationType(FlutterRunConfigurationType.class);
   }
 
   public static class Factory extends ConfigurationFactory {
@@ -76,10 +76,15 @@ public class FlutterRunConfigurationType extends ConfigurationTypeBase {
       return FlutterRunConfigurationType.doShowFlutterRunConfigurationForProject(project);
     }
 
-    @NotNull
+    // Consulo: no RunConfigurationSingletonPolicy; MULTIPLE_INSTANCE_ONLY is "not singleton and cannot be made one"
     @Override
-    public RunConfigurationSingletonPolicy getSingletonPolicy() {
-      return RunConfigurationSingletonPolicy.MULTIPLE_INSTANCE_ONLY;
+    public boolean isConfigurationSingletonByDefault() {
+      return false;
+    }
+
+    @Override
+    public boolean canConfigurationBeSingleton() {
+      return false;
     }
   }
 }

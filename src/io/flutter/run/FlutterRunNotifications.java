@@ -7,14 +7,14 @@ package io.flutter.run;
 
 import consulo.webBrowser.BrowserUtil;
 import consulo.component.PropertiesComponent;
-import com.intellij.notification.*;
-import consulo.ui.ex.action.AnAction;
-import consulo.ui.ex.action.AnActionEvent;
+import consulo.project.ProjectPropertiesComponent;
+import consulo.flutter.notification.FlutterRunNotificationGroups;
+import consulo.project.ui.notification.NotificationService;
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import io.flutter.icons.FlutterIcons;
 import io.flutter.FlutterBundle;
-import io.flutter.FlutterMessages;
+import consulo.localize.LocalizeValue;
 import io.flutter.view.FlutterViewMessages;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,20 +23,13 @@ public class FlutterRunNotifications {
 
   public static void init(@NotNull Project project) {
     // Initialize the flutter run notification group.
-    NotificationsConfiguration.getNotificationsConfiguration().register(
-      FlutterMessages.FLUTTER_NOTIFICATION_GROUP_ID,
-      NotificationDisplayType.BALLOON,
-      false);
-    NotificationsConfiguration.getNotificationsConfiguration().register(
-      FlutterMessages.FLUTTER_LOGGING_NOTIFICATION_GROUP_ID,
-      NotificationDisplayType.BALLOON,
-      true);
+    // Consulo: notification groups are registered by NotificationGroupContributor
 
     final FlutterRunNotifications notifications = new FlutterRunNotifications(project);
 
     //noinspection CodeBlock2Expr
     project.getMessageBus().connect().subscribe(
-      FlutterViewMessages.FLUTTER_DEBUG_TOPIC, (event) -> {
+      FlutterViewMessages.FlutterDebugNotifier.class, (event) -> { // Consulo: topics are listener classes
         ApplicationManager.getApplication().invokeLater(notifications::checkForDisplayFirstReload);
       }
     );
@@ -52,26 +45,20 @@ public class FlutterRunNotifications {
     if (myProject.isDisposed()) {
       return;
     }
-    final PropertiesComponent properties = PropertiesComponent.getInstance(myProject);
+    final PropertiesComponent properties = ProjectPropertiesComponent.getInstance(myProject);
 
     final boolean alreadyRun = properties.getBoolean(RELOAD_ALREADY_RUN);
     if (!alreadyRun) {
       properties.setValue(RELOAD_ALREADY_RUN, true);
 
-      final Notification notification = new Notification(
-        FlutterMessages.FLUTTER_NOTIFICATION_GROUP_ID,
-        FlutterBundle.message("flutter.reload.firstRun.title"),
-        FlutterBundle.message("flutter.reload.firstRun.content"),
-        NotificationType.INFORMATION);
-      notification.setIcon(FlutterIcons.HotReload);
-      notification.addAction(new AnAction("Learn More") {
-        @Override
-        public void actionPerformed(@NotNull AnActionEvent event) {
-          BrowserUtil.browse(FlutterBundle.message("flutter.reload.firstRun.url"));
-          notification.expire();
-        }
-      });
-      Notifications.Bus.notify(notification, myProject);
+      NotificationService.getInstance()
+        .newInfo(FlutterRunNotificationGroups.FLUTTER_MESSAGES)
+        .title(FlutterBundle.messageValue("flutter.reload.firstRun.title"))
+        .content(FlutterBundle.messageValue("flutter.reload.firstRun.content"))
+        .icon(FlutterIcons.HotReload)
+        .addClosingAction(LocalizeValue.localizeTODO("Learn More"),
+                          () -> BrowserUtil.browse(FlutterBundle.message("flutter.reload.firstRun.url")))
+        .notify(myProject);
     }
   }
 }

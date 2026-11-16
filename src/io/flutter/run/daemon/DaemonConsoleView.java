@@ -15,7 +15,8 @@ import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.logging.Logger;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
-import com.intellij.psi.search.ExecutionSearchScopes;
+import consulo.execution.configuration.ExecutionSearchScopeProvider;
+import consulo.content.scope.SearchScope;
 import consulo.language.psi.scope.GlobalSearchScope;
 import com.jetbrains.lang.dart.ide.runner.DartRelativePathsConsoleFilter;
 import io.flutter.logging.PluginLogger;
@@ -37,7 +38,7 @@ public class DaemonConsoleView extends ConsoleViewImpl {
     // Create our own console builder.
     //
     // We need to filter input to this console without affecting other consoles, so we cannot use a consoleFilterInputProvider.
-    final GlobalSearchScope searchScope = ExecutionSearchScopes.executionScope(env.getProject(), env.getRunProfile());
+    final SearchScope searchScope = ExecutionSearchScopeProvider.createSearchScope(env.getProject(), env.getRunProfile()); // Consulo: no ExecutionSearchScopes
     final TextConsoleBuilder builder = new TextConsoleBuilderImpl(env.getProject(), searchScope) {
       @NotNull
       @Override
@@ -55,7 +56,7 @@ public class DaemonConsoleView extends ConsoleViewImpl {
   private final StdoutJsonParser stdoutParser = new StdoutJsonParser();
   private boolean hasPrintedText;
 
-  public DaemonConsoleView(@NotNull final Project project, @NotNull final GlobalSearchScope searchScope) {
+  public DaemonConsoleView(@NotNull final Project project, @NotNull final SearchScope searchScope) {
     super(project, searchScope, true, false);
   }
 

@@ -103,7 +103,7 @@ public class DevToolsService {
 
     // Start the DevTools server.
     devToolsServerTask = new DevToolsServerTask(project, "Starting DevTools", devToolsFutureRef);
-    devToolsServerProgressIndicator = new BackgroundableProcessIndicator(project, devToolsServerTask);
+    devToolsServerProgressIndicator = new BackgroundableProcessIndicator(devToolsServerTask); // Consulo: the project comes from the task
     ProgressManager.getInstance()
       .runProcessWithProgressAsynchronously(
         devToolsServerTask, devToolsServerProgressIndicator);

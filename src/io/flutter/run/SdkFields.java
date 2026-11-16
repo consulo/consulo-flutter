@@ -15,7 +15,7 @@ import consulo.virtualFileSystem.VirtualFile;
 import consulo.util.collection.ArrayUtil;
 import consulo.process.cmd.ParametersListUtil;
 import consulo.util.xml.serializer.annotation.OptionTag;
-import com.intellij.util.xmlb.annotations.XMap;
+import consulo.util.xml.serializer.annotation.MapAnnotation;
 import com.jetbrains.lang.dart.sdk.DartConfigurable;
 import com.jetbrains.lang.dart.sdk.DartSdk;
 import io.flutter.FlutterBundle;
@@ -142,7 +142,7 @@ public class SdkFields {
 
   @NotNull
   @OptionTag
-  @XMap
+  @MapAnnotation // Consulo: no XMap
   public Map<String, String> getEnvs() {
     return envs;
   }
