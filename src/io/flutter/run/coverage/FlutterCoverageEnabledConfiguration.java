@@ -5,12 +5,12 @@
  */
 package io.flutter.run.coverage;
 
-import com.intellij.coverage.CoverageDataManager;
-import com.intellij.coverage.CoverageRunner;
-import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.util.ModalityUiUtil;
+import consulo.execution.coverage.CoverageDataManager;
+import consulo.execution.coverage.CoverageRunner;
+import consulo.execution.configuration.RunConfigurationBase;
+import consulo.execution.coverage.CoverageEnabledConfiguration;
+import consulo.ui.ModalityState;
+import consulo.dart.compat.ModalityUiUtil;
 import io.flutter.pub.PubRoot;
 import io.flutter.run.test.TestConfig;
 import org.jetbrains.annotations.NotNull;

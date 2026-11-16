@@ -5,7 +5,7 @@
  */
 package io.flutter.editor;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import io.flutter.FlutterUtils;
 import io.flutter.logging.PluginLogger;
 import org.jetbrains.annotations.NotNull;

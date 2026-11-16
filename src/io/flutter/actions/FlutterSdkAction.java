@@ -5,12 +5,12 @@
  */
 package io.flutter.actions;
 
-import com.intellij.openapi.actionSystem.ActionUpdateThread;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.project.Project;
+import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.dataContext.DataContext;
+import consulo.document.FileDocumentManager;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.project.Project;
 import com.jetbrains.lang.dart.analytics.Analytics;
 import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.FlutterBundle;

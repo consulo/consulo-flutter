@@ -5,9 +5,9 @@
  */
 package io.flutter.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
+import consulo.ui.ex.action.AnAction;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

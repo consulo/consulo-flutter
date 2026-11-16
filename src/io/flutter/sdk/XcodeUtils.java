@@ -5,14 +5,14 @@
  */
 package io.flutter.sdk;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.process.OSProcessUtil;
-import com.intellij.execution.process.ProcessInfo;
-import com.intellij.execution.process.ProcessOutput;
-import com.intellij.execution.util.ExecUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.local.OSProcessUtil;
+import consulo.platform.ProcessInfo;
+import consulo.process.util.ProcessOutput;
+import consulo.process.local.ExecUtil;
+import consulo.project.Project;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterMessages;
 import io.flutter.utils.SystemUtils;

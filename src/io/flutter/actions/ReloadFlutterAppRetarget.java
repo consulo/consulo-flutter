@@ -5,7 +5,7 @@
  */
 package io.flutter.actions;
 
-import com.intellij.openapi.actionSystem.ActionPlaces;
+import consulo.ui.ex.action.ActionPlaces;
 
 /**
  * A keystroke or toolbar invoked {@link ReloadFlutterApp} action.

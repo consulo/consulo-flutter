@@ -5,7 +5,7 @@
  */
 package io.flutter.android;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 public class IntellijGradleSyncProvider implements GradleSyncProvider {

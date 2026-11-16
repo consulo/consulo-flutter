@@ -5,10 +5,10 @@
  */
 package io.flutter.run.common;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.executors.DefaultDebugExecutor;
-import com.intellij.execution.executors.DefaultRunExecutor;
-import com.intellij.execution.runners.ExecutionEnvironment;
+import consulo.process.ExecutionException;
+import consulo.execution.debug.DefaultDebugExecutor;
+import consulo.execution.executor.DefaultRunExecutor;
+import consulo.execution.runner.ExecutionEnvironment;
 import io.flutter.run.LaunchState;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

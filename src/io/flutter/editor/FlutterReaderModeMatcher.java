@@ -5,12 +5,12 @@
  */
 package io.flutter.editor;
 
-import com.intellij.codeInsight.actions.ReaderModeMatcher;
-import com.intellij.codeInsight.actions.ReaderModeProvider;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.language.editor.readerMode.ReaderModeMatcher;
+import consulo.language.editor.readerMode.ReaderModeProvider;
+import consulo.codeEditor.Editor;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import io.flutter.pub.PubRoot;
 import io.flutter.utils.FlutterModuleUtils;
 import org.jetbrains.annotations.NotNull;

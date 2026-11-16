@@ -5,11 +5,11 @@
  */
 package io.flutter.run.coverage;
 
-import com.intellij.coverage.CoverageEngine;
-import com.intellij.coverage.CoverageRunner;
-import com.intellij.coverage.CoverageSuite;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.rt.coverage.data.ProjectData;
+import consulo.execution.coverage.CoverageEngine;
+import consulo.execution.coverage.CoverageRunner;
+import consulo.execution.coverage.CoverageSuite;
+import consulo.logging.Logger;
+import consulo.externalSystem.service.project.ProjectData;
 import io.flutter.FlutterBundle;
 import io.flutter.logging.PluginLogger;
 import io.flutter.settings.FlutterSettings;

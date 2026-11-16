@@ -5,7 +5,7 @@
  */
 package io.flutter.module.settings;
 
-import com.intellij.openapi.ui.ComboBox;
+import consulo.ui.ex.awt.ComboBox;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterUtils;
 import io.flutter.module.FlutterProjectType;

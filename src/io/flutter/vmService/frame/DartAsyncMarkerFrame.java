@@ -1,9 +1,9 @@
 package io.flutter.vmService.frame;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.ui.ColoredTextContainer;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.xdebugger.frame.XStackFrame;
+import consulo.application.AllIcons;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.execution.debug.frame.XStackFrame;
 import org.jetbrains.annotations.NotNull;
 
 /**

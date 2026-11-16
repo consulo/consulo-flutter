@@ -5,14 +5,14 @@
  */
 package io.flutter.android;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
+import consulo.application.ApplicationManager;
+import consulo.project.Project;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
-import com.intellij.openapi.projectRoots.Sdk;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.EnvironmentUtil;
+import consulo.content.bundle.Sdk;
+import consulo.module.content.ProjectRootManager;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.process.local.EnvironmentUtil;
 import io.flutter.sdk.FlutterSdk;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

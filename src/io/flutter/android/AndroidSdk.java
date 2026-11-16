@@ -5,17 +5,17 @@
  */
 package io.flutter.android;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.process.ColoredProcessHandler;
-import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessOutputTypes;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.process.event.ProcessEvent;
+import consulo.process.ProcessOutputTypes;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+import consulo.application.util.SystemInfo;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
 import io.flutter.logging.PluginLogger;
 import io.flutter.utils.ProcessAdapter;
 import org.jetbrains.annotations.NotNull;

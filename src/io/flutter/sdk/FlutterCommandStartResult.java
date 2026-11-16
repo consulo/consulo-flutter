@@ -5,7 +5,7 @@
  */
 package io.flutter.sdk;
 
-import com.intellij.execution.ExecutionException;
+import consulo.process.ExecutionException;
 import com.intellij.execution.process.ColoredProcessHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

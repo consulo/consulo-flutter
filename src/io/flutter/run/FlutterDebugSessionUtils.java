@@ -5,13 +5,13 @@
  */
 package io.flutter.run;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.executors.DefaultRunExecutor;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.xdebugger.XDebugProcessStarter;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerManager;
+import consulo.process.ExecutionException;
+import consulo.execution.executor.DefaultRunExecutor;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.execution.debug.XDebugProcessStarter;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.VisibleForTesting;

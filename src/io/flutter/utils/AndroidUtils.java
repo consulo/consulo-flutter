@@ -5,8 +5,8 @@
  */
 package io.flutter.utils;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectType;
+import consulo.project.Project;
+import consulo.project.ProjectType;
 import com.intellij.openapi.project.ProjectTypeService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

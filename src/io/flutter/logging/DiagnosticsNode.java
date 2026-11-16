@@ -9,7 +9,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import io.flutter.run.daemon.FlutterApp;
 import io.flutter.utils.CustomIconMaker;
 import io.flutter.utils.JsonUtils;

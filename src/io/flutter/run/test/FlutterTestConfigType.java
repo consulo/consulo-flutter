@@ -5,11 +5,11 @@
  */
 package io.flutter.run.test;
 
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.ConfigurationTypeBase;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.openapi.project.Project;
-import icons.FlutterIcons;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.ConfigurationTypeBase;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.project.Project;
+import io.flutter.icons.FlutterIcons;
 import io.flutter.run.FlutterRunConfigurationType;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;

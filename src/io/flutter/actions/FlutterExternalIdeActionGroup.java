@@ -6,9 +6,9 @@
 package io.flutter.actions;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectUtil;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.project.Project;
+import consulo.project.util.ProjectUtil;
+import consulo.virtualFileSystem.VirtualFile;
 import io.flutter.FlutterUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

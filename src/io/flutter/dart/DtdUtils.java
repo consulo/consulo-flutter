@@ -5,8 +5,8 @@
  */
 package io.flutter.dart;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.project.Project;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import com.jetbrains.lang.dart.ide.toolingDaemon.DartToolingDaemonService;
 import org.jetbrains.annotations.NotNull;
 

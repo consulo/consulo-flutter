@@ -5,9 +5,9 @@
  */
 package io.flutter.console;
 
-import com.intellij.execution.ConsoleFolding;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.execution.ConsoleFolding;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
 import io.flutter.FlutterConstants;
 import io.flutter.sdk.FlutterSdkUtil;
 import org.jetbrains.annotations.NotNull;

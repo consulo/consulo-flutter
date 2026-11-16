@@ -5,8 +5,8 @@
  */
 package io.flutter.logging;
 
-import com.intellij.execution.ConsoleFolding;
-import com.intellij.openapi.project.Project;
+import consulo.execution.ConsoleFolding;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

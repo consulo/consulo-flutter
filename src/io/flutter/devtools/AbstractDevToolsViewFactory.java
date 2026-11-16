@@ -5,12 +5,12 @@
  */
 package io.flutter.devtools;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.project.Project;
+import consulo.disposer.Disposer;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.project.ui.wm.ToolWindowFactory;
+import consulo.project.ui.wm.ToolWindowManagerListener;
+import consulo.component.messagebus.MessageBusConnection;
 import io.flutter.FlutterUtils;
 import io.flutter.actions.RefreshToolWindowAction;
 import io.flutter.run.daemon.DevToolsInstance;

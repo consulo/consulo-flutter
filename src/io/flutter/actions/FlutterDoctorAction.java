@@ -5,8 +5,8 @@
  */
 package io.flutter.actions;
 
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.project.Project;
+import consulo.dataContext.DataContext;
+import consulo.project.Project;
 import io.flutter.pub.PubRoot;
 import io.flutter.sdk.FlutterSdk;
 import org.jetbrains.annotations.NotNull;

@@ -5,15 +5,15 @@
  */
 package io.flutter.run.common;
 
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.testframework.TestConsoleProperties;
-import com.intellij.execution.testframework.actions.AbstractRerunFailedTestsAction;
-import com.intellij.execution.testframework.sm.SMCustomMessagesParsing;
-import com.intellij.execution.testframework.sm.runner.OutputToGeneralTestEventsConverter;
-import com.intellij.execution.testframework.sm.runner.SMTRunnerConsoleProperties;
-import com.intellij.execution.testframework.sm.runner.SMTestLocator;
-import com.intellij.execution.ui.ConsoleView;
+import consulo.execution.executor.Executor;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.test.TestConsoleProperties;
+import consulo.execution.test.action.AbstractRerunFailedTestsAction;
+import consulo.execution.test.sm.SMCustomMessagesParsing;
+import consulo.execution.test.sm.runner.OutputToGeneralTestEventsConverter;
+import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
+import consulo.execution.test.sm.runner.SMTestLocator;
+import consulo.execution.ui.console.ConsoleView;
 import com.jetbrains.lang.dart.util.DartUrlResolver;
 import io.flutter.run.test.FlutterTestEventsConverter;
 import io.flutter.run.test.FlutterTestLocationProvider;

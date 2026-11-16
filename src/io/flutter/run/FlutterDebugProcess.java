@@ -5,20 +5,20 @@
  */
 package io.flutter.run;
 
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.filters.TextConsoleBuilderFactory;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.ExecutionConsole;
-import com.intellij.execution.ui.RunnerLayoutUi;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.util.Computable;
-import com.intellij.ui.content.Content;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerBundle;
+import consulo.execution.ExecutionResult;
+import consulo.execution.ui.console.TextConsoleBuilderFactory;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.ExecutionConsole;
+import consulo.execution.ui.layout.RunnerLayoutUi;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
+import consulo.component.ProcessCanceledException;
+import consulo.application.util.function.Computable;
+import consulo.ui.ex.content.Content;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerBundle;
 import com.jetbrains.lang.dart.util.DartUrlResolver;
 import io.flutter.FlutterUtils;
 import io.flutter.actions.ReloadAllFlutterApps;

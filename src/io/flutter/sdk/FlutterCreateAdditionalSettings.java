@@ -5,7 +5,7 @@
  */
 package io.flutter.sdk;
 
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import io.flutter.module.FlutterProjectType;
 import io.flutter.module.settings.InitializeOnceBoolValueProperty;
 import java.util.ArrayList;

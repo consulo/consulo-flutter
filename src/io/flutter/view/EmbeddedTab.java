@@ -5,7 +5,7 @@
  */
 package io.flutter.view;
 
-import com.intellij.ui.content.ContentManager;
+import consulo.ui.ex.content.ContentManager;
 
 import javax.swing.*;
 

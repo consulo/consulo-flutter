@@ -6,14 +6,14 @@
 package io.flutter.run.coverage;
 
 import com.intellij.coverage.*;
-import com.intellij.execution.configurations.RunConfigurationBase;
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.configurations.WrappingRunConfiguration;
-import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.execution.configuration.RunConfigurationBase;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.configuration.WrappingRunConfiguration;
+import consulo.execution.coverage.CoverageEnabledConfiguration;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiFile;
 import com.jetbrains.lang.dart.DartFileType;
 import com.jetbrains.lang.dart.psi.DartFile;
 import io.flutter.FlutterBundle;

@@ -5,7 +5,7 @@
  */
 package io.flutter.run.test;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.jetbrains.lang.dart.psi.DartFile;
 import io.flutter.FlutterUtils;
 import io.flutter.run.common.CommonTestConfigUtils;

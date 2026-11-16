@@ -7,9 +7,9 @@ package io.flutter.survey;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.util.io.HttpRequests;
+import consulo.component.PropertiesComponent;
+import consulo.application.ApplicationManager;
+import consulo.http.HttpRequests;
 import io.flutter.utils.JsonUtils;
 import org.jetbrains.annotations.Nullable;
 

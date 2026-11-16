@@ -6,12 +6,12 @@
 package io.flutter.console;
 
 import com.intellij.execution.process.ColoredProcessHandler;
-import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Key;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.MessageView;
+import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.util.dataholder.Key;
+import consulo.ui.ex.content.Content;
+import consulo.project.ui.view.MessageView;
 import io.flutter.utils.OpenApiUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

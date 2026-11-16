@@ -5,33 +5,25 @@
  */
 package io.flutter;
 
-import com.intellij.AbstractBundle;
-import org.jetbrains.annotations.NonNls;
+import consulo.flutter.localize.FlutterLocalize;
+import consulo.localize.LocalizeKey;
+import consulo.localize.LocalizeValue;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.PropertyKey;
 
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
-import java.util.ResourceBundle;
-
+/**
+ * Consulo: messages come from LOCALIZE-LIB ({@code FlutterLocalize}, generated from {@code FlutterBundle.properties}
+ * by tool/consulo/sync_upstream_resources.py), so upstream keys stay valid.
+ */
 public class FlutterBundle {
+  public static String message(@NotNull String key, @NotNull Object... params) {
+    return messageValue(key, params).get();
+  }
 
-  private static Reference<ResourceBundle> ourBundle;
-  @NonNls private static final String BUNDLE = "io.flutter.FlutterBundle";
-
-  public static String message(@NotNull @PropertyKey(resourceBundle = BUNDLE) String key, @NotNull Object... params) {
-    return AbstractBundle.message(getBundle(), key, params);
+  public static @NotNull LocalizeValue messageValue(@NotNull String key, @NotNull Object... params) {
+    LocalizeKey localizeKey = LocalizeKey.of(FlutterLocalize.ID, key, params.length);
+    return params.length == 0 ? localizeKey.getValue() : localizeKey.getValue(params);
   }
 
   private FlutterBundle() {
-  }
-
-  private static ResourceBundle getBundle() {
-    ResourceBundle bundle = com.intellij.reference.SoftReference.dereference(ourBundle);
-    if (bundle == null) {
-      bundle = ResourceBundle.getBundle(BUNDLE);
-      ourBundle = new SoftReference<>(bundle);
-    }
-    return bundle;
   }
 }

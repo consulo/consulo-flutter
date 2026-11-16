@@ -5,18 +5,18 @@
  */
 package io.flutter.run.daemon;
 
-import com.intellij.execution.configurations.CommandLineState;
-import com.intellij.execution.filters.TextConsoleBuilder;
-import com.intellij.execution.filters.TextConsoleBuilderImpl;
-import com.intellij.execution.impl.ConsoleViewImpl;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.execution.configuration.CommandLineState;
+import consulo.execution.ui.console.TextConsoleBuilder;
+import consulo.ide.impl.idea.execution.filters.TextConsoleBuilderImpl;
+import consulo.ide.impl.idea.execution.impl.ConsoleViewImpl;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.console.ConsoleView;
+import consulo.execution.ui.console.ConsoleViewContentType;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.psi.search.ExecutionSearchScopes;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.jetbrains.lang.dart.ide.runner.DartRelativePathsConsoleFilter;
 import io.flutter.logging.PluginLogger;
 import io.flutter.settings.FlutterSettings;

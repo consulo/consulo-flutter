@@ -5,11 +5,11 @@
  */
 package io.flutter.run.test;
 
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.ui.SimpleListCellRenderer;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.project.Project;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
+import consulo.ui.ex.awt.SimpleListCellRenderer;
 import io.flutter.run.test.TestFields.Scope;
 import org.jetbrains.annotations.NotNull;
 

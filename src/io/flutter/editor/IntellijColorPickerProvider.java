@@ -5,8 +5,8 @@
  */
 package io.flutter.editor;
 
-import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.ui.colorpicker.ColorPickerBuilder;
+import consulo.ui.ex.popup.Balloon;
+import consulo.ui.ColorPickerBuilder;
 import com.intellij.ui.colorpicker.LightCalloutPopup;
 import com.intellij.ui.colorpicker.MaterialGraphicalColorPipetteProvider;
 import kotlin.Unit;

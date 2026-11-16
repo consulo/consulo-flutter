@@ -6,9 +6,9 @@
 package io.flutter.settings;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.util.EventDispatcher;
+import consulo.component.PropertiesComponent;
+import consulo.application.ApplicationManager;
+import consulo.proxy.EventDispatcher;
 import com.jetbrains.lang.dart.analyzer.DartClosingLabelManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

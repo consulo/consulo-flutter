@@ -5,13 +5,13 @@
  */
 package io.flutter.editor;
 
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.EditorNotificationPanel;
-import com.intellij.ui.EditorNotificationProvider;
-import com.intellij.ui.HyperlinkLabel;
-import icons.FlutterIcons;
+import consulo.fileEditor.FileEditor;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.ide.impl.idea.ui.EditorNotificationPanel;
+import consulo.fileEditor.EditorNotificationProvider;
+import consulo.ui.ex.awt.HyperlinkLabel;
+import io.flutter.icons.FlutterIcons;
 import io.flutter.FlutterUtils;
 import io.flutter.pub.PubRoot;
 import io.flutter.sdk.FlutterSdk;

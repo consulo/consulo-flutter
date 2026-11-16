@@ -5,8 +5,8 @@
  */
 package io.flutter.dart;
 
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
+import consulo.language.psi.PsiElement;
+import consulo.language.impl.psi.LeafPsiElement;
 import com.jetbrains.lang.dart.DartTokenTypes;
 import com.jetbrains.lang.dart.psi.*;
 import org.jetbrains.annotations.NotNull;

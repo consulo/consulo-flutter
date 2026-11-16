@@ -1,16 +1,16 @@
 package io.flutter.vmService.frame;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.ui.ColoredTextContainer;
-import com.intellij.ui.SimpleTextAttributes;
-import com.intellij.util.SmartList;
-import com.intellij.xdebugger.XSourcePosition;
-import com.intellij.xdebugger.evaluation.XDebuggerEvaluator;
-import com.intellij.xdebugger.frame.XCompositeNode;
-import com.intellij.xdebugger.frame.XStackFrame;
-import com.intellij.xdebugger.frame.XValueChildrenList;
+import consulo.application.AllIcons;
+import consulo.util.lang.StringUtil;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.ui.ex.ColoredTextContainer;
+import consulo.ui.ex.SimpleTextAttributes;
+import consulo.util.collection.SmartList;
+import consulo.execution.debug.XSourcePosition;
+import consulo.execution.debug.evaluation.XDebuggerEvaluator;
+import consulo.execution.debug.frame.XCompositeNode;
+import consulo.execution.debug.frame.XStackFrame;
+import consulo.execution.debug.frame.XValueChildrenList;
 import io.flutter.vmService.DartVmServiceDebugProcess;
 import org.dartlang.vm.service.consumer.GetObjectConsumer;
 import org.dartlang.vm.service.element.*;

@@ -5,8 +5,8 @@
  */
 package io.flutter.actions;
 
-import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.openapi.ui.ValidationInfo;
+import consulo.ui.ex.awt.DialogWrapper;
+import consulo.ui.ex.awt.ValidationInfo;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

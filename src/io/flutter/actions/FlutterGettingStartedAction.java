@@ -5,10 +5,10 @@
  */
 package io.flutter.actions;
 
-import com.intellij.ide.browsers.BrowserLauncher;
-import com.intellij.openapi.actionSystem.ActionUpdateThread;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.DumbAwareAction;
+import consulo.webBrowser.BrowserLauncher;
+import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
 import com.jetbrains.lang.dart.analytics.Analytics;
 import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.FlutterConstants;

@@ -5,9 +5,9 @@
  */
 package io.flutter.run.test;
 
-import com.intellij.execution.Location;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
+import consulo.execution.action.Location;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
 import com.jetbrains.lang.dart.psi.DartCallExpression;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

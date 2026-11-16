@@ -5,7 +5,7 @@
  */
 package io.flutter.run;
 
-import icons.FlutterIcons;
+import io.flutter.icons.FlutterIcons;
 import io.flutter.sdk.XcodeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

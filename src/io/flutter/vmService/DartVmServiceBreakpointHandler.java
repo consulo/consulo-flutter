@@ -13,12 +13,12 @@
 // limitations under the License.
 package io.flutter.vmService;
 
-import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
-import com.intellij.xdebugger.breakpoints.XBreakpointProperties;
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint;
+import consulo.execution.debug.breakpoint.XBreakpointHandler;
+import consulo.execution.debug.breakpoint.XBreakpointProperties;
+import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import com.jetbrains.lang.dart.ide.runner.DartLineBreakpointType;
 import org.dartlang.vm.service.element.Breakpoint;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import io.flutter.logging.PluginLogger;
 import org.jetbrains.annotations.NotNull;
 

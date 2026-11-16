@@ -7,12 +7,12 @@ package io.flutter.utils;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.disposer.Disposable;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.logging.Logger;
+import consulo.disposer.Disposer;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import io.flutter.FlutterUtils;
 import io.flutter.logging.PluginLogger;
 import org.jetbrains.annotations.NotNull;

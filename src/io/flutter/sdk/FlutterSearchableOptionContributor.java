@@ -5,8 +5,8 @@
  */
 package io.flutter.sdk;
 
-import com.intellij.ide.ui.search.SearchableOptionContributor;
-import com.intellij.ide.ui.search.SearchableOptionProcessor;
+import consulo.configurable.search.SearchableOptionContributor;
+import consulo.configurable.search.SearchableOptionProcessor;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterConstants;
 import org.jetbrains.annotations.NotNull;

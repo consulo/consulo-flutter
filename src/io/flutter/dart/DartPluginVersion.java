@@ -5,7 +5,7 @@
  */
 package io.flutter.dart;
 
-import com.intellij.openapi.util.Version;
+import consulo.util.lang.Version;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

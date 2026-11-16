@@ -5,12 +5,12 @@
  */
 package io.flutter;
 
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.project.Project;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.project.Project;
 import com.intellij.openapi.ui.messages.MessagesService;
-import icons.FlutterIcons;
+import io.flutter.icons.FlutterIcons;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

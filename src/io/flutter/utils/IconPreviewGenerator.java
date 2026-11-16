@@ -5,8 +5,8 @@
  */
 package io.flutter.utils;
 
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.util.TripleFunction;
+import consulo.logging.Logger;
+import consulo.util.lang.function.TripleFunction;
 import io.flutter.FlutterUtils;
 import io.flutter.logging.PluginLogger;
 import org.jetbrains.annotations.NotNull;

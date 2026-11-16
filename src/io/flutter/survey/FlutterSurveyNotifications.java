@@ -5,21 +5,21 @@
  */
 package io.flutter.survey;
 
-import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
-import com.intellij.openapi.fileEditor.FileEditorManagerListener;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.webBrowser.BrowserUtil;
+import consulo.component.PropertiesComponent;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationType;
+import consulo.project.ui.notification.Notifications;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.application.internal.ApplicationInfo;
+import consulo.fileEditor.FileEditorManager;
+import consulo.fileEditor.event.FileEditorManagerEvent;
+import consulo.fileEditor.event.FileEditorManagerListener;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import com.jetbrains.lang.dart.sdk.DartSdk;
-import icons.FlutterIcons;
+import io.flutter.icons.FlutterIcons;
 import io.flutter.FlutterMessages;
 import io.flutter.FlutterUtils;
 import io.flutter.pub.PubRoot;

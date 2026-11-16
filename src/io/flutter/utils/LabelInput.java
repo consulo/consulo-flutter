@@ -5,7 +5,7 @@
  */
 package io.flutter.utils;
 
-import com.intellij.ui.components.labels.LinkListener;
+import consulo.ui.ex.awt.LinkListener;
 import org.jetbrains.annotations.NotNull;
 
 public class LabelInput {

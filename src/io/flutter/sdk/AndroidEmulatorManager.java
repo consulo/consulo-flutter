@@ -6,9 +6,9 @@
 package io.flutter.sdk;
 
 import com.google.common.collect.ImmutableSet;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import io.flutter.FlutterUtils;
 import io.flutter.android.AndroidEmulator;
 import io.flutter.android.AndroidSdk;

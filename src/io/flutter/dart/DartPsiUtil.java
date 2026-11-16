@@ -5,7 +5,7 @@
  */
 package io.flutter.dart;
 
-import com.intellij.psi.PsiElement;
+import consulo.language.psi.PsiElement;
 import com.jetbrains.lang.dart.DartTokenTypes;
 import com.jetbrains.lang.dart.psi.DartArgumentList;
 import com.jetbrains.lang.dart.psi.DartArguments;

@@ -1,10 +1,10 @@
 package io.flutter.widgetpreview;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
+import consulo.project.Project;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.project.ui.wm.ToolWindowFactory;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentFactory;
 import io.flutter.sdk.FlutterSdk;
 import kotlin.coroutines.Continuation;
 import org.jetbrains.annotations.NotNull;

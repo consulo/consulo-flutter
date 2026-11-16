@@ -5,7 +5,7 @@
  */
 package io.flutter.editor;
 
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import com.intellij.openapi.util.IconLoader;
 import io.flutter.FlutterUtils;
 import io.flutter.logging.PluginLogger;

@@ -9,7 +9,7 @@ package io.flutter.run.test;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.intellij.execution.testframework.TestConsoleProperties;
+import consulo.execution.test.TestConsoleProperties;
 import com.jetbrains.lang.dart.util.DartUrlResolver;
 import io.flutter.test.DartTestEventsConverterZ;
 import org.jetbrains.annotations.NotNull;

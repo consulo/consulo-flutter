@@ -5,7 +5,7 @@
  */
 package io.flutter.editor;
 
-import com.intellij.openapi.ui.popup.Balloon;
+import consulo.ui.ex.popup.Balloon;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

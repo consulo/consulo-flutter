@@ -5,7 +5,7 @@
  */
 package io.flutter.devtools;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import io.flutter.run.daemon.DevToolsInstance;
 import io.flutter.sdk.FlutterSdkVersion;
 import io.flutter.view.EmbeddedBrowser;

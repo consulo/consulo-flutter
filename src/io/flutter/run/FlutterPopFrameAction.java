@@ -5,13 +5,13 @@
  */
 package io.flutter.run;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerManager;
-import com.intellij.xdebugger.frame.XStackFrame;
+import consulo.application.dumb.DumbAware;
+import consulo.project.Project;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerManager;
+import consulo.execution.debug.frame.XStackFrame;
 import io.flutter.FlutterBundle;
 import io.flutter.vmService.frame.DartVmServiceStackFrame;
 import org.jetbrains.annotations.NotNull;

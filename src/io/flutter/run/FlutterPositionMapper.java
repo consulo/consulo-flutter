@@ -6,16 +6,16 @@
 package io.flutter.run;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.search.FilenameIndex;
-import com.intellij.psi.search.GlobalSearchScope;
-import com.intellij.psi.search.GlobalSearchScopesCore;
-import com.intellij.util.PathUtil;
-import com.intellij.xdebugger.XSourcePosition;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.search.FilenameIndex;
+import consulo.language.psi.scope.GlobalSearchScope;
+import consulo.language.psi.scope.GlobalSearchScopesCore;
+import consulo.util.io.PathUtil;
+import consulo.execution.debug.XSourcePosition;
 import com.jetbrains.lang.dart.util.DartResolveUtil;
 import com.jetbrains.lang.dart.util.DartUrlResolver;
 import io.flutter.logging.PluginLogger;

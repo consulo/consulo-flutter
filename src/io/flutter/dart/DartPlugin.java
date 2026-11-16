@@ -5,12 +5,12 @@
  */
 package io.flutter.dart;
 
-import com.intellij.execution.configurations.ConfigurationType;
+import consulo.execution.configuration.ConfigurationType;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
+import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
+import consulo.container.plugin.PluginId;
+import consulo.module.Module;
+import consulo.project.Project;
 import com.jetbrains.lang.dart.ide.actions.DartPubActionBase;
 import com.jetbrains.lang.dart.sdk.DartSdk;
 import com.jetbrains.lang.dart.sdk.DartSdkLibUtil;

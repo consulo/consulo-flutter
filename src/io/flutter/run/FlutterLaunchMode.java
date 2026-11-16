@@ -5,8 +5,8 @@
  */
 package io.flutter.run;
 
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.util.Key;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.util.dataholder.Key;
 import org.jetbrains.annotations.NotNull;
 
 /**

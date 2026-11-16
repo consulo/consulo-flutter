@@ -1,6 +1,6 @@
 package io.flutter.vmService.frame;
 
-import com.intellij.xdebugger.XSourcePosition;
+import consulo.execution.debug.XSourcePosition;
 import io.flutter.vmService.DartVmServiceDebugProcess;
 import org.dartlang.vm.service.element.Frame;
 import org.jetbrains.annotations.NotNull;

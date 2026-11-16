@@ -5,17 +5,17 @@
  */
 package io.flutter.view;
 
-import com.intellij.ide.browsers.BrowserLauncher;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ProjectManagerListener;
-import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.ui.components.labels.LinkLabel;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
-import com.intellij.util.ui.JBUI;
+import consulo.webBrowser.BrowserLauncher;
+import consulo.logging.Logger;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.event.ProjectManagerListener;
+import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.awt.LinkLabel;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.awt.JBUI;
 import io.flutter.utils.AsyncUtils;
 import io.flutter.utils.LabelInput;
 import io.flutter.utils.OpenApiUtils;

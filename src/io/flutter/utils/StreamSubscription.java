@@ -5,7 +5,7 @@
  */
 package io.flutter.utils;
 
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 
 import java.util.function.Consumer;
 

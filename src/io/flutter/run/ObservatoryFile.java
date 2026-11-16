@@ -5,11 +5,11 @@
  */
 package io.flutter.run;
 
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.util.PathUtil;
-import com.intellij.xdebugger.XDebuggerUtil;
-import com.intellij.xdebugger.XSourcePosition;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.file.light.LightVirtualFile;
+import consulo.util.io.PathUtil;
+import consulo.execution.debug.XDebuggerUtil;
+import consulo.execution.debug.XSourcePosition;
 import com.jetbrains.lang.dart.DartFileType;
 import io.flutter.vmService.DartVmServiceDebugProcess;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;

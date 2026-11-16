@@ -5,19 +5,19 @@
  */
 package io.flutter.utils;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.roots.libraries.LibraryTablesRegistrar;
-import com.intellij.openapi.util.Computable;
-import com.intellij.openapi.util.Condition;
-import com.intellij.openapi.util.ThrowableComputable;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.ui.ModalityState;
+import consulo.module.Module;
+import consulo.module.ModuleManager;
+import consulo.project.Project;
+import consulo.module.content.ModuleRootManager;
+import consulo.content.library.LibraryTable;
+import consulo.content.library.LibraryTablesRegistrar;
+import consulo.application.util.function.Computable;
+import consulo.util.lang.function.Condition;
+import consulo.application.util.function.ThrowableComputable;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

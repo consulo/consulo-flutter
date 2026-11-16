@@ -5,13 +5,13 @@
  */
 package io.flutter.propertyeditor;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.ToolWindowType;
-import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.project.Project;
+import consulo.disposer.Disposer;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.ui.ex.toolWindow.ToolWindowType;
+import consulo.project.ui.wm.ToolWindowManagerListener;
+import consulo.component.messagebus.MessageBusConnection;
 import io.flutter.dart.DartPlugin;
 import io.flutter.dart.DartPluginVersion;
 import io.flutter.devtools.AbstractDevToolsViewFactory;

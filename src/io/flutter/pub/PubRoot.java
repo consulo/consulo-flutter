@@ -5,15 +5,15 @@
  */
 package io.flutter.pub;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectFileIndex;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.language.editor.CommonDataKeys;
+import consulo.language.editor.LangDataKeys;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.module.content.ProjectFileIndex;
+import consulo.module.content.ProjectRootManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiFile;
 import com.jetbrains.lang.dart.util.PackageConfigFileUtil;
 import io.flutter.FlutterUtils;
 import io.flutter.utils.OpenApiUtils;

@@ -1,8 +1,8 @@
 package io.flutter.vmService.frame;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.xdebugger.frame.XExecutionStack;
-import com.intellij.xdebugger.frame.XStackFrame;
+import consulo.application.AllIcons;
+import consulo.execution.debug.frame.XExecutionStack;
+import consulo.execution.debug.frame.XStackFrame;
 import io.flutter.vmService.DartVmServiceDebugProcess;
 import org.dartlang.vm.service.element.Frame;
 import org.dartlang.vm.service.element.InstanceRef;

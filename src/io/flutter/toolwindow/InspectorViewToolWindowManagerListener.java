@@ -5,10 +5,10 @@
  */
 package io.flutter.toolwindow;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.ex.ToolWindowManagerListener;
+import consulo.project.Project;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.project.ui.wm.ToolWindowManagerListener;
 import io.flutter.view.InspectorView;
 import org.jetbrains.annotations.NotNull;
 

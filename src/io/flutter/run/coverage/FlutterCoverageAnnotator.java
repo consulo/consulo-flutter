@@ -5,14 +5,14 @@
  */
 package io.flutter.run.coverage;
 
-import com.intellij.coverage.CoverageDataManager;
-import com.intellij.coverage.CoverageSuitesBundle;
-import com.intellij.coverage.SimpleCoverageAnnotator;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.SmartList;
+import consulo.execution.coverage.CoverageDataManager;
+import consulo.execution.coverage.CoverageSuitesBundle;
+import consulo.execution.coverage.SimpleCoverageAnnotator;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.module.content.ModuleRootManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.collection.SmartList;
 import io.flutter.utils.FlutterModuleUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

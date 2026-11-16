@@ -5,7 +5,7 @@
  */
 package io.flutter.actions;
 
-import com.intellij.openapi.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowId;
 import io.flutter.run.FlutterLaunchMode;
 
 public class RunProfileFlutterApp extends RunFlutterAction {

@@ -5,10 +5,10 @@
  */
 package io.flutter.logging;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PathManager;
+import consulo.application.ApplicationManager;
+import consulo.ide.impl.idea.openapi.application.PathManager;
 import com.intellij.openapi.diagnostic.LogLevel;
-import com.intellij.openapi.diagnostic.Logger;
+import consulo.logging.Logger;
 import io.flutter.settings.FlutterSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

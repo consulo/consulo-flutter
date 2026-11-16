@@ -5,14 +5,14 @@
  */
 package io.flutter.sdk;
 
-import com.intellij.openapi.application.WriteAction;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
+import consulo.application.WriteAction;
+import consulo.module.Module;
+import consulo.project.DumbService;
+import consulo.project.Project;
 import com.intellij.openapi.roots.*;
-import com.intellij.openapi.roots.impl.libraries.LibraryEx;
+import consulo.content.internal.LibraryEx;
 import com.intellij.openapi.roots.libraries.*;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 import io.flutter.utils.FlutterModuleUtils;
 import io.flutter.utils.OpenApiUtils;
 import org.jetbrains.annotations.NotNull;

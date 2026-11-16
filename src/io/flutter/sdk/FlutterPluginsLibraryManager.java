@@ -5,20 +5,20 @@
  */
 package io.flutter.sdk;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.application.ReadAction;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootEvent;
-import com.intellij.openapi.roots.ModuleRootListener;
-import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.application.ApplicationManager;
+import consulo.ui.ModalityState;
+import consulo.application.ReadAction;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.module.content.layer.event.ModuleRootEvent;
+import consulo.module.content.layer.event.ModuleRootListener;
+import consulo.content.library.PersistentLibraryKind;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileContentsChangedAdapter;
-import com.intellij.openapi.vfs.VirtualFileManager;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.virtualFileSystem.VirtualFileManager;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import io.flutter.FlutterProjectDisposable;
 import io.flutter.pub.PubRoot;
 import io.flutter.pub.PubRoots;

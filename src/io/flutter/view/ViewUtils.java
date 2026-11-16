@@ -5,15 +5,15 @@
  */
 package io.flutter.view;
 
-import com.intellij.openapi.ui.VerticalFlowLayout;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.ui.JBColor;
-import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.components.labels.LinkLabel;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentManager;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.ui.ex.awt.VerticalFlowLayout;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.LinkLabel;
+import consulo.ui.ex.content.Content;
+import consulo.ui.ex.content.ContentManager;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import io.flutter.utils.LabelInput;
 import io.flutter.utils.OpenApiUtils;
 import org.jetbrains.annotations.NotNull;

@@ -5,9 +5,9 @@
  */
 package io.flutter.run.common;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.psi.PsiElement;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.application.AllIcons;
+import consulo.language.psi.PsiElement;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

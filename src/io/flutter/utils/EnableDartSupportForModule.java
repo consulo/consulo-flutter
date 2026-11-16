@@ -5,8 +5,8 @@
  */
 package io.flutter.utils;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
+import consulo.module.Module;
+import consulo.project.Project;
 import com.intellij.util.ui.EdtInvocationManager;
 import com.jetbrains.lang.dart.sdk.DartSdk;
 import com.jetbrains.lang.dart.sdk.DartSdkLibUtil;

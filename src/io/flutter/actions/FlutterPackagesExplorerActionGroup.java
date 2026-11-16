@@ -6,7 +6,7 @@
 package io.flutter.actions;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.virtualFileSystem.VirtualFile;
 import io.flutter.pub.PubRoot;
 import org.jetbrains.annotations.NotNull;
 

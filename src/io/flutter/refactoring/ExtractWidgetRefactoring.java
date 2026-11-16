@@ -5,8 +5,8 @@
  */
 package io.flutter.refactoring;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import com.jetbrains.lang.dart.ide.refactoring.ServerRefactoring;
 import org.dartlang.analysis.server.protocol.ExtractWidgetOptions;
 import org.dartlang.analysis.server.protocol.RefactoringFeedback;

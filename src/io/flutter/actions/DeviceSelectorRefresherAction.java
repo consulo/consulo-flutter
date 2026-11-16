@@ -5,10 +5,10 @@
  */
 package io.flutter.actions;
 
-import com.intellij.openapi.actionSystem.ActionUpdateThread;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.Project;
+import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.project.Project;
 import com.jetbrains.lang.dart.analytics.Analytics;
 import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.run.daemon.DeviceService;

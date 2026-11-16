@@ -5,14 +5,14 @@
  */
 package io.flutter.run;
 
-import com.intellij.ide.browsers.BrowserLauncher;
-import com.intellij.openapi.actionSystem.ActionUpdateThread;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
-import icons.FlutterIcons;
+import consulo.webBrowser.BrowserLauncher;
+import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.logging.Logger;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.project.Project;
+import consulo.application.util.function.Computable;
+import io.flutter.icons.FlutterIcons;
 import io.flutter.FlutterUtils;
 import io.flutter.ObservatoryConnector;
 import io.flutter.devtools.DevToolsIdeFeature;

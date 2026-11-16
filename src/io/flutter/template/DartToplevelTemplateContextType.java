@@ -5,9 +5,9 @@
  */
 package io.flutter.template;
 
-import com.intellij.psi.PsiComment;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.language.psi.PsiComment;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.jetbrains.lang.dart.ide.template.DartTemplateContextType;
 import com.jetbrains.lang.dart.psi.DartClassDefinition;
 import org.jetbrains.annotations.NotNull;

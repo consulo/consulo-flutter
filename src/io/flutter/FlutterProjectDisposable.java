@@ -5,9 +5,9 @@
  */
 package io.flutter;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.components.Service;
-import com.intellij.openapi.project.Project;
+import consulo.disposer.Disposable;
+import com.thaiopensource.util.Service;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 /**

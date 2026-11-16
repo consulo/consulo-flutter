@@ -5,13 +5,13 @@
  */
 package io.flutter.view;
 
-import com.intellij.ide.util.PropertiesComponent;
-import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.openapi.wm.ToolWindowManager;
+import consulo.component.PropertiesComponent;
+import consulo.application.dumb.DumbAware;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.project.ui.wm.ToolWindowFactory;
+import consulo.project.ui.wm.ToolWindowManager;
 import io.flutter.utils.OpenApiUtils;
 import org.jetbrains.annotations.NotNull;
 

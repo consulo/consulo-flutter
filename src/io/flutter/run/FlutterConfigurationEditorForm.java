@@ -5,12 +5,12 @@
  */
 package io.flutter.run;
 
-import com.intellij.execution.configuration.EnvironmentVariablesTextFieldWithBrowseButton;
-import com.intellij.openapi.options.SettingsEditor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.execution.ui.awt.EnvironmentVariablesTextFieldWithBrowseButton;
+import consulo.execution.configuration.ui.SettingsEditor;
+import consulo.project.Project;
+import consulo.ui.ex.awt.TextFieldWithBrowseButton;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

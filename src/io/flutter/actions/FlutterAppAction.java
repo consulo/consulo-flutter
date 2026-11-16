@@ -5,11 +5,11 @@
  */
 package io.flutter.actions;
 
-import com.intellij.openapi.actionSystem.ActionUpdateThread;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
+import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.project.Project;
+import consulo.application.util.function.Computable;
 import io.flutter.run.daemon.FlutterApp;
 import org.jetbrains.annotations.NotNull;
 

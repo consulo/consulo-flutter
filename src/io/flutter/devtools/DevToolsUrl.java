@@ -5,9 +5,9 @@
  */
 package io.flutter.devtools;
 
-import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.application.internal.ApplicationInfo;
+import consulo.application.ApplicationManager;
+import consulo.util.lang.StringUtil;
 import io.flutter.sdk.FlutterSdkUtil;
 import io.flutter.sdk.FlutterSdkVersion;
 import org.jetbrains.annotations.NotNull;

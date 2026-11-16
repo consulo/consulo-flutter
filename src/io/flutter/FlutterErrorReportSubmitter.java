@@ -5,22 +5,22 @@
  */
 package io.flutter;
 
-import com.intellij.ide.DataManager;
+import consulo.dataContext.DataManager;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.ide.scratch.ScratchRootType;
-import com.intellij.openapi.application.PathManager;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.application.ApplicationInfo;
-import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
-import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
-import com.intellij.openapi.diagnostic.SubmittedReportInfo;
-import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.fileTypes.PlainTextLanguage;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.Consumer;
+import consulo.ide.impl.idea.ide.plugins.PluginManagerCore;
+import consulo.ide.impl.idea.ide.scratch.ScratchRootType;
+import consulo.ide.impl.idea.openapi.application.PathManager;
+import consulo.dataContext.DataContext;
+import consulo.application.internal.ApplicationInfo;
+import consulo.externalService.impl.internal.errorReport.ErrorReportSubmitter;
+import consulo.logging.internal.IdeaLoggingEvent;
+import consulo.logging.internal.SubmittedReportInfo;
+import consulo.container.plugin.PluginId;
+import consulo.navigation.OpenFileDescriptor;
+import consulo.language.plain.PlainTextLanguage;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import java.util.function.Consumer;
 import io.flutter.logging.PluginLogger;
 import io.flutter.run.daemon.DaemonApi;
 import io.flutter.sdk.FlutterSdk;
@@ -37,7 +37,7 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static com.intellij.openapi.actionSystem.CommonDataKeys.PROJECT;
+import static consulo.language.editor.CommonDataKeys.PROJECT;
 import static io.flutter.run.daemon.DaemonApi.COMPLETION_EXCEPTION_PREFIX;
 
 // Not sure how others debug this but here's one technique.

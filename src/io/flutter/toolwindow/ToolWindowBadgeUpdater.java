@@ -5,12 +5,12 @@
  */
 package io.flutter.toolwindow;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowId;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.ui.LayeredIcon;
+import consulo.application.AllIcons;
+import consulo.project.Project;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.project.ui.wm.ToolWindowId;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.desktop.awt.ui.impl.image.LayeredIcon;
 import io.flutter.run.common.RunMode;
 import io.flutter.run.daemon.FlutterApp;
 

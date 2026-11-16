@@ -5,14 +5,14 @@
  */
 package io.flutter.run;
 
-import com.intellij.ide.BrowserUtil;
-import com.intellij.ide.util.PropertiesComponent;
+import consulo.webBrowser.BrowserUtil;
+import consulo.component.PropertiesComponent;
 import com.intellij.notification.*;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.Project;
-import icons.FlutterIcons;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.application.ApplicationManager;
+import consulo.project.Project;
+import io.flutter.icons.FlutterIcons;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterMessages;
 import io.flutter.view.FlutterViewMessages;

@@ -5,10 +5,10 @@
  */
 package io.flutter.run.test;
 
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.xdebugger.XDebugSession;
+import consulo.execution.ExecutionResult;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.ui.ex.action.DefaultActionGroup;
+import consulo.execution.debug.XDebugSession;
 import com.jetbrains.lang.dart.util.DartUrlResolver;
 import io.flutter.ObservatoryConnector;
 import io.flutter.run.FlutterDebugProcessActions;

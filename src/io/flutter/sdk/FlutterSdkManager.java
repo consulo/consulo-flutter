@@ -5,15 +5,15 @@
  */
 package io.flutter.sdk;
 
-import com.intellij.concurrency.JobScheduler;
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.project.ProjectManagerListener;
-import com.intellij.openapi.roots.libraries.Library;
-import com.intellij.openapi.roots.libraries.LibraryTable;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.util.EventDispatcher;
+import consulo.application.internal.JobScheduler;
+import consulo.disposer.Disposable;
+import consulo.project.Project;
+import consulo.project.ProjectManager;
+import consulo.project.event.ProjectManagerListener;
+import consulo.content.library.Library;
+import consulo.content.library.LibraryTable;
+import consulo.disposer.Disposer;
+import consulo.proxy.EventDispatcher;
 import io.flutter.utils.OpenApiUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

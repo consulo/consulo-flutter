@@ -5,14 +5,14 @@
  */
 package io.flutter.sdk;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.libraries.LibraryType;
-import com.intellij.openapi.roots.libraries.NewLibraryConfiguration;
-import com.intellij.openapi.roots.libraries.PersistentLibraryKind;
-import com.intellij.openapi.roots.libraries.ui.LibraryEditorComponent;
-import com.intellij.openapi.roots.libraries.ui.LibraryPropertiesEditor;
-import com.intellij.openapi.vfs.VirtualFile;
-import icons.FlutterIcons;
+import consulo.project.Project;
+import consulo.content.library.LibraryType;
+import consulo.content.library.NewLibraryConfiguration;
+import consulo.content.library.PersistentLibraryKind;
+import consulo.content.library.ui.LibraryEditorComponent;
+import consulo.content.library.ui.LibraryPropertiesEditor;
+import consulo.virtualFileSystem.VirtualFile;
+import io.flutter.icons.FlutterIcons;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -5,16 +5,16 @@
  */
 package io.flutter.run;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.configurations.RuntimeConfigurationError;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.util.ArrayUtil;
-import com.intellij.util.execution.ParametersListUtil;
-import com.intellij.util.xmlb.annotations.OptionTag;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.execution.configuration.RuntimeConfigurationError;
+import consulo.logging.Logger;
+import consulo.application.progress.ProgressManager;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.collection.ArrayUtil;
+import consulo.process.cmd.ParametersListUtil;
+import consulo.util.xml.serializer.annotation.OptionTag;
 import com.intellij.util.xmlb.annotations.XMap;
 import com.jetbrains.lang.dart.sdk.DartConfigurable;
 import com.jetbrains.lang.dart.sdk.DartSdk;

@@ -15,12 +15,12 @@
  */
 package io.flutter.run;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.ExecutionResult;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.process.ExecutionException;
+import consulo.execution.ExecutionResult;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import io.flutter.run.daemon.DeviceService;
 import io.flutter.run.daemon.FlutterApp;
 import org.jetbrains.annotations.NotNull;

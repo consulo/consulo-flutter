@@ -5,8 +5,8 @@
  */
 package io.flutter.android;
 
-import com.intellij.openapi.extensions.ExtensionPointName;
-import com.intellij.openapi.project.Project;
+import consulo.component.extension.ExtensionPointName;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 public interface GradleSyncProvider {

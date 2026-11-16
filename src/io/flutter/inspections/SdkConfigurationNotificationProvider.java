@@ -5,17 +5,17 @@
  */
 package io.flutter.inspections;
 
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtilCore;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import com.intellij.ui.EditorNotificationPanel;
-import com.intellij.ui.EditorNotificationProvider;
+import consulo.fileEditor.FileEditor;
+import consulo.module.Module;
+import consulo.language.util.ModuleUtilCore;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
+import consulo.ide.impl.idea.ui.EditorNotificationPanel;
+import consulo.fileEditor.EditorNotificationProvider;
 import com.jetbrains.lang.dart.DartLanguage;
-import icons.FlutterIcons;
+import io.flutter.icons.FlutterIcons;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterUtils;
 import io.flutter.sdk.FlutterSdk;

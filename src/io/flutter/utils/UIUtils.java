@@ -6,7 +6,7 @@
 package io.flutter.utils;
 
 import com.intellij.openapi.editor.colors.ColorKey;
-import com.intellij.openapi.editor.colors.EditorColors;
+import consulo.codeEditor.EditorColors;
 import org.jetbrains.annotations.NotNull;
 
 public class UIUtils {

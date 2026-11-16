@@ -5,12 +5,12 @@
  */
 package io.flutter.utils;
 
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.ColorUtil;
-import com.intellij.ui.LayeredIcon;
-import com.intellij.util.ui.GraphicsUtil;
-import com.intellij.util.ui.UIUtil;
-import icons.FlutterIcons;
+import consulo.util.lang.StringUtil;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.desktop.awt.ui.impl.image.LayeredIcon;
+import consulo.ui.ex.awt.util.GraphicsUtil;
+import consulo.ui.ex.awt.UIUtil;
+import io.flutter.icons.FlutterIcons;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

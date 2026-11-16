@@ -5,15 +5,15 @@
  */
 package io.flutter.run;
 
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.project.BaseProjectDirectories;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
+import consulo.application.ApplicationManager;
+import consulo.lsp.compat.BaseProjectDirectories;
+import consulo.project.Project;
+import consulo.util.io.FileUtil;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiManager;
 import com.jetbrains.lang.dart.psi.DartFile;
 import com.jetbrains.lang.dart.util.DartResolveUtil;
 import io.flutter.FlutterBundle;

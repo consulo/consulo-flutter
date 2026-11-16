@@ -5,8 +5,8 @@
  */
 package io.flutter.devtools;
 
-import com.intellij.openapi.components.Service;
-import com.intellij.openapi.project.Project;
+import com.thaiopensource.util.Service;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 @Service(Service.Level.PROJECT)

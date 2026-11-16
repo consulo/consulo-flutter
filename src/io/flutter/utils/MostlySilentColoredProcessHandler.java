@@ -5,14 +5,14 @@
  */
 package io.flutter.utils;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.process.BaseOSProcessHandler;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.internal.BaseOSProcessHandler;
 import com.intellij.execution.process.ColoredProcessHandler;
-import com.intellij.execution.process.UnixProcessManager;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.io.BaseOutputReader;
+import consulo.process.internal.UnixProcessManager;
+import consulo.util.dataholder.Key;
+import consulo.application.util.SystemInfo;
+import consulo.process.io.BaseOutputReader;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;

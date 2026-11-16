@@ -5,22 +5,22 @@
  */
 package io.flutter.utils;
 
-import com.intellij.execution.RunManager;
-import com.intellij.execution.RunnerAndConfigurationSettings;
-import com.intellij.facet.Facet;
+import consulo.execution.RunManager;
+import consulo.execution.RunnerAndConfigurationSettings;
+import com.thaiopensource.relaxng.output.xsd.basic.Facet;
 import com.intellij.facet.FacetManager;
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.module.Module;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
+import consulo.fileEditor.FileEditor;
+import consulo.fileEditor.FileEditorManager;
+import consulo.module.Module;
 import com.intellij.openapi.module.ModuleType;
 import com.intellij.openapi.module.ModuleTypeManager;
-import com.intellij.openapi.project.DumbService;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.project.DumbService;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import com.intellij.serviceContainer.AlreadyDisposedException;
-import com.intellij.ui.EditorNotifications;
+import consulo.fileEditor.EditorNotifications;
 import com.jetbrains.lang.dart.sdk.DartSdk;
 import com.jetbrains.lang.dart.util.PubspecYamlUtil;
 import io.flutter.FlutterUtils;

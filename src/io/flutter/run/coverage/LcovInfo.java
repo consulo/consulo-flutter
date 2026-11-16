@@ -5,10 +5,10 @@
  */
 package io.flutter.run.coverage;
 
-import com.intellij.openapi.util.SystemInfo;
+import consulo.application.util.SystemInfo;
 import com.intellij.rt.coverage.data.ClassData;
 import com.intellij.rt.coverage.data.LineData;
-import com.intellij.rt.coverage.data.ProjectData;
+import consulo.externalSystem.service.project.ProjectData;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;

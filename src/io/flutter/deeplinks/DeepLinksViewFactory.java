@@ -5,7 +5,7 @@
  */
 package io.flutter.deeplinks;
 
-import com.intellij.openapi.project.Project;
+import consulo.project.Project;
 import io.flutter.devtools.AbstractDevToolsViewFactory;
 import io.flutter.devtools.DevToolsIdeFeature;
 import io.flutter.devtools.DevToolsUrl;

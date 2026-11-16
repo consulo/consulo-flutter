@@ -5,17 +5,17 @@
  */
 package io.flutter.project;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.IconProvider;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Iconable.IconFlags;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
-import com.intellij.ui.LayeredIcon;
+import consulo.project.Project;
+import consulo.component.util.Iconable.IconFlags;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
+import consulo.desktop.awt.ui.impl.image.LayeredIcon;
 import com.jetbrains.lang.dart.DartFileType;
 import com.jetbrains.lang.dart.psi.DartFile;
-import icons.FlutterIcons;
+import io.flutter.icons.FlutterIcons;
 import io.flutter.FlutterUtils;
 import io.flutter.pub.PubRoot;
 import io.flutter.pub.PubRootCache;

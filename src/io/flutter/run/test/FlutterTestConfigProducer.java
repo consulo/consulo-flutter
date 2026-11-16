@@ -5,13 +5,13 @@
  */
 package io.flutter.run.test;
 
-import com.intellij.execution.actions.ConfigurationContext;
-import com.intellij.execution.actions.ConfigurationFromContext;
-import com.intellij.execution.actions.RunConfigurationProducer;
-import com.intellij.openapi.util.Ref;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
-import com.intellij.psi.PsiElement;
+import consulo.execution.action.ConfigurationContext;
+import consulo.execution.action.ConfigurationFromContext;
+import consulo.execution.action.RunConfigurationProducer;
+import consulo.util.lang.ref.Ref;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiDirectory;
+import consulo.language.psi.PsiElement;
 import com.jetbrains.lang.dart.psi.DartFile;
 import io.flutter.FlutterUtils;
 import io.flutter.dart.DartPlugin;

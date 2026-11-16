@@ -5,20 +5,20 @@
  */
 package io.flutter.devtools;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.editor.colors.EditorColorsManager;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.ui.ColorUtil;
-import com.intellij.ui.JBColor;
-import com.intellij.util.ui.UIUtil;
+import consulo.application.Application;
+import consulo.colorScheme.EditorColorsManager;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.ex.awt.util.ColorUtil;
+import consulo.ui.ex.JBColor;
+import consulo.ui.ex.awt.UIUtil;
 import org.dartlang.vm.service.VmService;
 import org.dartlang.vm.service.VmServiceListener;
 import org.jetbrains.annotations.NotNull;
 
 import com.google.gson.JsonObject;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.xdebugger.impl.XSourcePositionImpl;
+import consulo.application.ApplicationManager;
+import consulo.virtualFileSystem.LocalFileSystem;
+import consulo.execution.debug.impl.internal.XSourcePositionImpl;
 import io.flutter.run.daemon.FlutterApp;
 import io.flutter.utils.JsonUtils;
 import org.dartlang.vm.service.element.*;

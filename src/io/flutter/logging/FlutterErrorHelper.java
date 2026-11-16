@@ -6,7 +6,7 @@
 package io.flutter.logging;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.util.lang.StringUtil;
 
 import java.util.regex.Pattern;
 

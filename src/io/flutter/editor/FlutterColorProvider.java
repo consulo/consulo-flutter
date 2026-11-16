@@ -5,13 +5,13 @@
  */
 package io.flutter.editor;
 
-import com.intellij.openapi.command.CommandProcessor;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.ElementColorProvider;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.PsiFileFactoryImpl;
-import com.intellij.psi.impl.source.tree.AstBufferUtil;
+import consulo.undoRedo.CommandProcessor;
+import consulo.document.Document;
+import consulo.language.psi.ElementColorProvider;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.impl.internal.psi.PsiFileFactoryImpl;
+import consulo.language.impl.ast.AstBufferUtil;
 import com.jetbrains.lang.dart.DartLanguage;
 import com.jetbrains.lang.dart.DartTokenTypes;
 import com.jetbrains.lang.dart.psi.*;

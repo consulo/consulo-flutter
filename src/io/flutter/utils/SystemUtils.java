@@ -5,13 +5,13 @@
  */
 package io.flutter.utils;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
-import com.intellij.execution.configurations.PathEnvironmentVariableUtil;
-import com.intellij.execution.process.ProcessOutput;
-import com.intellij.execution.util.ExecUtil;
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.concurrency.AppExecutorUtil;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
+import consulo.process.PathEnvironmentVariableUtil;
+import consulo.process.util.ProcessOutput;
+import consulo.process.local.ExecUtil;
+import consulo.application.util.SystemInfo;
+import consulo.application.util.concurrent.AppExecutorUtil;
 import com.intellij.util.system.OS;
 import org.jetbrains.annotations.Nullable;
 

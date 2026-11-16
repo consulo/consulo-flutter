@@ -5,15 +5,15 @@
  */
 package io.flutter.run;
 
-import com.intellij.execution.configurations.ConfigurationFactory;
-import com.intellij.execution.configurations.ConfigurationTypeBase;
-import com.intellij.execution.configurations.RunConfiguration;
+import consulo.execution.configuration.ConfigurationFactory;
+import consulo.execution.configuration.ConfigurationTypeBase;
+import consulo.execution.configuration.RunConfiguration;
 import com.intellij.execution.configurations.RunConfigurationSingletonPolicy;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.search.FileTypeIndex;
-import com.intellij.psi.search.GlobalSearchScope;
+import consulo.project.Project;
+import consulo.language.psi.search.FileTypeIndex;
+import consulo.language.psi.scope.GlobalSearchScope;
 import com.jetbrains.lang.dart.DartFileType;
-import icons.FlutterIcons;
+import io.flutter.icons.FlutterIcons;
 import io.flutter.FlutterBundle;
 import io.flutter.utils.FlutterModuleUtils;
 import org.jetbrains.annotations.NonNls;

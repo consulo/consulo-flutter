@@ -5,13 +5,13 @@
  */
 package io.flutter.pub;
 
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.module.Module;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
 import io.flutter.utils.OpenApiUtils;
 import org.jetbrains.annotations.NotNull;
 
-import com.intellij.util.SmartList;
+import consulo.util.collection.SmartList;
 import java.util.List;
 
 /**

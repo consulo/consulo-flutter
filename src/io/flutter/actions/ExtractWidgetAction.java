@@ -5,21 +5,21 @@
  */
 package io.flutter.actions;
 
-import com.intellij.CommonBundle;
-import com.intellij.openapi.actionSystem.ActionUpdateThread;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.editor.Caret;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.DumbAwareAction;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.refactoring.util.CommonRefactoringUtil;
-import com.intellij.ui.DocumentAdapter;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.ui.JBUI;
+import consulo.application.CommonBundle;
+import consulo.ui.ex.action.ActionUpdateThread;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.dataContext.DataContext;
+import consulo.language.editor.PlatformDataKeys;
+import consulo.codeEditor.Caret;
+import consulo.codeEditor.Editor;
+import consulo.ui.ex.action.DumbAwareAction;
+import consulo.project.Project;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.editor.refactoring.util.CommonRefactoringUtil;
+import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.ui.ex.awt.JBUI;
 import com.jetbrains.lang.dart.analytics.Analytics;
 import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import com.jetbrains.lang.dart.ide.refactoring.ServerRefactoringDialog;

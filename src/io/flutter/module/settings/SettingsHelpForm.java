@@ -5,8 +5,8 @@
  */
 package io.flutter.module.settings;
 
-import com.intellij.ide.browsers.BrowserLauncher;
-import com.intellij.ui.components.labels.LinkLabel;
+import consulo.webBrowser.BrowserLauncher;
+import consulo.ui.ex.awt.LinkLabel;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterConstants;
 import io.flutter.FlutterUtils;

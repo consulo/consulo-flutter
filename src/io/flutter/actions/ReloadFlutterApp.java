@@ -5,13 +5,13 @@
  */
 package io.flutter.actions;
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Computable;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnActionEvent;
+import consulo.project.Project;
+import consulo.application.util.function.Computable;
 import com.jetbrains.lang.dart.analytics.Analytics;
 import com.jetbrains.lang.dart.analytics.AnalyticsData;
-import icons.FlutterIcons;
+import io.flutter.icons.FlutterIcons;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterConstants;
 import io.flutter.analytics.AnalyticsConstants;

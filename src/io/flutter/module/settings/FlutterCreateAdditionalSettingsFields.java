@@ -7,9 +7,9 @@ package io.flutter.module.settings;
 
 import com.intellij.ide.util.projectWizard.SettingsStep;
 import com.intellij.openapi.ui.DialogPanel;
-import com.intellij.ui.DocumentAdapter;
-import com.intellij.util.ui.JBUI;
-import com.intellij.util.ui.UIUtil;
+import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.JBUI;
+import consulo.ui.ex.awt.UIUtil;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterUtils;
 import io.flutter.module.FlutterProjectType;

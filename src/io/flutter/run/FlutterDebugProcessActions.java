@@ -5,9 +5,9 @@
  */
 package io.flutter.run;
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import consulo.ui.ex.action.ActionManager;
+import consulo.ui.ex.action.AnAction;
+import consulo.ui.ex.action.DefaultActionGroup;
 import org.jetbrains.annotations.NotNull;
 
 /**

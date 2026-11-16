@@ -5,21 +5,21 @@
  */
 package io.flutter.editor;
 
-import com.intellij.application.options.CodeStyle;
-import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileDocumentManagerListener;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleUtil;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.util.PsiErrorElementUtil;
-import com.intellij.util.messages.MessageBus;
-import com.intellij.util.messages.MessageBusConnection;
+import consulo.language.codeStyle.CodeStyle;
+import consulo.language.editor.WriteCommandAction;
+import consulo.document.Document;
+import consulo.document.FileDocumentManager;
+import consulo.document.event.FileDocumentManagerListener;
+import consulo.module.Module;
+import consulo.ide.impl.idea.openapi.module.ModuleUtil;
+import consulo.project.Project;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiFile;
+import consulo.language.editor.PsiErrorElementUtil;
+import consulo.component.messagebus.MessageBus;
+import consulo.component.messagebus.MessageBusConnection;
 import com.jetbrains.lang.dart.DartLanguage;
 import com.jetbrains.lang.dart.analyzer.DartAnalysisServerService;
 import com.jetbrains.lang.dart.assists.AssistUtils;

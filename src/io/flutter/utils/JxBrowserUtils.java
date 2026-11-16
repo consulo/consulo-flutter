@@ -5,8 +5,8 @@
  */
 package io.flutter.utils;
 
-import com.intellij.openapi.util.SystemInfo;
-import com.intellij.util.system.CpuArch;
+import consulo.application.util.SystemInfo;
+import consulo.dart.compat.CpuArch;
 import io.flutter.settings.FlutterSettings;
 import org.jetbrains.annotations.NotNull;
 

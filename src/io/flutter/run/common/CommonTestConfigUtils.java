@@ -6,16 +6,16 @@
 package io.flutter.run.common;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.CachedValue;
-import com.intellij.psi.util.CachedValueProvider;
-import com.intellij.psi.util.CachedValuesManager;
-import com.intellij.psi.util.PsiModificationTracker;
-import com.intellij.psi.util.PsiTreeUtil;
+import consulo.util.dataholder.Key;
+import consulo.util.lang.StringUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.application.util.CachedValue;
+import consulo.application.util.CachedValueProvider;
+import consulo.application.util.CachedValuesManager;
+import consulo.language.psi.PsiModificationTracker;
+import consulo.language.psi.util.PsiTreeUtil;
 import com.jetbrains.lang.dart.psi.DartCallExpression;
 import com.jetbrains.lang.dart.psi.DartComponent;
 import com.jetbrains.lang.dart.psi.DartComponentName;

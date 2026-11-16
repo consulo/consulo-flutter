@@ -5,9 +5,9 @@
  */
 package io.flutter.samples;
 
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.text.StringUtil;
+import consulo.document.Document;
+import consulo.document.util.TextRange;
+import consulo.util.lang.StringUtil;
 import com.jetbrains.lang.dart.psi.DartComponent;
 import org.jetbrains.annotations.NotNull;
 

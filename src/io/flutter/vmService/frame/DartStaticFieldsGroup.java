@@ -1,8 +1,8 @@
 package io.flutter.vmService.frame;
 
 import com.google.gson.JsonElement;
-import com.intellij.icons.AllIcons;
-import com.intellij.util.SmartList;
+import consulo.application.AllIcons;
+import consulo.util.collection.SmartList;
 import com.intellij.xdebugger.frame.*;
 import io.flutter.vmService.DartVmServiceDebugProcess;
 import org.dartlang.vm.service.consumer.GetObjectConsumer;

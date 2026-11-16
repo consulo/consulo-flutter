@@ -5,21 +5,21 @@
  */
 package io.flutter.run.common;
 
-import com.intellij.execution.TestStateStorage;
-import com.intellij.execution.lineMarker.ExecutorAction;
-import com.intellij.execution.lineMarker.RunLineMarkerContributor;
-import com.intellij.execution.testframework.TestIconMapper;
-import com.intellij.execution.testframework.sm.runner.states.TestStateInfo;
-import com.intellij.icons.AllIcons;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.io.FileUtil;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiInvalidElementAccessException;
-import com.intellij.psi.impl.source.tree.LeafElement;
-import com.intellij.util.Function;
+import consulo.execution.test.TestStateStorage;
+import consulo.execution.lineMarker.ExecutorAction;
+import consulo.execution.lineMarker.RunLineMarkerContributor;
+import consulo.execution.test.TestIconMapper;
+import consulo.execution.test.TestStateInfo;
+import consulo.application.AllIcons;
+import consulo.document.Document;
+import consulo.project.Project;
+import consulo.util.io.FileUtil;
+import consulo.language.psi.PsiDocumentManager;
+import consulo.language.psi.PsiElement;
+import consulo.language.psi.PsiFile;
+import consulo.language.psi.PsiInvalidElementAccessException;
+import consulo.language.impl.ast.LeafElement;
+import java.util.function.Function;
 import com.intellij.util.Time;
 import com.jetbrains.lang.dart.psi.DartCallExpression;
 import com.jetbrains.lang.dart.psi.DartId;

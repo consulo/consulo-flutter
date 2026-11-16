@@ -8,8 +8,8 @@ package io.flutter.sdk;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
-import com.intellij.openapi.util.Version;
-import com.intellij.openapi.vfs.VirtualFile;
+import consulo.util.lang.Version;
+import consulo.virtualFileSystem.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -5,8 +5,8 @@
  */
 package io.flutter.utils;
 
-import com.intellij.openapi.application.Application;
-import com.intellij.openapi.application.ApplicationManager;
+import consulo.application.Application;
+import consulo.application.ApplicationManager;
 
 import javax.swing.SwingUtilities;
 import java.util.concurrent.CancellationException;

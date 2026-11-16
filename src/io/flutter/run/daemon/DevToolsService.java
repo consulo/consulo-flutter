@@ -5,9 +5,9 @@
  */
 package io.flutter.run.daemon;
 
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.impl.BackgroundableProcessIndicator;
-import com.intellij.openapi.project.Project;
+import consulo.application.progress.ProgressManager;
+import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
+import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

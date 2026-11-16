@@ -5,8 +5,8 @@
  */
 package io.flutter.sdk;
 
-import com.intellij.openapi.roots.libraries.LibraryProperties;
-import com.intellij.util.xmlb.XmlSerializerUtil;
+import consulo.content.library.LibraryProperties;
+import consulo.util.xml.serializer.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

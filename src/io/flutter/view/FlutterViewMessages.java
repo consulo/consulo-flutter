@@ -5,9 +5,9 @@
  */
 package io.flutter.view;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.Disposer;
-import com.intellij.util.messages.MessageBus;
+import consulo.project.Project;
+import consulo.disposer.Disposer;
+import consulo.component.messagebus.MessageBus;
 import com.intellij.util.messages.Topic;
 import io.flutter.run.daemon.FlutterApp;
 import io.flutter.vmService.VMServiceManager;

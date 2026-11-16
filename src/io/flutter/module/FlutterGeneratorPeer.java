@@ -5,21 +5,21 @@
  */
 package io.flutter.module;
 
-import com.intellij.icons.AllIcons;
+import consulo.application.AllIcons;
 import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.TextComponentAccessor;
-import com.intellij.openapi.ui.ValidationInfo;
+import consulo.application.ApplicationManager;
+import consulo.fileChooser.FileChooserDescriptorFactory;
+import consulo.ui.ex.awt.ComboBox;
+import consulo.ui.ex.awt.Messages;
+import consulo.ui.ex.awt.TextComponentAccessor;
+import consulo.ui.ex.awt.ValidationInfo;
 import com.intellij.openapi.util.io.FileUtilRt;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.ui.ComboboxWithBrowseButton;
-import com.intellij.ui.DocumentAdapter;
-import com.intellij.ui.components.JBLabel;
-import com.intellij.util.ui.update.UiNotifyConnector;
-import com.intellij.xml.util.XmlStringUtil;
+import consulo.util.lang.StringUtil;
+import consulo.ui.ex.awt.ComboboxWithBrowseButton;
+import consulo.ui.ex.awt.event.DocumentAdapter;
+import consulo.ui.ex.awt.JBLabel;
+import consulo.ui.ex.awt.update.UiNotifyConnector;
+import consulo.util.lang.xml.XmlStringUtil;
 import io.flutter.FlutterBundle;
 import io.flutter.module.settings.SettingsHelpForm;
 import io.flutter.sdk.FlutterSdk;

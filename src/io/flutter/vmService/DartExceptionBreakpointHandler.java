@@ -1,12 +1,12 @@
 package io.flutter.vmService;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.xdebugger.XDebugSession;
-import com.intellij.xdebugger.XDebuggerManager;
-import com.intellij.xdebugger.breakpoints.XBreakpoint;
-import com.intellij.xdebugger.breakpoints.XBreakpointHandler;
-import com.intellij.xdebugger.breakpoints.XBreakpointManager;
-import com.intellij.xdebugger.breakpoints.XBreakpointType;
+import consulo.project.Project;
+import consulo.execution.debug.XDebugSession;
+import consulo.execution.debug.XDebuggerManager;
+import consulo.execution.debug.breakpoint.XBreakpoint;
+import consulo.execution.debug.breakpoint.XBreakpointHandler;
+import consulo.execution.debug.XBreakpointManager;
+import consulo.execution.debug.breakpoint.XBreakpointType;
 import com.jetbrains.lang.dart.ide.runner.DartExceptionBreakpointProperties;
 import com.jetbrains.lang.dart.ide.runner.DartExceptionBreakpointType;
 import org.dartlang.vm.service.element.ExceptionPauseMode;

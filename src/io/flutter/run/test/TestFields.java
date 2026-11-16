@@ -6,15 +6,15 @@
 package io.flutter.run.test;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.RuntimeConfigurationError;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.InvalidDataException;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.process.ExecutionException;
+import consulo.execution.configuration.RuntimeConfigurationError;
+import consulo.project.Project;
+import consulo.util.xml.serializer.InvalidDataException;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtilCore;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.execution.ParametersListUtil;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.util.lang.StringUtil;
+import consulo.process.cmd.ParametersListUtil;
 import io.flutter.pub.PubRoot;
 import io.flutter.run.FlutterDevice;
 import io.flutter.run.MainFile;

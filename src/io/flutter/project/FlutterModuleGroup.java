@@ -3,7 +3,7 @@ package io.flutter.project;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.SettingsStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
-import com.intellij.openapi.Disposable;
+import consulo.disposer.Disposable;
 import io.flutter.FlutterBundle;
 import io.flutter.module.FlutterModuleBuilder;
 import io.flutter.module.FlutterProjectType;

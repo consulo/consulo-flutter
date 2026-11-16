@@ -5,22 +5,22 @@
  */
 package io.flutter.run.coverage;
 
-import com.intellij.coverage.CoverageDataManager;
-import com.intellij.coverage.CoverageExecutor;
-import com.intellij.coverage.CoverageRunnerData;
-import com.intellij.execution.configurations.ConfigurationInfoProvider;
-import com.intellij.execution.configurations.RunProfile;
-import com.intellij.execution.configurations.RunProfileState;
-import com.intellij.execution.configurations.RunnerSettings;
-import com.intellij.execution.configurations.coverage.CoverageEnabledConfiguration;
-import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessHandler;
+import consulo.execution.coverage.CoverageDataManager;
+import consulo.execution.coverage.CoverageExecutor;
+import consulo.execution.coverage.CoverageRunnerData;
+import consulo.execution.configuration.ConfigurationInfoProvider;
+import consulo.execution.configuration.RunProfile;
+import consulo.execution.configuration.RunProfileState;
+import consulo.execution.configuration.RunnerSettings;
+import consulo.execution.coverage.CoverageEnabledConfiguration;
+import consulo.process.event.ProcessEvent;
+import consulo.process.ProcessHandler;
 import com.intellij.execution.runners.DefaultProgramRunnerKt;
-import com.intellij.execution.runners.ExecutionEnvironment;
-import com.intellij.execution.runners.GenericProgramRunner;
-import com.intellij.execution.ui.RunContentDescriptor;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.vfs.LocalFileSystem;
+import consulo.execution.runner.ExecutionEnvironment;
+import consulo.execution.runner.GenericProgramRunner;
+import consulo.execution.ui.RunContentDescriptor;
+import consulo.logging.Logger;
+import consulo.virtualFileSystem.LocalFileSystem;
 import com.intellij.openapi.vfs.VfsUtil;
 import io.flutter.FlutterBundle;
 import io.flutter.logging.PluginLogger;

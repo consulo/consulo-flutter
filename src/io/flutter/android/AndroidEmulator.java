@@ -5,18 +5,18 @@
  */
 package io.flutter.android;
 
-import com.intellij.execution.ExecutionException;
-import com.intellij.execution.configurations.GeneralCommandLine;
+import consulo.process.ExecutionException;
+import consulo.process.cmd.GeneralCommandLine;
 import com.intellij.execution.process.ColoredProcessHandler;
-import com.intellij.execution.process.ProcessEvent;
-import com.intellij.execution.process.ProcessOutputTypes;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.util.Key;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.util.ReflectionUtil;
+import consulo.process.event.ProcessEvent;
+import consulo.process.ProcessOutputTypes;
+import consulo.application.ApplicationManager;
+import consulo.ui.ModalityState;
+import consulo.util.dataholder.Key;
+import consulo.virtualFileSystem.VirtualFile;
+import consulo.ui.ex.toolWindow.ToolWindow;
+import consulo.project.ui.wm.ToolWindowManager;
+import consulo.util.lang.reflect.ReflectionUtil;
 import io.flutter.FlutterMessages;
 import io.flutter.utils.MostlySilentColoredProcessHandler;
 import io.flutter.utils.OpenApiUtils;

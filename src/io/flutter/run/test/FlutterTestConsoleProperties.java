@@ -5,9 +5,9 @@
  */
 package io.flutter.run.test;
 
-import com.intellij.execution.Executor;
-import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.testframework.sm.runner.SMTRunnerConsoleProperties;
+import consulo.execution.executor.Executor;
+import consulo.execution.configuration.RunConfiguration;
+import consulo.execution.test.sm.runner.SMTRunnerConsoleProperties;
 import org.jetbrains.annotations.NotNull;
 
 /**
