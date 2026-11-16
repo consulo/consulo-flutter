@@ -5,6 +5,8 @@
  */
 package io.flutter.run;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.execution.action.ConfigurationContext;
 import consulo.execution.action.ConfigurationFromContext;
 import consulo.execution.action.RunConfigurationProducer;
@@ -29,6 +31,7 @@ import java.util.stream.Stream;
  * <p>
  * (For example, when right-clicking on main.dart in the Project view.)
  */
+@ExtensionImpl
 public class FlutterRunConfigurationProducer extends RunConfigurationProducer<SdkRunConfig> {
 
   public FlutterRunConfigurationProducer() {

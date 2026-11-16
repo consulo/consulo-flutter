@@ -6,12 +6,15 @@
 
 package io.flutter.sdk;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;
 import consulo.ui.UIAccess;
 import org.jetbrains.annotations.NotNull;
 
 // Consulo: upstream ProjectActivity (suspend, registered as backgroundPostStartupActivity) is a BackgroundStartupActivity
+@ExtensionImpl
 public class FlutterProjectActivity implements BackgroundStartupActivity {
   @Override
   public void runActivity(@NotNull Project project, @NotNull UIAccess uiAccess) {

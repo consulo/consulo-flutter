@@ -5,6 +5,8 @@
  */
 package io.flutter.editor;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.undoRedo.CommandProcessor;
 import consulo.document.Document;
 import consulo.language.psi.ElementColorProvider;
@@ -30,6 +32,7 @@ import java.util.Objects;
 import static io.flutter.dart.DartPsiUtil.getNewExprFromType;
 import static io.flutter.dart.DartPsiUtil.topmostReferenceExpression;
 
+@ExtensionImpl
 public class FlutterColorProvider implements ElementColorProvider {
 
   // Consulo: ElementColorProvider is a language extension

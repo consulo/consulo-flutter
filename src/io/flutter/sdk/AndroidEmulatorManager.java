@@ -5,6 +5,12 @@
  */
 package io.flutter.sdk;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+
 import com.google.common.collect.ImmutableSet;
 import consulo.logging.Logger;
 import consulo.project.Project;
@@ -26,6 +32,9 @@ import java.util.concurrent.atomic.AtomicReference;
  * This class manages the list of known Android eumlators, and handles refreshing the list as well
  * as notifying interested parties when the list changes.
  */
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class AndroidEmulatorManager {
   private static final @NotNull Logger LOG = PluginLogger.createLogger(AndroidEmulatorManager.class);
 
@@ -38,8 +47,8 @@ public class AndroidEmulatorManager {
   private final AtomicReference<ImmutableSet<Runnable>> listeners = new AtomicReference<>(ImmutableSet.of());
 
   private @NotNull List<AndroidEmulator> cachedEmulators = new ArrayList<>();
-
-  private AndroidEmulatorManager(@NotNull Project project) {
+  @Inject
+  public AndroidEmulatorManager(@NotNull Project project) {
     this.project = project;
   }
 

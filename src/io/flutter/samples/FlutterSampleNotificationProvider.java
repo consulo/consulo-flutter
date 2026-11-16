@@ -5,6 +5,9 @@
  */
 package io.flutter.samples;
 
+import consulo.annotation.component.ExtensionImpl;
+import jakarta.inject.Inject;
+
 import com.google.common.annotations.VisibleForTesting;
 import consulo.webBrowser.BrowserUtil;
 import consulo.document.Document;
@@ -33,9 +36,11 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
+@ExtensionImpl
 public class FlutterSampleNotificationProvider implements EditorNotificationProvider {
   @NotNull final Project project;
 
+  @Inject
   public FlutterSampleNotificationProvider(@NotNull Project project) {
     this.project = project;
   }

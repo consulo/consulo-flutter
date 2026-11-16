@@ -5,6 +5,12 @@
  */
 package io.flutter.run.daemon;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+
 import consulo.application.progress.ProgressManager;
 import consulo.ide.impl.idea.openapi.progress.impl.BackgroundableProcessIndicator;
 import consulo.project.Project;
@@ -15,6 +21,9 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class DevToolsService {
   @NotNull private final Project project;
 
@@ -28,8 +37,8 @@ public class DevToolsService {
   public static DevToolsService getInstance(@NotNull final Project project) {
     return Objects.requireNonNull(project.getInstance(DevToolsService.class));
   }
-
-  private DevToolsService(@NotNull final Project project) {
+  @Inject
+  public DevToolsService(@NotNull final Project project) {
     this.project = project;
   }
 

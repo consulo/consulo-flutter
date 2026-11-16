@@ -5,11 +5,14 @@
  */
 package io.flutter.run.test;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import io.flutter.run.common.TestLineMarkerContributor;
 
 /**
  * Annotates conventional Flutter tests with line markers for running tests.
  */
+@ExtensionImpl
 public class FlutterTestLineMarkerContributor extends TestLineMarkerContributor {
   public FlutterTestLineMarkerContributor() {
     super(TestConfigUtils.getInstance());

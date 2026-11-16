@@ -5,6 +5,8 @@
  */
 package io.flutter.project;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.annotation.access.RequiredReadAction;
 import consulo.application.AllIcons;
 import consulo.component.util.Iconable.IconFlags;
@@ -30,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 
 // Consulo: upstream IconProvider is an IconDescriptorUpdater; the icon computed by getIcon() replaces the main icon
+@ExtensionImpl(order = "first")
 public class FlutterIconProvider implements IconDescriptorUpdater {
   @SuppressWarnings("DataFlowIssue") private static final @NotNull Image TEST_FILE =
     overlayIcons(DartFileType.INSTANCE.getIcon(), AllIcons.Nodes.JunitTestMark);

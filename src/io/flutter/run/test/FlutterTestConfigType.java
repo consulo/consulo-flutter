@@ -5,6 +5,8 @@
  */
 package io.flutter.run.test;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationTypeBase;
 import consulo.execution.configuration.RunConfiguration;
@@ -19,8 +21,9 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The type of configs that run tests using "flutter test".
  */
+@ExtensionImpl
 public class FlutterTestConfigType extends ConfigurationTypeBase {
-  protected FlutterTestConfigType() {
+  public FlutterTestConfigType() {
     super("FlutterTestConfigType", LocalizeValue.localizeTODO("Flutter Test"), LocalizeValue.localizeTODO("description"), FlutterIcons.Flutter_test);
 
     addFactory(new Factory(this));

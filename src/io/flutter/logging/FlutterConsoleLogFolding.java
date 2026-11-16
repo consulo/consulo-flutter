@@ -5,6 +5,8 @@
  */
 package io.flutter.logging;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.execution.ConsoleFolding;
 import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +19,7 @@ import java.util.List;
  * <p>
  * Currently this handles folding related to Flutter.Error events.
  */
+@ExtensionImpl(order = "last")
 public class FlutterConsoleLogFolding extends ConsoleFolding {
   @Override
   public boolean shouldFoldLine(@NotNull Project project, @NotNull String line) {

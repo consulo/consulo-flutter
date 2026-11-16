@@ -5,6 +5,8 @@
  */
 package io.flutter;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import consulo.application.ui.event.UISettingsListener;
@@ -57,6 +59,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @see ProjectOpenActivity for actions that run earlier.
  */
+@ExtensionImpl
 public class FlutterInitializer extends FlutterProjectActivity {
   private boolean toolWindowsInitialized = false;
 

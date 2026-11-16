@@ -5,6 +5,8 @@
  */
 package io.flutter.editor;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.annotation.access.RequiredReadAction;
 import consulo.dataContext.DataContext;
 import consulo.fileEditor.EditorNotificationBuilder;
@@ -30,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
+@ExtensionImpl
 public class NativeEditorNotificationProvider implements EditorNotificationProvider {
   private final Project project;
   private boolean showNotification = true;

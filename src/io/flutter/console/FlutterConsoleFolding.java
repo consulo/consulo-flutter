@@ -5,6 +5,8 @@
  */
 package io.flutter.console;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.execution.ConsoleFolding;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
@@ -19,6 +21,7 @@ import java.util.List;
  * Fold lines like '/Users/.../projects/flutter/flutter/bin/flutter packages get', and their
  * Windows equivalents, such as 'C:\flutter\bin\flutter.bat packages get'.
  */
+@ExtensionImpl(id = "1")
 public class FlutterConsoleFolding extends ConsoleFolding {
   private static final String flutterMarker =
     FlutterConstants.INDEPENDENT_PATH_SEPARATOR + FlutterSdkUtil.flutterScriptName() + " ";

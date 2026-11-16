@@ -5,6 +5,8 @@
  */
 package io.flutter.editor;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.language.editor.readerMode.ReaderModeMatcher;
 import consulo.language.editor.readerMode.ReaderModeProvider;
 import consulo.codeEditor.Editor;
@@ -18,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@ExtensionImpl
 public class FlutterReaderModeMatcher implements ReaderModeMatcher {
   @Nullable
   @Override

@@ -5,6 +5,12 @@
  */
 package io.flutter.run;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+
 import com.google.common.collect.ImmutableMap;
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.ide.impl.idea.ide.actions.SaveAllAction;
@@ -68,6 +74,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Handle the mechanics of performing a hot reload on file save.
  */
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class FlutterReloadManager implements Disposable {
   private static final @NotNull Logger LOG = PluginLogger.createLogger(FlutterReloadManager.class);
 
@@ -110,8 +119,8 @@ public class FlutterReloadManager implements Disposable {
   public static FlutterReloadManager getInstance(@NotNull Project project) {
     return project.getInstance(FlutterReloadManager.class);
   }
-
-  private FlutterReloadManager(@NotNull Project project) {
+  @Inject
+  public FlutterReloadManager(@NotNull Project project) {
     this.myProject = project;
 
     final MessageBusConnection connection =

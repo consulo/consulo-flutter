@@ -5,6 +5,8 @@
  */
 package io.flutter.run.coverage;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageExecutor;
 import consulo.execution.coverage.CoverageRunnerData;
@@ -40,6 +42,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 
+@ExtensionImpl
 public class FlutterCoverageProgramRunner extends GenericProgramRunner<RunnerSettings> {
   private static final @NotNull Logger LOG = PluginLogger.createLogger(FlutterCoverageProgramRunner.class);
 

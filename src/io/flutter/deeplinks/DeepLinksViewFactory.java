@@ -5,6 +5,8 @@
  */
 package io.flutter.deeplinks;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import io.flutter.icons.FlutterIcons;
@@ -15,6 +17,7 @@ import io.flutter.run.daemon.DevToolsInstance;
 import io.flutter.sdk.FlutterSdkVersion;
 import org.jetbrains.annotations.NotNull;
 
+@ExtensionImpl
 public class DeepLinksViewFactory extends AbstractDevToolsViewFactory {
   @NotNull public static String TOOL_WINDOW_ID = "Flutter Deep Links";
 

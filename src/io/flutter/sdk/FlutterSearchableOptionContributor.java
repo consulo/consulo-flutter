@@ -5,6 +5,8 @@
  */
 package io.flutter.sdk;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.configurable.search.SearchableOptionContributor;
 import consulo.configurable.search.SearchableOptionProcessor;
 import consulo.localize.LocalizeValue;
@@ -14,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 // Note: update this file when updating FlutterSettingsConfigurable.
 
+@ExtensionImpl
 public class FlutterSearchableOptionContributor extends SearchableOptionContributor {
   @Override
   public void processOptions(@NotNull SearchableOptionProcessor processor) {

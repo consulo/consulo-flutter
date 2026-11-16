@@ -5,6 +5,12 @@
  */
 package io.flutter.view;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+
 import com.google.common.annotations.VisibleForTesting;
 import consulo.webBrowser.BrowserLauncher;
 import consulo.disposer.Disposable;
@@ -53,6 +59,9 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 // Consulo: upstream @State is dropped, this service has no persistent state.
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class InspectorView implements Disposable {
   private static final @NotNull Logger LOG = PluginLogger.createLogger(InspectorView.class);
 
@@ -78,7 +87,7 @@ public class InspectorView implements Disposable {
   private InspectorViewToolWindowManagerListener toolWindowListener;
   private int devToolsInstallCount = 0;
   // Consulo: JxBrowser is dropped (JxBrowserManager, JxBrowserUtils and the installation handling).
-
+  @Inject
   public InspectorView(@NotNull Project project) {
     this(project, new ViewUtils());
   }

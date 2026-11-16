@@ -1,5 +1,7 @@
 package io.flutter.widgetpreview;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.project.Project;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowFactory;
@@ -12,6 +14,7 @@ import consulo.ui.image.Image;
 import io.flutter.icons.FlutterIcons;
 import org.jetbrains.annotations.NotNull;
 
+@ExtensionImpl
 public class WidgetPreviewToolWindowFactory implements ToolWindowFactory {
   public static final String TOOL_WINDOW_ID = "Flutter Widget Preview";
 

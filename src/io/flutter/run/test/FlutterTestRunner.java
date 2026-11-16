@@ -5,6 +5,8 @@
  */
 package io.flutter.run.test;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -63,6 +65,7 @@ import java.io.IOException;
 /**
  * Runs a Flutter test configuration in the debugger.
  */
+@ExtensionImpl
 public class FlutterTestRunner extends GenericProgramRunner {
   @NotNull
   @Override

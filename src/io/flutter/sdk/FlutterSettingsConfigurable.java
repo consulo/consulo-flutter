@@ -5,6 +5,8 @@
  */
 package io.flutter.sdk;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.process.util.CapturingProcessAdapter;
 import consulo.process.ExecutionException;
 import consulo.process.ProcessHandler;
@@ -23,6 +25,9 @@ import consulo.fileChooser.FileChooserDescriptorFactory;
 import consulo.ui.ex.awt.CopyPasteManager;
 import consulo.configurable.ConfigurationException;
 import consulo.configurable.SearchableConfigurable;
+import consulo.configurable.ProjectConfigurable;
+import consulo.configurable.NonDefaultProjectConfigurable;
+import jakarta.inject.Inject;
 import consulo.project.Project;
 import consulo.ui.ex.awt.ComboBox;
 import consulo.ui.ex.awt.FixedSizeButton;
@@ -68,7 +73,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 // Note: when updating the settings here, update FlutterSearchableOptionContributor as well.
 
-public class FlutterSettingsConfigurable implements SearchableConfigurable {
+@ExtensionImpl
+public class FlutterSettingsConfigurable implements SearchableConfigurable, ProjectConfigurable, NonDefaultProjectConfigurable {
 
   public static final String FLUTTER_SETTINGS_PAGE_NAME = FlutterBundle.message("flutter.title");
   private static final String FLUTTER_SETTINGS_HELP_TOPIC = "flutter.settings.help";
@@ -105,7 +111,8 @@ public class FlutterSettingsConfigurable implements SearchableConfigurable {
   // Consulo: a ProcessHandler can't wrap an already started Process, so the running `flutter --version` is tracked by its handler
   private final AtomicReference<ProcessHandler> activeVersionProcess = new AtomicReference<>();
 
-  FlutterSettingsConfigurable(@NotNull Project project) {
+  @Inject
+  public FlutterSettingsConfigurable(@NotNull Project project) {
     this.myProject = project;
     init();
     myVersionLabel.setText(" ");
@@ -174,6 +181,12 @@ public class FlutterSettingsConfigurable implements SearchableConfigurable {
   @NotNull
   public String getId() {
     return FlutterConstants.FLUTTER_SETTINGS_PAGE_ID;
+  }
+
+  // Consulo: upstream groupId="language"; the page is placed under the Dart settings page
+  @Override
+  public @Nullable String getParentId() {
+    return "dart.settings";
   }
 
   // Consulo: configurables return a Consulo UI component, the Swing panel is wrapped

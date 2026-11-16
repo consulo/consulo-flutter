@@ -5,6 +5,8 @@
  */
 package io.flutter.run.test;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.execution.action.ConfigurationContext;
 import consulo.execution.action.ConfigurationFromContext;
 import consulo.execution.action.RunConfigurationProducer;
@@ -22,10 +24,11 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Determines when we can run a test using "flutter test".
  */
+@ExtensionImpl
 public class FlutterTestConfigProducer extends RunConfigurationProducer<TestConfig> {
   private final TestConfigUtils testConfigUtils = TestConfigUtils.getInstance();
 
-  protected FlutterTestConfigProducer() {
+  public FlutterTestConfigProducer() {
     super(FlutterTestConfigType.getInstance());
   }
 

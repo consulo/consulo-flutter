@@ -5,6 +5,8 @@
  */
 package io.flutter.sdk;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.content.library.LibraryType;
 import consulo.content.library.PersistentLibraryKind;
 import consulo.content.library.ui.LibraryEditorComponent;
@@ -15,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 import consulo.ui.image.Image;
 
+@ExtensionImpl
 public class FlutterPluginLibraryType extends LibraryType<FlutterPluginLibraryProperties> {
   public static final String FLUTTER_PLUGINS_LIBRARY_NAME = "Flutter Plugins";
 
@@ -27,7 +30,7 @@ public class FlutterPluginLibraryType extends LibraryType<FlutterPluginLibraryPr
       }
     };
 
-  protected FlutterPluginLibraryType() {
+  public FlutterPluginLibraryType() {
     super(LIBRARY_KIND);
   }
 

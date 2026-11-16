@@ -69,6 +69,9 @@ module io.flutter {
   requires org.jetbrains.plugins.yaml;
   requires org.yaml.snakeyaml;
 
+  exports consulo.flutter.color;
+  exports consulo.flutter.notification;
+  exports consulo.flutter.sdk;
   exports io.flutter;
   exports io.flutter.actions;
   exports io.flutter.android;

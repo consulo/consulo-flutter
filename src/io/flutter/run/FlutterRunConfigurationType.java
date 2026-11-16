@@ -5,6 +5,8 @@
  */
 package io.flutter.run;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.execution.configuration.ConfigurationFactory;
 import consulo.execution.configuration.ConfigurationTypeBase;
 import consulo.execution.configuration.RunConfiguration;
@@ -19,6 +21,7 @@ import io.flutter.utils.FlutterModuleUtils;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
+@ExtensionImpl
 public class FlutterRunConfigurationType extends ConfigurationTypeBase {
   private final Factory factory;
 

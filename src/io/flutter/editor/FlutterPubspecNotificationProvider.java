@@ -5,6 +5,8 @@
  */
 package io.flutter.editor;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.annotation.access.RequiredReadAction;
 import consulo.fileEditor.EditorNotificationBuilder;
 import consulo.fileEditor.EditorNotificationProvider;
@@ -22,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
+@ExtensionImpl
 public final class FlutterPubspecNotificationProvider implements EditorNotificationProvider {
   @NotNull private final Project project;
 

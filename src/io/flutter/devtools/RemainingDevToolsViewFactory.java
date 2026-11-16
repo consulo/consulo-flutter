@@ -5,6 +5,8 @@
  */
 package io.flutter.devtools;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import io.flutter.icons.FlutterIcons;
@@ -14,6 +16,7 @@ import io.flutter.view.EmbeddedBrowser;
 import io.flutter.view.FlutterViewMessages;
 import org.jetbrains.annotations.NotNull;
 
+@ExtensionImpl
 public class RemainingDevToolsViewFactory extends AbstractDevToolsViewFactory {
   @NotNull public static String TOOL_WINDOW_ID = "Flutter DevTools";
 

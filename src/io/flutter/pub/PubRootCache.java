@@ -5,6 +5,12 @@
  */
 package io.flutter.pub;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+
 import consulo.module.Module;
 import consulo.project.Project;
 import consulo.virtualFileSystem.VirtualFile;
@@ -18,6 +24,9 @@ import java.util.*;
 /**
  * Cache the information computed from pubspecs in the project.
  */
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class PubRootCache {
   @NotNull
   public static PubRootCache getInstance(@NotNull final Project project) {
@@ -27,8 +36,8 @@ public class PubRootCache {
   @NotNull final Project project;
 
   private final Map<VirtualFile, PubRoot> cache = new HashMap<>();
-
-  private PubRootCache(@NotNull final Project project) {
+  @Inject
+  public PubRootCache(@NotNull final Project project) {
     this.project = project;
   }
 

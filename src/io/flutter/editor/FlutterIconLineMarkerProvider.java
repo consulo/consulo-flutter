@@ -5,6 +5,8 @@
  */
 package io.flutter.editor;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import com.jetbrains.lang.dart.DartLanguage;
 import consulo.language.Language;
 import consulo.language.editor.Pass;
@@ -50,6 +52,7 @@ import static io.flutter.dart.DartPsiUtil.*;
 // Style note: Normally we put control flow changing statements on a separate line in a block.
 // When working with PSI elements nearly everything can return null. There are a lot of null checks
 // that could return null, but they seldom trigger, so the return is on the same line as the if statement.
+@ExtensionImpl
 public class FlutterIconLineMarkerProvider extends LineMarkerProviderDescriptor {
 
   public static final Map<String, Set<String>> KnownPaths = new HashMap<>();
@@ -62,7 +65,7 @@ public class FlutterIconLineMarkerProvider extends LineMarkerProviderDescriptor 
 
   private static boolean instantiated = false;
 
-  FlutterIconLineMarkerProvider() {
+  public FlutterIconLineMarkerProvider() {
     // Extension point implementations can't use static initializers so we keep track of the
     // first instantiation to make sure #initialize is called to set up initial state. (Note that this state
     // may get reset with a subsequent explicit call to #initialize.)

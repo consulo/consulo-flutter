@@ -5,6 +5,8 @@
  */
 package io.flutter.propertyeditor;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.project.Project;
 import consulo.ui.image.Image;
 import io.flutter.icons.FlutterIcons;
@@ -25,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
+@ExtensionImpl
 public class PropertyEditorViewFactory extends AbstractDevToolsViewFactory {
   @NotNull public final static String TOOL_WINDOW_ID = "Flutter Property Editor";
 

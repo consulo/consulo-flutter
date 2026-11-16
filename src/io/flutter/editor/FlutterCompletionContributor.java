@@ -6,6 +6,8 @@
 
 package io.flutter.editor;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import com.jetbrains.lang.dart.DartLanguage;
 import com.jetbrains.lang.dart.psi.DartReferenceExpression;
 import consulo.language.Language;
@@ -26,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 
 // Consulo: converted from Kotlin; icons are consulo.ui.image.Image (ColorIcon/EmptyIcon -> ImageEffects).
+@ExtensionImpl(order = "first")
 public class FlutterCompletionContributor extends CompletionContributor {
   private static final int ICON_SIZE = 16;
   private static final Image EMPTY_ICON = ImageEffects.empty(ICON_SIZE);

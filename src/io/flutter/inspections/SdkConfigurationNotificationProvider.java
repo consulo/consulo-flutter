@@ -5,6 +5,8 @@
  */
 package io.flutter.inspections;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import com.jetbrains.lang.dart.DartLanguage;
 import consulo.annotation.access.RequiredReadAction;
 import consulo.fileEditor.EditorNotificationBuilder;
@@ -30,6 +32,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
+@ExtensionImpl
 public class SdkConfigurationNotificationProvider implements EditorNotificationProvider {
   // Consulo: upstream hides the panel on "Dismiss"; here the dismissal is remembered on the file.
   private static final Key<Boolean> DISMISSED = Key.create("flutter.no.sdk.notification.dismissed");

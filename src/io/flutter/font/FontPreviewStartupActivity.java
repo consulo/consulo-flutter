@@ -6,6 +6,8 @@
 
 package io.flutter.font;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.application.ApplicationManager;
 import consulo.project.Project;
 import consulo.project.startup.BackgroundStartupActivity;
@@ -18,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
  * as a ProjectActivity and backgroundPostStartupActivity extension.
  */
 // Consulo: upstream ProjectActivity (Kotlin, backgroundPostStartupActivity) -> BackgroundStartupActivity
+@ExtensionImpl(id = "FontPreviewStartupActivity", order = "last")
 public class FontPreviewStartupActivity implements BackgroundStartupActivity {
   @Override
   public void runActivity(@NotNull Project project, @NotNull UIAccess uiAccess) {

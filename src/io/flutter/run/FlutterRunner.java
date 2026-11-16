@@ -5,12 +5,15 @@
  */
 package io.flutter.run;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import io.flutter.sdk.FlutterSdk;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * Runner for run configurations (using the Flutter SDK).
  */
+@ExtensionImpl
 public class FlutterRunner extends LaunchState.Runner<SdkRunConfig> {
   public FlutterRunner() {
     super(SdkRunConfig.class);

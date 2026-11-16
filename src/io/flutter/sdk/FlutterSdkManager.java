@@ -5,6 +5,12 @@
  */
 package io.flutter.sdk;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+
 import consulo.application.util.concurrent.AppExecutorUtil;
 import consulo.disposer.Disposable;
 import consulo.project.Project;
@@ -26,6 +32,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * Monitors the application library table to notify clients when Flutter SDK configuration changes.
  */
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class FlutterSdkManager implements Disposable {
   private final EventDispatcher<Listener> myListenerDispatcher = EventDispatcher.create(Listener.class);
   private boolean isFlutterConfigured;
@@ -35,8 +44,8 @@ public class FlutterSdkManager implements Disposable {
   public static FlutterSdkManager getInstance(@NotNull Project project) {
     return Objects.requireNonNull(project.getInstance(FlutterSdkManager.class));
   }
-
-  private FlutterSdkManager(@NotNull Project project) {
+  @Inject
+  public FlutterSdkManager(@NotNull Project project) {
     myProject = project;
 
     final LibraryTable libraryTable = OpenApiUtils.getLibraryTable(project);

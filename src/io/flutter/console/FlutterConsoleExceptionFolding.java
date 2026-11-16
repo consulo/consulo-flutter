@@ -5,6 +5,8 @@
  */
 package io.flutter.console;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.execution.ConsoleFolding;
 import consulo.project.Project;
 import io.flutter.settings.FlutterSettings;
@@ -13,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@ExtensionImpl(order = "after 1")
 public class FlutterConsoleExceptionFolding extends ConsoleFolding {
   private static final String EXCEPTION_PREFIX = "=======";
   private boolean foldLines = false;

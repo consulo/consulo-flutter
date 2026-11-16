@@ -5,6 +5,8 @@
  */
 package io.flutter.view;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.component.PropertiesComponent;
 import consulo.project.ProjectPropertiesComponent;
 import consulo.application.dumb.DumbAware;
@@ -20,6 +22,7 @@ import io.flutter.icons.FlutterIcons;
 import io.flutter.utils.OpenApiUtils;
 import org.jetbrains.annotations.NotNull;
 
+@ExtensionImpl
 public class InspectorViewFactory implements ToolWindowFactory, DumbAware {
   private static final String TOOL_WINDOW_VISIBLE_PROPERTY = "flutter.view.tool.window.visible";
 

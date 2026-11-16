@@ -5,6 +5,12 @@
  */
 package io.flutter.run.daemon;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import consulo.application.util.concurrent.AppExecutorUtil;
@@ -38,6 +44,9 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Provides the list of available devices (mobile phones or emulators) that appears in the dropdown menu.
  */
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class DeviceService implements Disposable {
   @NotNull private final Project project;
 
@@ -58,8 +67,8 @@ public class DeviceService implements Disposable {
   public static DeviceService getInstance(@NotNull final Project project) {
     return Objects.requireNonNull(project.getInstance(DeviceService.class));
   }
-
-  private DeviceService(@NotNull final Project project) {
+  @Inject
+  public DeviceService(@NotNull final Project project) {
     this.project = project;
 
     deviceDaemon.setDisposeParent(this);

@@ -5,6 +5,11 @@
  */
 package io.flutter.settings;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+
 import com.google.common.annotations.VisibleForTesting;
 import consulo.application.ApplicationPropertiesComponent;
 import consulo.component.PropertiesComponent;
@@ -17,6 +22,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.EventListener;
 import java.util.Objects;
 
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
+@Singleton
 public class FlutterSettings {
   private static final String reloadOnSaveKey = "io.flutter.reloadOnSave";
   private static final String openInspectorOnAppLaunchKey = "io.flutter.openInspectorOnAppLaunch";

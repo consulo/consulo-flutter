@@ -5,6 +5,12 @@
  */
 package io.flutter.editor;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+
 import consulo.language.codeStyle.CodeStyle;
 import consulo.language.editor.WriteCommandAction;
 import consulo.document.Document;
@@ -38,6 +44,9 @@ import java.util.List;
 /**
  * A manager class to run actions on save (formatting, organize imports, ...).
  */
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class FlutterSaveActionsManager {
 
   /**
@@ -54,8 +63,8 @@ public class FlutterSaveActionsManager {
   }
 
   private final @NotNull Project myProject;
-
-  private FlutterSaveActionsManager(@NotNull Project project) {
+  @Inject
+  public FlutterSaveActionsManager(@NotNull Project project) {
     this.myProject = project;
 
     final MessageBus bus = project.getMessageBus();

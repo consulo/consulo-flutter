@@ -5,6 +5,12 @@
  */
 package io.flutter.run.coverage;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+import jakarta.inject.Inject;
+
 import consulo.execution.coverage.CoverageDataManager;
 import consulo.execution.coverage.CoverageSuitesBundle;
 import consulo.execution.coverage.SimpleCoverageAnnotator;
@@ -21,13 +27,16 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+@ServiceAPI(ComponentScope.PROJECT)
+@ServiceImpl
+@Singleton
 public class FlutterCoverageAnnotator extends SimpleCoverageAnnotator {
 
   @Nullable
   public static FlutterCoverageAnnotator getInstance(Project project) {
     return project.getInstance(FlutterCoverageAnnotator.class);
   }
-
+  @Inject
   public FlutterCoverageAnnotator(Project project) {
     super(project);
   }

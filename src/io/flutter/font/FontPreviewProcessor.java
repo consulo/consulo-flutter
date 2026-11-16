@@ -5,6 +5,11 @@
  */
 package io.flutter.font;
 
+import consulo.annotation.component.ComponentScope;
+import consulo.annotation.component.ServiceAPI;
+import consulo.annotation.component.ServiceImpl;
+import jakarta.inject.Singleton;
+
 import consulo.language.editor.DaemonCodeAnalyzer;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -51,6 +56,9 @@ import java.util.stream.Collectors;
 
 import static io.flutter.editor.FlutterIconLineMarkerProvider.KnownPaths;
 
+@ServiceAPI(ComponentScope.APPLICATION)
+@ServiceImpl
+@Singleton
 public class FontPreviewProcessor {
 
   public static final String PACKAGE_SEPARATORS = "[,\r\n]";

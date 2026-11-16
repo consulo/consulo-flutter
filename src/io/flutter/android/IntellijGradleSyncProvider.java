@@ -5,9 +5,12 @@
  */
 package io.flutter.android;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.project.Project;
 import org.jetbrains.annotations.NotNull;
 
+@ExtensionImpl(order = "last")
 public class IntellijGradleSyncProvider implements GradleSyncProvider {
 
   @Override

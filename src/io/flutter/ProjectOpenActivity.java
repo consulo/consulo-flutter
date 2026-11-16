@@ -5,6 +5,8 @@
  */
 package io.flutter;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.application.ApplicationManager;
 import consulo.application.dumb.DumbAware;
 import consulo.flutter.notification.FlutterNotificationGroups;
@@ -24,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @see FlutterInitializer for actions that run later.
  */
+@ExtensionImpl
 public class ProjectOpenActivity extends FlutterProjectActivity implements DumbAware {
   // Consulo: the Android Studio project type (FLUTTER_PROJECT_TYPE) is dropped.
 

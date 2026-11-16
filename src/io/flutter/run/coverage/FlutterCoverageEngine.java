@@ -5,6 +5,8 @@
  */
 package io.flutter.run.coverage;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.application.Application;
 import consulo.execution.coverage.CoverageAnnotator;
 import consulo.execution.coverage.CoverageEngine;
@@ -36,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@ExtensionImpl
 public class FlutterCoverageEngine extends CoverageEngine {
 
   public static FlutterCoverageEngine getInstance() {

@@ -5,6 +5,8 @@
  */
 package io.flutter.run.coverage;
 
+import consulo.annotation.component.ExtensionImpl;
+
 import consulo.execution.coverage.CoverageEngine;
 import consulo.execution.coverage.CoverageRunner;
 import consulo.execution.coverage.CoverageSuite;
@@ -20,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.IOException;
 
+@ExtensionImpl
 public class FlutterCoverageRunner extends CoverageRunner {
   private static final String ID = "FlutterCoverageRunner";
   private static final @NotNull Logger LOG = PluginLogger.createLogger(FlutterCoverageRunner.class);
