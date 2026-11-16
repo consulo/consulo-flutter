@@ -5,18 +5,16 @@
  */
 package io.flutter.actions;
 
-import consulo.application.AllIcons;
+import consulo.platform.base.icon.PlatformIconGroup;
 import consulo.dataContext.DataManager;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
-import consulo.language.editor.CommonDataKeys;
+import consulo.ui.ex.awt.UIExAWTDataKey;
 import consulo.dataContext.DataContext;
-import com.intellij.openapi.actionSystem.DataKey;
+import consulo.ui.ex.action.AnActionWithSyncUpdate;
 import consulo.ui.ex.action.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.PlatformCoreDataKeys;
 import consulo.ui.ex.action.Presentation;
-import consulo.ui.Separator;
+import consulo.ui.ex.action.AnSeparator;
 import consulo.ui.ex.awt.action.CustomComponentAction;
 import consulo.application.Application;
 import consulo.application.ApplicationManager;
@@ -33,12 +31,13 @@ import consulo.application.util.SystemInfo;
 import consulo.ui.ex.JBColor;
 import consulo.ui.ex.awt.JBLabel;
 import consulo.ui.ex.awt.JBUIScale;
-import consulo.ide.impl.idea.util.IconUtil;
+import consulo.ui.ex.awt.JBCurrentTheme;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.dart.compat.ModalityUiUtil;
 import consulo.ui.ex.awt.JBUI;
 import consulo.ui.ex.awt.UIUtil;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.icons.FlutterIcons;
 import io.flutter.FlutterBundle;
 import io.flutter.logging.PluginLogger;
@@ -73,15 +72,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class DeviceSelectorAction extends AnAction implements CustomComponentAction, DumbAware {
+public class DeviceSelectorAction extends AnAction implements CustomComponentAction, DumbAware, AnActionWithSyncUpdate {
   private static final @NotNull Logger LOG = PluginLogger.createLogger(DeviceSelectorAction.class);
 
   private static final Key<JButton> CUSTOM_COMPONENT_KEY = Key.create("customComponent");
   private static final Key<JBLabel> ICON_LABEL_KEY = Key.create("iconLabel");
   private static final Key<JBLabel> TEXT_LABEL_KEY = Key.create("textLabel");
   private static final Key<JBLabel> ARROW_LABEL_KEY = Key.create("arrowLabel");
-  private static final @NotNull Icon DEFAULT_DEVICE_ICON = FlutterIcons.Mobile;
-  private static final @NotNull Icon DEFAULT_ARROW_ICON = IconUtil.scale(AllIcons.General.ChevronDown, null, 1.2f);
+  private static final @NotNull Image DEFAULT_DEVICE_ICON = FlutterIcons.Mobile;
+  // Consulo: no AllIcons.General.ChevronDown, the platform down arrow is used
+  private static final @NotNull Image DEFAULT_ARROW_ICON = ImageEffects.resize(PlatformIconGroup.generalArrowdown(), 1.2f);
 
   /**
    * Theme property key for the main toolbar foreground color.
@@ -128,28 +128,23 @@ public class DeviceSelectorAction extends AnAction implements CustomComponentAct
    * This method attempts to retrieve the theme-specific toolbar icon hover background color using
    * the {@link #TOOLBAR_ICON_HOVER_BACKGROUND_KEY}. If the key is not found in the current theme
    * (which may happen with custom or older themes), it falls back to the standard action button
-   * hover background color provided by {@link JBUI.CurrentTheme.ActionButton#hoverBackground()}.
+   * hover background color provided by {@link JBCurrentTheme.ActionButton#hoverBackground()}.
    * </p>
    *
    * @return A {@link Color} suitable for toolbar icon button hover states that adapts to the
    * current theme, ensuring consistency with other toolbar actions.
    */
   @NotNull Color getToolbarHoverBackgroundColor() {
-    return JBColor.namedColor(TOOLBAR_ICON_HOVER_BACKGROUND_KEY, JBUI.CurrentTheme.ActionButton.hoverBackground());
+    return JBColor.namedColor(TOOLBAR_ICON_HOVER_BACKGROUND_KEY, JBCurrentTheme.ActionButton.hoverBackground());
   }
 
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
-  }
 
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    final Project project = e.getProject();
+    final Project project = e.getData(Project.KEY);
     if (!isSelectorVisible(project)) {
       return;
     }
-
-    Analytics.report(AnalyticsData.forAction(this, e));
 
     final DefaultActionGroup group = new DefaultActionGroup();
     group.addAll(actions);
@@ -159,7 +154,7 @@ public class DeviceSelectorAction extends AnAction implements CustomComponentAct
     final ListPopup popup =
       factory.createActionGroupPopup(null, group, dataContext, JBPopupFactory.ActionSelectionAid.SPEEDSEARCH, false);
 
-    final Component component = e.getData(Objects.requireNonNull(PlatformCoreDataKeys.CONTEXT_COMPONENT));
+    final Component component = e.getData(UIExAWTDataKey.CONTEXT_COMPONENT);
     if (component != null) {
       popup.showUnderneathOf(component);
     }
@@ -207,9 +202,9 @@ public class DeviceSelectorAction extends AnAction implements CustomComponentAct
         }
         else {
           // Fallback: use the default mobile icon size when the component is not fully initialized
-          final Icon defaultIcon = DEFAULT_DEVICE_ICON;
-          width += defaultIcon.getIconWidth();
-          height = Math.max(height, defaultIcon.getIconHeight());
+          final Image defaultIcon = DEFAULT_DEVICE_ICON;
+          width += defaultIcon.getWidth();
+          height = Math.max(height, defaultIcon.getHeight());
         }
 
         final @Nullable FontMetrics fm;
@@ -234,9 +229,9 @@ public class DeviceSelectorAction extends AnAction implements CustomComponentAct
         }
         else {
           // Fallback: use the default arrow icon size
-          final Icon defaultArrow = DEFAULT_ARROW_ICON;
-          width += defaultArrow.getIconWidth();
-          height = Math.max(height, defaultArrow.getIconHeight());
+          final Image defaultArrow = DEFAULT_ARROW_ICON;
+          width += defaultArrow.getWidth();
+          height = Math.max(height, defaultArrow.getHeight());
         }
 
         width += JBUI.scale(24);
@@ -299,10 +294,10 @@ public class DeviceSelectorAction extends AnAction implements CustomComponentAct
     presentation.putClientProperty(CUSTOM_COMPONENT_KEY, button);
 
     button.addActionListener(e -> {
-      final DataKey<Project> dataKey = Objects.requireNonNull(CommonDataKeys.PROJECT);
+      final Key<Project> dataKey = Project.KEY;
       final DataManager dataManager = Objects.requireNonNull(DataManager.getInstance());
       final DataContext dataContext = dataManager.getDataContext(button);
-      final Project project = dataKey.getData(dataContext);
+      final Project project = dataContext.getData(dataKey);
       if (isSelectorVisible(project)) {
         final DefaultActionGroup group = new DefaultActionGroup();
         group.addAll(actions);
@@ -345,7 +340,7 @@ public class DeviceSelectorAction extends AnAction implements CustomComponentAct
   @Override
   public void update(@NotNull AnActionEvent e) {
     // Only show the device menu when the device daemon process is running.
-    final Project project = e.getProject();
+    final Project project = e.getData(Project.KEY);
     if (!isSelectorVisible(project)) {
       e.getPresentation().setVisible(false);
       return;
@@ -356,7 +351,7 @@ public class DeviceSelectorAction extends AnAction implements CustomComponentAct
       knownProjects.add(project);
       final Application application = ApplicationManager.getApplication();
       if (application != null) {
-        application.getMessageBus().connect().subscribe(ProjectManager.TOPIC, new ProjectManagerListener() {
+        application.getMessageBus().connect().subscribe(ProjectManagerListener.class, new ProjectManagerListener() {
           @Override
           public void projectClosed(@NotNull Project closedProject) {
             knownProjects.remove(closedProject);
@@ -390,7 +385,7 @@ public class DeviceSelectorAction extends AnAction implements CustomComponentAct
     final Collection<FlutterDevice> devices = deviceService.getConnectedDevices();
 
     final String text;
-    Icon icon;
+    Image icon;
 
     if (devices.isEmpty()) {
       icon = DEFAULT_DEVICE_ICON;
@@ -423,7 +418,7 @@ public class DeviceSelectorAction extends AnAction implements CustomComponentAct
         final @Nullable JBLabel textLabel = (JBLabel)customComponent.getClientProperty(TEXT_LABEL_KEY);
 
         if (iconLabel != null) {
-          iconLabel.setIcon(icon);
+          iconLabel.setIcon(TargetAWT.to(icon));
         }
         if (textLabel != null) {
           textLabel.setText(text);
@@ -444,7 +439,7 @@ public class DeviceSelectorAction extends AnAction implements CustomComponentAct
 
   private void queueUpdate(@NotNull Project project, @NotNull Presentation presentation) {
     ModalityUiUtil.invokeLaterIfNeeded(
-      ModalityState.defaultModalityState(),
+      Application.get().getDefaultModalityState(),
       () -> update(project, presentation)
     );
   }
@@ -520,7 +515,7 @@ public class DeviceSelectorAction extends AnAction implements CustomComponentAct
           }
         }
       }
-      newActions.add(new Separator());
+      newActions.add(AnSeparator.create());
       newActions.add(new OpenSimulatorAction(!simulatorOpen));
       LOG.debug("[" + projectName + "] 'Open iOS Simulator' action added");
     }
@@ -528,12 +523,12 @@ public class DeviceSelectorAction extends AnAction implements CustomComponentAct
     // Add Open Android emulators actions.
     final List<OpenEmulatorAction> emulatorActions = OpenEmulatorAction.getEmulatorActions(project);
     if (emulatorActions != null && !emulatorActions.isEmpty()) {
-      newActions.add(new Separator());
+      newActions.add(AnSeparator.create());
       newActions.addAll(emulatorActions);
       LOG.debug("[" + projectName + "] Emulator action added: " + emulatorActions);
     }
     if (!FlutterModuleUtils.hasInternalDartSdkPath(project)) {
-      newActions.add(new Separator());
+      newActions.add(AnSeparator.create());
       newActions.add(RestartFlutterDaemonAction.forDeviceSelector());
     }
 
@@ -556,16 +551,11 @@ public class DeviceSelectorAction extends AnAction implements CustomComponentAct
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-      final Project project = e.getProject();
+      final Project project = e.getData(Project.KEY);
       final DeviceService service = project == null ? null : DeviceService.getInstance(project);
       if (service != null) {
         service.setSelectedDevice(device);
       }
-    }
-
-    @Override
-    public @NotNull ActionUpdateThread getActionUpdateThread() {
-      return ActionUpdateThread.BGT;
     }
   }
 }

@@ -5,19 +5,15 @@
  */
 package io.flutter.actions;
 
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
-import com.intellij.openapi.util.NlsActions;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.icons.FlutterIcons;
 import io.flutter.run.daemon.DeviceService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.Icon;
+import consulo.ui.image.Image;
 
 public class RestartFlutterDaemonAction extends AnAction {
 
@@ -40,26 +36,19 @@ public class RestartFlutterDaemonAction extends AnAction {
    * A constructor for dynamic invocation.
    */
   @SuppressWarnings("ActionPresentationInstantiatedInCtor")
-  private RestartFlutterDaemonAction(@Nullable @NlsActions.ActionText String text,
-                                     @Nullable @NlsActions.ActionDescription String description,
-                                     @Nullable Icon icon) {
+  private RestartFlutterDaemonAction(@Nullable String text,
+                                     @Nullable String description,
+                                     @Nullable Image icon) {
     super(text, description, icon);
   }
 
   @Override
   public void actionPerformed(@NotNull AnActionEvent event) {
-    final Project project = event.getProject();
+    final Project project = event.getData(Project.KEY);
     if (project == null) {
       return;
     }
 
     DeviceService.getInstance(project).restart();
-
-    Analytics.report(AnalyticsData.forAction(this, event));
-  }
-
-  @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
   }
 }

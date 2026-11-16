@@ -9,8 +9,6 @@ import consulo.ui.ex.action.ActionManager;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.project.Project;
 import consulo.application.util.function.Computable;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.icons.FlutterIcons;
 import io.flutter.FlutterBundle;
 import io.flutter.FlutterConstants;
@@ -37,7 +35,7 @@ public class ReloadAllFlutterApps extends FlutterAppAction {
 
   @Override
   public void actionPerformed(@NotNull AnActionEvent e) {
-    final Project project = getEventProject(e);
+    final Project project = e.getData(Project.KEY);
     if (project == null) {
       return;
     }
@@ -45,7 +43,5 @@ public class ReloadAllFlutterApps extends FlutterAppAction {
     if (reloadManager != null) {
       reloadManager.saveAllAndReloadAll(FlutterApp.allFromProjectProcess(project), FlutterConstants.RELOAD_REASON_MANUAL);
     }
-
-    Analytics.report(AnalyticsData.forAction(ID, e.getPlace(), e.getProject()));
   }
 }

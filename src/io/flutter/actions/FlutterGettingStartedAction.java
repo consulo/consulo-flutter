@@ -6,23 +6,15 @@
 package io.flutter.actions;
 
 import consulo.webBrowser.BrowserLauncher;
-import consulo.ui.ex.action.ActionUpdateThread;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.ui.ex.action.DumbAwareAction;
-import com.jetbrains.lang.dart.analytics.Analytics;
-import com.jetbrains.lang.dart.analytics.AnalyticsData;
 import io.flutter.FlutterConstants;
 import org.jetbrains.annotations.NotNull;
 
 public class FlutterGettingStartedAction extends DumbAwareAction {
-  @Override
-  public @NotNull ActionUpdateThread getActionUpdateThread() {
-    return ActionUpdateThread.BGT;
-  }
 
   @Override
   public void actionPerformed(@NotNull final AnActionEvent e) {
-    Analytics.report(AnalyticsData.forAction(this, e));
 
     BrowserLauncher.getInstance().browse(FlutterConstants.URL_GETTING_STARTED_IDE, null);
   }
