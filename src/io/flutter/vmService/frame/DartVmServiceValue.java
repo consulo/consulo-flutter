@@ -5,9 +5,12 @@ import com.google.gson.JsonObject;
 import consulo.application.AllIcons;
 import consulo.application.ApplicationManager;
 import consulo.util.lang.StringUtil;
-import consulo.desktop.awt.ui.impl.image.LayeredIcon;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
+import consulo.ui.image.ImageEffects;
 import consulo.execution.debug.XSourcePosition;
-import com.intellij.xdebugger.frame.*;
+import consulo.execution.debug.frame.*;
 import consulo.execution.debug.frame.presentation.XKeywordValuePresentation;
 import consulo.execution.debug.frame.presentation.XNumericValuePresentation;
 import consulo.execution.debug.frame.presentation.XStringValuePresentation;
@@ -20,7 +23,6 @@ import org.dartlang.vm.service.element.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.nio.ByteBuffer;
 import java.text.MessageFormat;
 import java.util.Base64;
@@ -30,12 +32,12 @@ import java.util.Base64;
 // See https://youtrack.jetbrains.com/issue/WEB-17629.
 
 public class DartVmServiceValue extends XNamedValue {
-  private static final LayeredIcon FINAL_FIELD_ICON =
-    LayeredIcon.layeredIcon(() -> new Icon[]{AllIcons.Nodes.Field, AllIcons.Nodes.FinalMark});
-  private static final LayeredIcon STATIC_FIELD_ICON =
-    LayeredIcon.layeredIcon(() -> new Icon[]{AllIcons.Nodes.Field, AllIcons.Nodes.StaticMark});
-  private static final LayeredIcon STATIC_FINAL_FIELD_ICON =
-    LayeredIcon.layeredIcon(() -> new Icon[]{AllIcons.Nodes.Field, AllIcons.Nodes.StaticMark, AllIcons.Nodes.FinalMark});
+  private static final Image FINAL_FIELD_ICON =
+    ImageEffects.layered(AllIcons.Nodes.Field, AllIcons.Nodes.FinalMark);
+  private static final Image STATIC_FIELD_ICON =
+    ImageEffects.layered(AllIcons.Nodes.Field, AllIcons.Nodes.StaticMark);
+  private static final Image STATIC_FINAL_FIELD_ICON =
+    ImageEffects.layered(AllIcons.Nodes.Field, AllIcons.Nodes.StaticMark, AllIcons.Nodes.FinalMark);
   private static final String JSON_STRING_TEMPLATE =
     "'{'\"type\":\"@Instance\",\"class\":'{'\"type\":\"@Class\",\"fixedId\":\"true\",\"id\":\"classes/91\"," +
     "\"name\":\"_OneByteString\"'}',\"kind\":\"String\",\"length\":\"{0}\",\"valueAsString\":\"{1}\"'}'";
@@ -165,8 +167,8 @@ public class DartVmServiceValue extends XNamedValue {
     // todo handle other special kinds: Type, TypeParameter, Pattern, may be some others as well
   }
 
-  private Icon getIcon() {
-    if (myIsException) return AllIcons.Debugger.Db_exception_breakpoint;
+  private Image getIcon() {
+    if (myIsException) return ExecutionDebugIconGroup.breakpointBreakpointexception();
 
     if (myFieldRef != null) {
       if (myFieldRef.isStatic() && (myFieldRef.isFinal() || myFieldRef.isConst())) {
@@ -183,17 +185,17 @@ public class DartVmServiceValue extends XNamedValue {
 
     final InstanceKind kind = myInstanceRef.getKind();
 
-    if (kind == InstanceKind.Map || isListKind(kind)) return AllIcons.Debugger.Db_array;
+    if (kind == InstanceKind.Map || isListKind(kind)) return ExecutionDebugIconGroup.nodeArray();
 
     if (kind == InstanceKind.Null ||
         kind == InstanceKind.Bool ||
         kind == InstanceKind.Double ||
         kind == InstanceKind.Int ||
         kind == InstanceKind.String) {
-      return AllIcons.Debugger.Db_primitive;
+      return ExecutionDebugIconGroup.nodePrimitive();
     }
 
-    return AllIcons.Debugger.Value;
+    return ExecutionDebugIconGroup.nodeValue();
   }
 
   private boolean computeVarHavingStringValuePresentation(@NotNull final XValueNode node) {
@@ -216,7 +218,7 @@ public class DartVmServiceValue extends XNamedValue {
         }
         break;
       case StackTrace:
-        node.setFullValueEvaluator(new ImmediateFullValueEvaluator("Click to see stack trace...", myInstanceRef.getValueAsString()));
+        node.setFullValueEvaluator(new ImmediateFullValueEvaluator(LocalizeValue.localizeTODO("Click to see stack trace..."), myInstanceRef.getValueAsString()));
         node.setPresentation(getIcon(), myInstanceRef.getClassRef().getName(), "", true);
         break;
       default:
@@ -498,7 +500,7 @@ public class DartVmServiceValue extends XNamedValue {
         @Override
         public void computePresentation(@NotNull XValueNode node, @NotNull XValuePlace place) {
           final String value = getShortPresentableValue(keyInstanceRef) + " -> " + getShortPresentableValue(valueInstanceRef);
-          node.setPresentation(AllIcons.Debugger.Value, "map entry", value, true);
+          node.setPresentation(ExecutionDebugIconGroup.nodeValue(), "map entry", value, true);
         }
 
         @Override

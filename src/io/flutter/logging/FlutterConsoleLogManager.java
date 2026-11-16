@@ -14,23 +14,27 @@ import com.google.gson.JsonSyntaxException;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.application.AllIcons;
+import consulo.application.ApplicationPropertiesComponent;
 import consulo.component.PropertiesComponent;
-import com.intellij.notification.*;
+import consulo.flutter.notification.FlutterVmNotificationGroups;
+import consulo.localize.LocalizeValue;
+import consulo.project.ui.notification.Notification;
+import consulo.project.ui.notification.NotificationService;
 import consulo.ui.ex.action.AnAction;
 import consulo.ui.ex.action.AnActionEvent;
 import consulo.logging.Logger;
-import consulo.codeEditor.impl.EditorSettingsExternalizable;
+import consulo.codeEditor.PersistentEditorSettings;
 import consulo.codeEditor.SoftWrapAppliancePlaces;
 import consulo.project.Project;
 import consulo.util.lang.StringUtil;
 import consulo.ui.ex.toolWindow.ToolWindow;
 import consulo.project.ui.wm.ToolWindowManager;
-import consulo.project.ui.internal.ToolWindowManagerEx;
 import consulo.ui.ex.SimpleTextAttributes;
+import consulo.ui.ex.util.TextAttributesUtil;
 import consulo.application.util.concurrent.QueueProcessor;
 import io.flutter.FlutterUtils;
 import io.flutter.devtools.DevToolsUtils;
-import io.flutter.jxbrowser.JxBrowserManager;
+import io.flutter.jxbrowser.JxBrowserStatus;
 import io.flutter.run.daemon.FlutterApp;
 import io.flutter.settings.FlutterSettings;
 import io.flutter.utils.JsonUtils;
@@ -62,10 +66,10 @@ public class FlutterConsoleLogManager {
   private static final String DEEP_LINK_GROUP_ID = "deeplink";
 
   private static final ConsoleViewContentType TITLE_CONTENT_TYPE =
-    new ConsoleViewContentType("title", SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES.toTextAttributes());
+    new ConsoleViewContentType("title", TextAttributesUtil.toTextAttributes(SimpleTextAttributes.REGULAR_BOLD_ATTRIBUTES));
   private static final ConsoleViewContentType NORMAL_CONTENT_TYPE = ConsoleViewContentType.NORMAL_OUTPUT;
   private static final ConsoleViewContentType SUBTLE_CONTENT_TYPE =
-    new ConsoleViewContentType("subtle", SimpleTextAttributes.GRAY_ATTRIBUTES.toTextAttributes());
+    new ConsoleViewContentType("subtle", TextAttributesUtil.toTextAttributes(SimpleTextAttributes.GRAY_ATTRIBUTES));
   private static final ConsoleViewContentType ERROR_CONTENT_TYPE = ConsoleViewContentType.ERROR_OUTPUT;
 
   private static QueueProcessor<Runnable> queue;
@@ -75,12 +79,12 @@ public class FlutterConsoleLogManager {
    * Set our preferred settings for the run console.
    */
   public static void initConsolePreferences() {
-    final PropertiesComponent properties = PropertiesComponent.getInstance();
+    final PropertiesComponent properties = ApplicationPropertiesComponent.getInstance();
     if (!properties.getBoolean(consolePreferencesSetKey)) {
       properties.setValue(consolePreferencesSetKey, true);
 
       // Set our preferred default settings for console text wrapping.
-      final EditorSettingsExternalizable editorSettings = EditorSettingsExternalizable.getInstance();
+      final PersistentEditorSettings editorSettings = PersistentEditorSettings.getInstance();
       editorSettings.setUseSoftWraps(true, SoftWrapAppliancePlaces.CONSOLE);
     }
   }
@@ -230,7 +234,8 @@ public class FlutterConsoleLogManager {
           errorSummary = property.getDescription();
         }
         else if (StringUtil.equals("DevToolsDeepLinkProperty", property.getType()) &&
-                 FlutterUtils.embeddedBrowserAvailable(JxBrowserManager.getInstance().getStatus())) {
+                 // Consulo: JxBrowser is dropped, its installation is always skipped
+                 FlutterUtils.embeddedBrowserAvailable(JxBrowserStatus.INSTALLATION_SKIPPED)) {
           showDeepLinkNotification(property, errorSummary);
           continue;
         }
@@ -367,18 +372,18 @@ public class FlutterConsoleLogManager {
   }
 
   private void showDeepLinkNotification(DiagnosticsNode property, @NotNull String errorSummary) {
-    NotificationGroup group = NotificationGroupManager.getInstance().getNotificationGroup(DEEP_LINK_GROUP_ID);
-    assert group != null;
-    Notification notification = group.createNotification(errorSummary, NotificationType.INFORMATION);
-    notification.setIcon(AllIcons.General.BalloonWarning);
-    notification.addAction(new AnAction("Inspect Widget") {
+    // Consulo: group DEEP_LINK_GROUP_ID is FlutterVmNotificationGroups.DEEPLINK
+    Notification notification = NotificationService.getInstance()
+      .newInfo(FlutterVmNotificationGroups.DEEPLINK)
+      .content(LocalizeValue.of(errorSummary))
+      .icon(AllIcons.General.BalloonWarning)
+      .create();
+    notification.addAction(new AnAction(LocalizeValue.localizeTODO("Inspect Widget")) {
       @Override
       public void actionPerformed(@NotNull AnActionEvent event) {
         // Show inspector window if it's not already visible.
         final ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(app.getProject());
-        if (!(toolWindowManager instanceof ToolWindowManagerEx)) {
-          return;
-        }
+        // Consulo: no public ToolWindowManagerEx, upstream's instanceof check is always true in the IDE
 
         final ToolWindow toolWindow = toolWindowManager.getToolWindow(InspectorView.TOOL_WINDOW_ID);
         if (toolWindow != null && !toolWindow.isVisible()) {
@@ -398,7 +403,7 @@ public class FlutterConsoleLogManager {
         notification.expire();
       }
     });
-    Notifications.Bus.notify(notification, app.getProject());
+    notification.notify(app.getProject());
     try (var executor = Executors.newSingleThreadScheduledExecutor()) {
       executor.schedule(notification::expire, 25, TimeUnit.SECONDS);
     }

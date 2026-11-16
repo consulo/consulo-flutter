@@ -11,7 +11,8 @@ import consulo.process.cmd.GeneralCommandLine;
 import consulo.execution.ui.console.Filter;
 import consulo.execution.ui.console.HyperlinkInfo;
 import consulo.execution.ui.console.OpenFileHyperlinkInfo;
-import com.intellij.execution.process.ColoredProcessHandler;
+import consulo.process.ProcessHandler;
+import consulo.process.ProcessHandlerBuilder;
 import consulo.process.event.ProcessEvent;
 import consulo.colorScheme.EffectType;
 import consulo.colorScheme.TextAttributes;
@@ -21,6 +22,7 @@ import consulo.ui.ex.awt.Messages;
 import consulo.virtualFileSystem.LocalFileSystem;
 import consulo.virtualFileSystem.VirtualFile;
 import consulo.ui.ex.awt.UIUtil;
+import consulo.ui.ex.awtUnsafe.TargetAWT;
 import io.flutter.FlutterMessages;
 import io.flutter.FlutterUtils;
 import io.flutter.sdk.FlutterSdk;
@@ -53,7 +55,7 @@ public class FlutterConsoleFilter implements Filter {
     public void navigate(@NotNull Project project) {
       try {
         final GeneralCommandLine cmd = new GeneralCommandLine().withExePath("open").withParameters(myPath);
-        final ColoredProcessHandler handler = new ColoredProcessHandler(cmd);
+        final ProcessHandler handler = ProcessHandlerBuilder.create(cmd).colored().build();
         handler.addProcessListener(new ProcessAdapter() {
           @Override
           public void processTerminated(@NotNull final ProcessEvent event) {
@@ -124,7 +126,7 @@ public class FlutterConsoleFilter implements Filter {
     }
 
     if (line.startsWith("Lost connection to device")) {
-      TextAttributes attr = new TextAttributes(UIUtil.getErrorForeground(), null, null, EffectType.BOXED, Font.PLAIN);
+      TextAttributes attr = new TextAttributes(TargetAWT.from(UIUtil.getErrorForeground()), null, null, EffectType.BOXED, Font.PLAIN);
       return new Result(entireLength - line.length(), entireLength, null, attr);
     }
     int lineNumber = 0;

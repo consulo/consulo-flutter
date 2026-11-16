@@ -19,7 +19,6 @@ import consulo.execution.debug.breakpoint.XLineBreakpoint;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import consulo.execution.debug.frame.XExecutionStack;
 import consulo.execution.debug.frame.XStackFrame;
-import consulo.execution.debug.impl.internal.XDebugSessionImpl;
 import com.jetbrains.lang.dart.DartFileType;
 import io.flutter.logging.PluginLogger;
 import io.flutter.utils.OpenApiUtils;
@@ -295,7 +294,8 @@ public class VmServiceWrapper implements Disposable {
         // Only the impl class supports reset so we need to cast.
         // Note that `XDebugSessionImpl` is marked internal, so this may not be safe long-run.
         // See: https://github.com/flutter/flutter-intellij/issues/7718
-        ((XDebugSessionImpl)session).reset();
+        // Consulo: XDebugSession.resetBreakpoints() is the public equivalent of XDebugSessionImpl.reset()
+        session.resetBreakpoints();
         session.initBreakpoints();
       });
       setIsolatePauseMode(isolateRef.getId(), myDebugProcess.getBreakOnExceptionMode(), isolateRef);

@@ -6,8 +6,8 @@
 package io.flutter.logging;
 
 import consulo.application.ApplicationManager;
-import consulo.ide.impl.idea.openapi.application.PathManager;
-import com.intellij.openapi.diagnostic.LogLevel;
+import consulo.container.boot.ContainerPathManager;
+import consulo.logging.LoggerLevel;
 import consulo.logging.Logger;
 import io.flutter.settings.FlutterSettings;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +41,8 @@ public class PluginLogger {
   public static void initLogger() {
     if (isInitialized) return;
 
-    final String logPath = PathManager.getLogPath();
+    // Consulo: log directory from ContainerPathManager
+    final String logPath = ContainerPathManager.get().getLogPath().getPath();
     String fullPath = logPath + File.separatorChar + LOG_FILE_NAME;
 
     synchronized (LogManager.getLogManager()) {
@@ -108,7 +109,7 @@ public class PluginLogger {
                              super.formatMessage(record),
                              (record.getThrown() != null
                               ? "\n" +
-                                com.intellij.openapi.util.text.StringUtil.getThrowableText(record.getThrown())
+                                consulo.util.lang.ExceptionUtil.getThrowableText(record.getThrown())
                               : "")
         );
       }
@@ -122,7 +123,7 @@ public class PluginLogger {
       return;
     }
     try {
-      rootLoggerInstance.setLevel(FlutterSettings.getInstance().isVerboseLogging() ? LogLevel.ALL : LogLevel.INFO);
+      rootLoggerInstance.setLevel(FlutterSettings.getInstance().isVerboseLogging() ? LoggerLevel.TRACE : LoggerLevel.INFO); // Consulo: LoggerLevel has no ALL
     }
     catch (Throwable e) {
       // This can happen if the logger is wrapped by a 3rd party plugin that doesn't

@@ -3,13 +3,14 @@ package io.flutter.vmService.frame;
 import com.google.gson.JsonElement;
 import consulo.application.AllIcons;
 import consulo.util.collection.SmartList;
-import com.intellij.xdebugger.frame.*;
+import consulo.execution.debug.frame.*;
+import consulo.localize.LocalizeValue;
+import consulo.ui.image.Image;
 import io.flutter.vmService.DartVmServiceDebugProcess;
 import org.dartlang.vm.service.consumer.GetObjectConsumer;
 import org.dartlang.vm.service.element.*;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 // similar to com.intellij.debugger.engine.JavaStaticGroup
@@ -23,7 +24,7 @@ class DartStaticFieldsGroup extends XValueGroup {
                                @NotNull final String isolateId,
                                @NotNull final String className,
                                @NotNull final SmartList<FieldRef> fieldsRefs) {
-    super("static");
+    super(LocalizeValue.of("static"));
     myDebugProcess = debugProcess;
     myIsolateId = isolateId;
     myClassName = className;
@@ -42,7 +43,7 @@ class DartStaticFieldsGroup extends XValueGroup {
   }
 
   @Override
-  public Icon getIcon() {
+  public Image getIcon() {
     return AllIcons.Nodes.Static;
   }
 

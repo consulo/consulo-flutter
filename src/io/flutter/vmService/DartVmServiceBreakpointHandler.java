@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static com.intellij.icons.AllIcons.Debugger.Db_invalid_breakpoint;
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 
 public class DartVmServiceBreakpointHandler extends XBreakpointHandler<XLineBreakpoint<XBreakpointProperties>> {
   private static final Logger LOG = PluginLogger.createLogger(DartVmServiceBreakpointHandler.class);
@@ -113,7 +113,7 @@ public class DartVmServiceBreakpointHandler extends XBreakpointHandler<XLineBrea
 
   public void breakpointFailed(@NotNull final XLineBreakpoint<XBreakpointProperties> xBreakpoint) {
     // can this xBreakpoint be resolved for other isolate?
-    myDebugProcess.getSession().updateBreakpointPresentation(xBreakpoint, Db_invalid_breakpoint, null);
+    myDebugProcess.getSession().updateBreakpointPresentation(xBreakpoint, ExecutionDebugIconGroup.breakpointBreakpointinvalid(), null);
   }
 
   public XLineBreakpoint<XBreakpointProperties> getXBreakpoint(@NotNull final Breakpoint vmBreakpoint) {

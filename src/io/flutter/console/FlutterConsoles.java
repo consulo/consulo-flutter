@@ -5,7 +5,7 @@
  */
 package io.flutter.console;
 
-import com.intellij.execution.process.ColoredProcessHandler;
+import consulo.process.ProcessHandler;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.module.Module;
 import consulo.project.Project;
@@ -31,7 +31,7 @@ public class FlutterConsoles {
    *
    * @param module if not null, show in this module's console.
    */
-  public static void displayProcessLater(@NotNull ColoredProcessHandler process,
+  public static void displayProcessLater(@NotNull ProcessHandler process,
                                          @NotNull Project project,
                                          @Nullable Module module,
                                          @NotNull Runnable onReady) {

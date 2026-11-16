@@ -12,7 +12,7 @@ import consulo.process.ProcessHandler;
 import consulo.execution.runner.ExecutionEnvironment;
 import consulo.execution.ui.console.ConsoleViewContentType;
 import consulo.execution.ui.ExecutionConsole;
-import consulo.project.util.ProjectUtil;
+import consulo.project.ui.util.ProjectUIUtil;
 import consulo.ui.ex.action.DefaultActionGroup;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
@@ -24,7 +24,8 @@ import consulo.util.lang.TimeoutUtil;
 import consulo.execution.debug.XDebugProcess;
 import consulo.execution.debug.XDebugSession;
 import consulo.execution.debug.event.XDebugSessionListener;
-import consulo.execution.debug.XDebuggerBundle;
+import consulo.execution.debug.localize.XDebuggerLocalize;
+import consulo.localize.LocalizeValue;
 import consulo.execution.debug.XSourcePosition;
 import consulo.execution.debug.breakpoint.XBreakpointHandler;
 import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
@@ -402,12 +403,12 @@ public abstract class DartVmServiceDebugProcess extends XDebugProcess {
 
 
   @Override
-  public String getCurrentStateMessage() {
+  public @NotNull LocalizeValue getCurrentStateMessage() {
     return getSession().isStopped()
-           ? XDebuggerBundle.message("debugger.state.message.disconnected")
+           ? XDebuggerLocalize.debuggerStateMessageDisconnected()
            : myVmConnected
-             ? XDebuggerBundle.message("debugger.state.message.connected")
-             : FlutterBundle.message("waiting.for.flutter");
+             ? XDebuggerLocalize.debuggerStateMessageConnected()
+             : FlutterBundle.messageValue("waiting.for.flutter");
   }
 
   @Override
@@ -558,7 +559,7 @@ public abstract class DartVmServiceDebugProcess extends XDebugProcess {
               OpenApiUtils.safeInvokeLater(() -> OpenApiUtils.safeRunWriteAction(() -> {
                 info.navigate(project);
 
-                ProjectUtil.focusProjectWindow(project, true);
+                ProjectUIUtil.focusProjectWindow(project, true);
               }));
             }
           });

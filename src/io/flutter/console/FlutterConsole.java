@@ -7,7 +7,7 @@ package io.flutter.console;
 
 import consulo.execution.ui.console.TextConsoleBuilder;
 import consulo.execution.ui.console.TextConsoleBuilderFactory;
-import com.intellij.execution.process.ColoredProcessHandler;
+import consulo.process.ProcessHandler;
 import consulo.process.event.ProcessEvent;
 import consulo.execution.ui.console.ConsoleView;
 import consulo.execution.ui.console.ConsoleViewContentType;
@@ -71,7 +71,7 @@ class FlutterConsole {
   /**
    * Starts displaying the output of a different process.
    */
-  void watchProcess(@NotNull ColoredProcessHandler process) {
+  void watchProcess(@NotNull ProcessHandler process) {
     if (cancelProcessSubscription != null) {
       cancelProcessSubscription.run();
       cancelProcessSubscription = null;

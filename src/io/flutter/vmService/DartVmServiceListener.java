@@ -1,5 +1,6 @@
 package io.flutter.vmService;
 
+import consulo.localize.LocalizeValue;
 import consulo.application.ApplicationManager;
 import consulo.logging.Logger;
 import consulo.util.lang.ref.Ref;
@@ -219,7 +220,9 @@ public class DartVmServiceListener implements VmServiceListener {
       }
 
       @Override
-      public void errorOccurred(@NotNull final String errorMessage) {
+      public void errorOccurred(final @NotNull LocalizeValue errorMessageValue) {
+        // Consulo: XValueCallback reports LocalizeValue
+        final String errorMessage = errorMessageValue.get();
         evalResult.set("Failed to evaluate log expression [" + evalText + "]: " + errorMessage);
         semaphore.up();
       }

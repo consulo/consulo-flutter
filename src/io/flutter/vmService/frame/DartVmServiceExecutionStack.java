@@ -1,5 +1,6 @@
 package io.flutter.vmService.frame;
 
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.application.AllIcons;
 import consulo.execution.debug.frame.XExecutionStack;
 import consulo.execution.debug.frame.XStackFrame;
@@ -25,9 +26,9 @@ public class DartVmServiceExecutionStack extends XExecutionStack {
     // topFrame is not null for (and only for) the active execution stack
     super(debugProcess.isIsolateSuspended(isolateId) ? beautify(isolateName)
                                                      : beautify(isolateName) + " (running)",
-          topFrame != null ? AllIcons.Debugger.ThreadCurrent
-                           : debugProcess.isIsolateSuspended(isolateId) ? AllIcons.Debugger.ThreadAtBreakpoint
-                                                                        : AllIcons.Debugger.ThreadRunning);
+          topFrame != null ? ExecutionDebugIconGroup.threadThreadcurrent()
+                           : debugProcess.isIsolateSuspended(isolateId) ? ExecutionDebugIconGroup.threadThreadatbreakpoint()
+                                                                        : ExecutionDebugIconGroup.threadThreadrunning());
     myDebugProcess = debugProcess;
     myIsolateId = isolateId;
     myException = exception;
@@ -48,7 +49,12 @@ public class DartVmServiceExecutionStack extends XExecutionStack {
     return myTopFrame;
   }
 
+  // Consulo: computeStackFrames has no firstFrameIndex, the frames view does not add the top frame itself
   @Override
+  public void computeStackFrames(@NotNull final XStackFrameContainer container) {
+    computeStackFrames(0, container);
+  }
+
   public void computeStackFrames(final int firstFrameIndex, @NotNull final XStackFrameContainer container) {
     if (myDebugProcess.isIsolateSuspended(myIsolateId)) {
       myDebugProcess.getVmServiceWrapper().computeStackFrames(myIsolateId, firstFrameIndex, container, myException);

@@ -1,5 +1,6 @@
 package io.flutter.vmService.frame;
 
+import consulo.execution.debug.icon.ExecutionDebugIconGroup;
 import consulo.application.AllIcons;
 import consulo.util.lang.StringUtil;
 import consulo.language.file.light.LightVirtualFile;
@@ -88,7 +89,7 @@ public class DartVmServiceStackFrame extends XStackFrame {
       component.append(text, SimpleTextAttributes.GRAY_ATTRIBUTES);
     }
 
-    component.setIcon(AllIcons.Debugger.Frame);
+    component.setIcon(ExecutionDebugIconGroup.nodeFrame());
   }
 
   @NotNull

@@ -1,5 +1,6 @@
 package io.flutter.vmService.frame;
 
+import consulo.localize.LocalizeValue;
 import consulo.document.Document;
 import consulo.codeEditor.Editor;
 import consulo.fileEditor.FileEditorLocation;
@@ -72,7 +73,9 @@ public class DartVmServiceEvaluator extends XDebuggerEvaluator {
       }
 
       @Override
-      public void errorOccurred(@NotNull String errorMessage) {
+      public void errorOccurred(@NotNull LocalizeValue errorMessageValue) {
+        // Consulo: XValueCallback reports LocalizeValue
+        final String errorMessage = errorMessageValue.get();
         vmService.setExceptionPauseMode(myDebugProcess.getBreakOnExceptionMode());
         callback.errorOccurred(errorMessage);
       }
