@@ -32,6 +32,7 @@ import consulo.execution.debug.evaluation.XDebuggerEditorsProvider;
 import consulo.execution.debug.evaluation.XDebuggerEvaluator;
 import consulo.execution.debug.frame.XStackFrame;
 import consulo.execution.debug.frame.XSuspendContext;
+import consulo.execution.debug.step.HasRunToPosition;
 import com.jetbrains.lang.dart.ide.runner.actions.DartPopFrameAction;
 import com.jetbrains.lang.dart.ide.runner.base.DartDebuggerEditorsProvider;
 import com.jetbrains.lang.dart.util.DartUrlResolver;
@@ -76,7 +77,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-public abstract class DartVmServiceDebugProcess extends XDebugProcess {
+public abstract class DartVmServiceDebugProcess extends XDebugProcess implements HasRunToPosition {
   private static final @NotNull Logger LOG = PluginLogger.createLogger(DartVmServiceDebugProcess.class);
 
   @NotNull private final ExecutionResult myExecutionResult;
